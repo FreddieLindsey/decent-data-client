@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import Web3 from 'web3'
 
+import IPFSFileDropper from '../IPFSFileDropper'
+
 import {
   simpleStorageAddressGet,
   simpleStorageValueGet,
@@ -93,6 +95,12 @@ class App extends Component {
             Get address of contract
           </button>
         }
+
+        <br />
+        <hr />
+        <br />
+
+        <IPFSFileDropper />
 
         <br />
         <hr />
