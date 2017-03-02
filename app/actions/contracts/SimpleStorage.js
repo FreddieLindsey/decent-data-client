@@ -3,12 +3,13 @@ export const SIMPLESTORAGE_ADDRESS_GET_PENDING = 'SIMPLESTORAGE_ADDRESS_GET_PEND
 export const SIMPLESTORAGE_ADDRESS_GET_SUCCESS = 'SIMPLESTORAGE_ADDRESS_GET_SUCCESS'
 export const SIMPLESTORAGE_ADDRESS_GET_ERROR   = 'SIMPLESTORAGE_ADDRESS_GET_ERROR'
 
-export const simpleStorageAddressGet = (dispatch) => {
+export const simpleStorageAddressGet = (dispatch, done) => {
   dispatch(simpleStorageAddressGetPending())
   window.contracts.SimpleStorage.deployed()
   .then((instance) => {
     dispatch(simpleStorageAddressGetSuccess(instance.address))
   })
+  .then(() => (typeof done === 'function') && done())
   .catch((err) => {
     dispatch(simpleStorageAddressGetError(err))
   })
@@ -39,7 +40,7 @@ export const SIMPLESTORAGE_VALUE_GET_PENDING = 'SIMPLESTORAGE_VALUE_GET_PENDING'
 export const SIMPLESTORAGE_VALUE_GET_SUCCESS = 'SIMPLESTORAGE_VALUE_GET_SUCCESS'
 export const SIMPLESTORAGE_VALUE_GET_ERROR   = 'SIMPLESTORAGE_VALUE_GET_ERROR'
 
-export const simpleStorageValueGet = (dispatch) => {
+export const simpleStorageValueGet = (dispatch, done) => {
   dispatch(simpleStorageValueGetPending())
   window.contracts.SimpleStorage.deployed()
   .then((instance) => {
@@ -48,6 +49,7 @@ export const simpleStorageValueGet = (dispatch) => {
   .then((value) => {
     dispatch(simpleStorageValueGetSuccess(value))
   })
+  .then(() => (typeof done === 'function') && done())
   .catch((error) => {
     dispatch(simpleStorageValueGetError(error))
   })
@@ -78,7 +80,7 @@ export const SIMPLESTORAGE_VALUE_SET_PENDING = 'SIMPLESTORAGE_VALUE_SET_PENDING'
 export const SIMPLESTORAGE_VALUE_SET_SUCCESS = 'SIMPLESTORAGE_VALUE_SET_SUCCESS'
 export const SIMPLESTORAGE_VALUE_SET_ERROR   = 'SIMPLESTORAGE_VALUE_SET_ERROR'
 
-export const simpleStorageValueSet = (dispatch, value, address) => {
+export const simpleStorageValueSet = (dispatch, value, address, done) => {
   dispatch(simpleStorageValueSetPending())
   window.contracts.SimpleStorage.deployed()
   .then((instance) => {
@@ -88,6 +90,7 @@ export const simpleStorageValueSet = (dispatch, value, address) => {
     console.dir(receipt)
     dispatch(simpleStorageValueSetSuccess(value))
   })
+  .then(() => (typeof done === 'function') && done())
   .catch((error) => {
     dispatch(simpleStorageValueSetError(error))
   })
