@@ -1,7 +1,7 @@
 const ipfs = (ipfsState = {}, action) => {
   // Pre-checks
   let state = ipfsState
-  if (!action.info || !state.instance) {
+  if (!action.info && !state.instance) {
     state = getIpfs(state)
   }
   if (!state.instance) return state
@@ -14,7 +14,6 @@ const ipfs = (ipfsState = {}, action) => {
 }
 
 const getIpfs = (state) => {
-  console.log('GET IPFS')
   return (typeof window.ipfs === 'object') ?
     { ...state, instance: window.ipfs } :
     { ...state, error: 'No IPFS found!' }
