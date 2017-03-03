@@ -9,9 +9,11 @@ label {
 }
 
 input {
-  width: 500px;
-  padding: 5px;
+  box-sizing: border-box;
   font-size: 16px;
+  margin: 10px 0;
+  padding: 5px 10px;
+  width: 500px;
 }
 
 button {

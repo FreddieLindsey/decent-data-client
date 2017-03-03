@@ -31,9 +31,10 @@
     "jsx": true
   },
   "rules": {
-    "no-bitwise": 1,
+    "no-bitwise": 0,
     "indent": [2, 2, { "SwitchCase": 1 }],
     "max-depth": [1, 4],
+    "max-len": ["error", 100],
     "max-statements": [1, 30],
     "complexity": [1, 30],
     "quotes": 0,
