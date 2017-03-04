@@ -9,7 +9,7 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
-  res.json({ ...req.body })
+  res.json({ content: req.body.data })
 })
 
 export const ipfs = router

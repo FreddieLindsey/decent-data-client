@@ -9,16 +9,15 @@ describe('IPFS', () => {
         })
   })
 
-  it('send json', (done) => {
-    const data = {
-      file: 'LOL'
-    }
-    request()
+  it('send file', (done) => {
+    request('localhost:8000')
         .post('/ipfs')
-        .send(data)
+        .sendAsBinary(files.text)
         .end((err, res) => {
           expect(res).to.have.status(200)
-          expect(res.body).to.deep.equal(data)
+          expect(res.body).to.deep.equal({
+            content: files.text.toString()
+          })
           done()
         })
   })
