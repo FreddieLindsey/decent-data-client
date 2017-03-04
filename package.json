@@ -11,9 +11,10 @@
     "logs-testrpc": "docker logs testrpc --follow",
     "services": "./scripts/start_services.sh",
     "start": "webpack-dev-server --host 0.0.0.0 --port 3000 --hot --content-base build/client",
-    "test": "yarn run test-contracts; yarn run test-web",
-    "test-contracts": "truffle test",
-    "test-web": "mocha --compilers js:babel-register spec/**/*.spec.js"
+    "test": "yarn run test-contracts; yarn run test-api; yarn run test-web",
+    "test-api": "env NODE_ENV=test API_PORT=8001 mocha --compilers js:babel-register spec/server/**/*.spec.js",
+    "test-contracts": "env NODE_ENV=test truffle test",
+    "test-web": "env NODE_ENV=test mocha --compilers js:babel-register spec/client/**/*.spec.js"
   },
   "author": "Frederick Lindsey",
   "license": "MIT",
@@ -33,6 +34,7 @@
     "babel-watch": "^2.0.6",
     "body-parser": "^1.17.0",
     "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.26.1",
     "eslint": "^3.14.0",

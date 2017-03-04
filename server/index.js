@@ -27,3 +27,5 @@ const port = process.env.API_PORT || 8000;
 
 console.log('API listening on port ' + port)
 app.listen(port)
+
+export default app
