@@ -2626,6 +2626,20 @@ ethjs-abi@^0.1.8:
     js-sha3 "0.5.5"
     number-to-bn "1.7.0"
 
+ethpm-registry@0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/ethpm-registry/-/ethpm-registry-0.0.8.tgz#9d94d08aa254e1502a074416d8c03d6f4cd065d3"
+  dependencies:
+    fs-extra "^2.0.0"
+    left-pad "^1.1.3"
+    semver "^5.3.0"
+    solidity-sha3 "^0.4.1"
+    truffle beta
+    truffle-artifactor "^2.1.2"
+    truffle-contract "^1.1.6"
+    web3 "^0.18.2"
+    yargs "^6.6.0"
+
 ethpm-registry@0.0.9:
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/ethpm-registry/-/ethpm-registry-0.0.9.tgz#b76159a45cde351decbd21bf83be5bf7edfb14c1"
@@ -2660,6 +2674,24 @@ ethpm@0.0.10:
     promisify-node "^0.4.0"
     semver "^5.3.0"
     wget-improved "^1.4.0"
+
+ethpm@0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/ethpm/-/ethpm-0.0.9.tgz#4af5b993b8c2f5e194fb2b609a134497442b2e3a"
+  dependencies:
+    async "^2.1.2"
+    ethpm-spec "^1.0.0"
+    fs-extra "^1.0.0"
+    glob "^7.1.1"
+    ipfs "^0.18.0"
+    ipfs-api "^11.1.0"
+    jsonschema "^1.1.1"
+    lodash "^4.17.1"
+    node-dir "^0.1.16"
+    promisify-node "^0.4.0"
+    semver "^5.3.0"
+    wget-improved "^1.4.0"
+    yargs "^6.4.0"
 
 event-emitter@~0.3.4:
   version "0.3.4"
@@ -6942,6 +6974,14 @@ solidity-parser@^0.1.0:
     pegjs "^0.9.0"
     yargs "^4.6.0"
 
+solidity-parser@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/solidity-parser/-/solidity-parser-0.2.0.tgz#317aa865ff71239bfc2f2d03e658ece1a196edca"
+  dependencies:
+    mocha "^2.4.5"
+    pegjs "^0.10.0"
+    yargs "^4.6.0"
+
 solidity-parser@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/solidity-parser/-/solidity-parser-0.3.0.tgz#cab04f8e406bdc1f3c16512eec6aa87a1072f8b9"
@@ -7399,7 +7439,7 @@ trim-right@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/trim-right/-/trim-right-1.0.1.tgz#cb2e1203067e0c8de1f614094b9fe45704ea6003"
 
-truffle-artifactor@^2.1.0, truffle-artifactor@^2.1.2, truffle-artifactor@^2.1.3:
+truffle-artifactor@^2.1.0, truffle-artifactor@^2.1.2, truffle-artifactor@^2.1.3, truffle-artifactor@~2.1.2:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/truffle-artifactor/-/truffle-artifactor-2.1.3.tgz#556735a4ead853997a1e77c84d488fdb504b2328"
   dependencies:
@@ -7429,6 +7469,20 @@ truffle-compile@^1.1.0:
     truffle-error "0.0.2"
     truffle-expect "0.0.3"
 
+truffle-compile@~1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/truffle-compile/-/truffle-compile-1.0.0.tgz#a62b316affd0f0aa099e555738031ddfc5eb37d7"
+  dependencies:
+    async "^2.1.4"
+    colors "^1.1.2"
+    graphlib "^2.1.1"
+    solc "0.4.8"
+    solidity-parser "^0.2.0"
+    truffle-config "0.0.7"
+    truffle-contract-sources "^0.0.1"
+    truffle-error "0.0.2"
+    truffle-expect "0.0.3"
+
 truffle-config@0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/truffle-config/-/truffle-config-0.0.2.tgz#c41bccde798791244724c62b231f71e6777dbcfa"
@@ -7449,7 +7503,7 @@ truffle-config@0.0.6:
     truffle-error "0.0.1"
     truffle-provider "0.0.1"
 
-truffle-config@0.0.7, truffle-config@^0.0.7:
+truffle-config@0.0.7, truffle-config@^0.0.7, truffle-config@~0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/truffle-config/-/truffle-config-0.0.7.tgz#03185bb9ddd88c62a6a306cfdfc495b3c715e7c4"
   dependencies:
@@ -7465,13 +7519,13 @@ truffle-contract-schema@0.0.5:
   dependencies:
     crypto-js "^3.1.9-1"
 
-truffle-contract-sources@^0.0.1:
+truffle-contract-sources@^0.0.1, truffle-contract-sources@~0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/truffle-contract-sources/-/truffle-contract-sources-0.0.1.tgz#29b6270366c86109cbb0eb307418fc6b2795d7fd"
   dependencies:
     node-dir "^0.1.16"
 
-truffle-contract@^1.0.3, truffle-contract@^1.1.10, truffle-contract@^1.1.6, truffle-contract@^1.1.8:
+truffle-contract@^1.0.3, truffle-contract@^1.1.10, truffle-contract@^1.1.6, truffle-contract@^1.1.8, truffle-contract@~1.1.8:
   version "1.1.10"
   resolved "https://registry.yarnpkg.com/truffle-contract/-/truffle-contract-1.1.10.tgz#fc4593e0cfafb8f141c25be9ad988d638c12685d"
   dependencies:
@@ -7487,7 +7541,7 @@ truffle-deployer@0.1.1:
     truffle-contract "^1.0.3"
     truffle-expect "^0.0.3"
 
-truffle-deployer@^0.1.2:
+truffle-deployer@^0.1.2, truffle-deployer@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/truffle-deployer/-/truffle-deployer-0.1.2.tgz#54241c28b19d2f6f1c7ba370d8f7439ee309873f"
   dependencies:
@@ -7498,15 +7552,15 @@ truffle-error@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/truffle-error/-/truffle-error-0.0.1.tgz#4b39badf54805a206e95fca72becabcec2c05a6f"
 
-truffle-error@0.0.2, truffle-error@^0.0.2:
+truffle-error@0.0.2, truffle-error@^0.0.2, truffle-error@~0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/truffle-error/-/truffle-error-0.0.2.tgz#01b189b78505566ae1689c239c7ca2dd121cfe4c"
 
-truffle-expect@0.0.3, truffle-expect@^0.0.3:
+truffle-expect@0.0.3, truffle-expect@^0.0.3, truffle-expect@~0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/truffle-expect/-/truffle-expect-0.0.3.tgz#9b75cef343bd596e7e5dbc878f5f1b2e318a944c"
 
-truffle-init@^1.0.5:
+truffle-init@^1.0.5, truffle-init@~1.0.2:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/truffle-init/-/truffle-init-1.0.5.tgz#1694cee4a58bd1d14a0c7881d3faca8ca4185711"
   dependencies:
@@ -7517,7 +7571,7 @@ truffle-init@^1.0.5:
     temp "^0.8.3"
     truffle-config "0.0.7"
 
-truffle-migrate@^0.0.5:
+truffle-migrate@^0.0.5, truffle-migrate@~0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/truffle-migrate/-/truffle-migrate-0.0.5.tgz#b4a313924ed86b5c333adaa42f6353f50adbf12a"
   dependencies:
@@ -7529,13 +7583,13 @@ truffle-migrate@^0.0.5:
     truffle-require "0.0.2"
     web3 "^0.18.0"
 
-truffle-provider@0.0.1, truffle-provider@^0.0.1:
+truffle-provider@0.0.1, truffle-provider@^0.0.1, truffle-provider@~0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/truffle-provider/-/truffle-provider-0.0.1.tgz#9d0ddb01131de1e3c59c4f8a0532bd2770811f1f"
   dependencies:
     web3 "^0.18.0"
 
-truffle-provisioner@^0.1.0:
+truffle-provisioner@^0.1.0, truffle-provisioner@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/truffle-provisioner/-/truffle-provisioner-0.1.0.tgz#029e5249c1015300738535e04fded931a53c4f62"
 
@@ -7547,7 +7601,7 @@ truffle-require@0.0.2:
     truffle-expect "0.0.3"
     web3 "^0.18.0"
 
-truffle-require@^0.0.3:
+truffle-require@^0.0.3, truffle-require@~0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/truffle-require/-/truffle-require-0.0.3.tgz#72c090822b9358979d82be6f4abbb5305af6d976"
   dependencies:
@@ -7558,6 +7612,15 @@ truffle-require@^0.0.3:
 truffle-resolver@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/truffle-resolver/-/truffle-resolver-2.0.0.tgz#323c3ab82450878e41dbdaf918c1aea5380dd025"
+  dependencies:
+    async "^2.1.4"
+    truffle-contract "^1.1.8"
+    truffle-expect "0.0.3"
+    truffle-provisioner "^0.1.0"
+
+truffle-resolver@~1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/truffle-resolver/-/truffle-resolver-1.0.1.tgz#b0cc16b8101c4c6b6a17bd371dfdba6932ef104a"
   dependencies:
     async "^2.1.4"
     truffle-contract "^1.1.8"
@@ -7582,7 +7645,13 @@ truffle-solidity-utils@^1.0.0:
   dependencies:
     solidity-parser "^0.3.0"
 
-truffle@^3.1.1:
+truffle-solidity-utils@~0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/truffle-solidity-utils/-/truffle-solidity-utils-0.0.1.tgz#13a90e3bd979df01dbb3312e8f2ae0c3ef96d1b3"
+  dependencies:
+    solidity-parser "^0.2.0"
+
+truffle@^3.1.1, truffle@beta:
   version "3.1.9"
   resolved "https://registry.yarnpkg.com/truffle/-/truffle-3.1.9.tgz#9f40a61cf53da2efa10533e86c17b9c12eb57299"
   dependencies:
@@ -7619,6 +7688,45 @@ truffle@^3.1.1:
     truffle-require "^0.0.3"
     truffle-resolver "^2.0.0"
     truffle-solidity-utils "^1.0.0"
+    web3 "0.18.0"
+    yargs "^6.6.0"
+
+truffle@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/truffle/-/truffle-3.1.2.tgz#dacdd079995db46736e660d0ff8cef59e04bf2d7"
+  dependencies:
+    async "^1.4.2"
+    chai "^3.3.0"
+    chokidar "^1.4.2"
+    colors "^1.1.2"
+    cpr "^0.4.3"
+    del "^2.2.0"
+    ethpm "0.0.9"
+    ethpm-registry "0.0.8"
+    finalhandler "^0.4.0"
+    fs-extra "^2.0.0"
+    lodash "^4.5.1"
+    mkdirp "^0.5.1"
+    mocha "^3.2.0"
+    node-dir "^0.1.10"
+    serve-static "^1.10.0"
+    spawn-args "^0.1.0"
+    temp "^0.8.3"
+    truffle-artifactor "~2.1.2"
+    truffle-compile "~1.0.0"
+    truffle-config "~0.0.7"
+    truffle-contract "~1.1.8"
+    truffle-contract-sources "~0.0.1"
+    truffle-deployer "~0.1.2"
+    truffle-error "~0.0.2"
+    truffle-expect "~0.0.3"
+    truffle-init "~1.0.2"
+    truffle-migrate "~0.0.5"
+    truffle-provider "~0.0.1"
+    truffle-provisioner "~0.1.0"
+    truffle-require "~0.0.3"
+    truffle-resolver "~1.0.0"
+    truffle-solidity-utils "~0.0.1"
     web3 "0.18.0"
     yargs "^6.6.0"
 
@@ -8162,7 +8270,7 @@ yargs@^4.6.0, yargs@^4.7.1:
     y18n "^3.2.1"
     yargs-parser "^2.4.1"
 
-yargs@^6.0.0, yargs@^6.3.0, yargs@^6.6.0:
+yargs@^6.0.0, yargs@^6.3.0, yargs@^6.4.0, yargs@^6.6.0:
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/yargs/-/yargs-6.6.0.tgz#782ec21ef403345f830a808ca3d513af56065208"
   dependencies:

@@ -1,19 +1,24 @@
-import chai, { expect } from 'chai'
-import chaiHttp from 'chai-http'
-chai.use(chaiHttp)
-
-import server from '../../../server'
-
 describe('IPFS', () => {
 
-  it('get status', () => {
-    chai.request(server)
+  it('get status', (done) => {
+    request()
         .get('/ipfs')
         .end((err, res) => {
           expect(res).to.have.status(200)
-          expect(res).to.deepEqual({
-            status: 'ok'
-          })
+          done()
+        })
+  })
+
+  it('send json', (done) => {
+    const data = {
+      file: 'LOL'
+    }
+    request()
+        .post('/ipfs')
+        .send(data)
+        .end((err, res) => {
+          expect(res).to.have.status(200)
+          expect(res.body).to.deep.equal(data)
           done()
         })
   })

@@ -5,11 +5,11 @@ const router = express.Router()
 const ipfs_ = ipfsApi()
 
 router.get('/', (req, res, next) => {
-  res.json({ status: ok })
+  res.json({ status: 'ok' })
 })
 
 router.post('/', (req, res, next) => {
-  console.dir(req)
+  res.json({ ...req.body })
 })
 
 export const ipfs = router

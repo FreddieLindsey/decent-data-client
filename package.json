@@ -12,8 +12,8 @@
     "services": "./scripts/start_services.sh",
     "start": "webpack-dev-server --host 0.0.0.0 --port 3000 --hot --content-base build/client",
     "test": "yarn run test-contracts; yarn run test-api; yarn run test-web",
-    "test-api": "env NODE_ENV=test API_PORT=8001 mocha --compilers js:babel-register spec/server/**/*.spec.js",
-    "test-contracts": "env NODE_ENV=test truffle test",
+    "test-api": "env NODE_ENV=test API_PORT=8001 mocha --compilers js:babel-register --require spec/server/init.js spec/server/**/*.spec.js",
+    "test-contracts": "truffle test",
     "test-web": "env NODE_ENV=test mocha --compilers js:babel-register spec/client/**/*.spec.js"
   },
   "author": "Frederick Lindsey",
@@ -60,6 +60,7 @@
     "redux-thunk": "^2.2.0",
     "sass-loader": "^6.0.2",
     "style-loader": "^0.13.1",
+    "truffle": "^3.1.2",
     "truffle-contract": "^1.1.6",
     "truffle-solidity-loader": "git+https://github.com/sogoiii/truffle-solidity-loader.git#1f1e213d52f033b6863218307b8968ae68220fe1",
     "web3": "^0.18.2",
