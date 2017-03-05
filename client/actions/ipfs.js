@@ -3,8 +3,13 @@ export const IPFS_WRITE_FILE_PENDING = 'IPFS_WRITE_FILE_PENDING'
 export const IPFS_WRITE_FILE_SUCCESS = 'IPFS_WRITE_FILE_SUCCESS'
 export const IPFS_WRITE_FILE_ERROR   = 'IPFS_WRITE_FILE_ERROR'
 
-export const ipfsWriteFile = () => (dispatch) => {
-  dispatch(ipfsWriteFilePending())
+export const ipfsWriteFiles = (dispatch, files) => {
+  for (const f in files) {
+    ipfsWriteFile(dispatch, files[f])
+  }
+}
+
+export const ipfsWriteFile = (dispatch, file) => {
   
 }
 

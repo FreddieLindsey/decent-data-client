@@ -260,6 +260,10 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
+attr-accept@^1.0.3:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/attr-accept/-/attr-accept-1.1.0.tgz#b5cd35227f163935a8f1de10ed3eba16941f6be6"
+
 autoprefixer@^6.3.1:
   version "6.7.6"
   resolved "https://registry.yarnpkg.com/autoprefixer/-/autoprefixer-6.7.6.tgz#00f05656c7ef73de9d2fd9b4668f6ef6905a855a"
@@ -6278,6 +6282,17 @@ react-dom@^15.4.2:
     loose-envify "^1.1.0"
     object-assign "^4.1.0"
 
+react-dropzone@^3.11.0:
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/react-dropzone/-/react-dropzone-3.11.0.tgz#bfe270a5a86dd9aa7a969cdaaa7c3c44d000e64a"
+  dependencies:
+    attr-accept "^1.0.3"
+    react-is-deprecated "^0.1.2"
+
+react-is-deprecated@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/react-is-deprecated/-/react-is-deprecated-0.1.2.tgz#301148f86ea428fe8e673eca7a372160b7579dbd"
+
 react-proxy@^1.1.7:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/react-proxy/-/react-proxy-1.1.8.tgz#9dbfd9d927528c3aa9f444e4558c37830ab8c26a"
@@ -7651,7 +7666,46 @@ truffle-solidity-utils@~0.0.1:
   dependencies:
     solidity-parser "^0.2.0"
 
-truffle@^3.1.1, truffle@beta:
+truffle@^3.1.1, truffle@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/truffle/-/truffle-3.1.2.tgz#dacdd079995db46736e660d0ff8cef59e04bf2d7"
+  dependencies:
+    async "^1.4.2"
+    chai "^3.3.0"
+    chokidar "^1.4.2"
+    colors "^1.1.2"
+    cpr "^0.4.3"
+    del "^2.2.0"
+    ethpm "0.0.9"
+    ethpm-registry "0.0.8"
+    finalhandler "^0.4.0"
+    fs-extra "^2.0.0"
+    lodash "^4.5.1"
+    mkdirp "^0.5.1"
+    mocha "^3.2.0"
+    node-dir "^0.1.10"
+    serve-static "^1.10.0"
+    spawn-args "^0.1.0"
+    temp "^0.8.3"
+    truffle-artifactor "~2.1.2"
+    truffle-compile "~1.0.0"
+    truffle-config "~0.0.7"
+    truffle-contract "~1.1.8"
+    truffle-contract-sources "~0.0.1"
+    truffle-deployer "~0.1.2"
+    truffle-error "~0.0.2"
+    truffle-expect "~0.0.3"
+    truffle-init "~1.0.2"
+    truffle-migrate "~0.0.5"
+    truffle-provider "~0.0.1"
+    truffle-provisioner "~0.1.0"
+    truffle-require "~0.0.3"
+    truffle-resolver "~1.0.0"
+    truffle-solidity-utils "~0.0.1"
+    web3 "0.18.0"
+    yargs "^6.6.0"
+
+truffle@beta:
   version "3.1.9"
   resolved "https://registry.yarnpkg.com/truffle/-/truffle-3.1.9.tgz#9f40a61cf53da2efa10533e86c17b9c12eb57299"
   dependencies:
@@ -7688,45 +7742,6 @@ truffle@^3.1.1, truffle@beta:
     truffle-require "^0.0.3"
     truffle-resolver "^2.0.0"
     truffle-solidity-utils "^1.0.0"
-    web3 "0.18.0"
-    yargs "^6.6.0"
-
-truffle@^3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/truffle/-/truffle-3.1.2.tgz#dacdd079995db46736e660d0ff8cef59e04bf2d7"
-  dependencies:
-    async "^1.4.2"
-    chai "^3.3.0"
-    chokidar "^1.4.2"
-    colors "^1.1.2"
-    cpr "^0.4.3"
-    del "^2.2.0"
-    ethpm "0.0.9"
-    ethpm-registry "0.0.8"
-    finalhandler "^0.4.0"
-    fs-extra "^2.0.0"
-    lodash "^4.5.1"
-    mkdirp "^0.5.1"
-    mocha "^3.2.0"
-    node-dir "^0.1.10"
-    serve-static "^1.10.0"
-    spawn-args "^0.1.0"
-    temp "^0.8.3"
-    truffle-artifactor "~2.1.2"
-    truffle-compile "~1.0.0"
-    truffle-config "~0.0.7"
-    truffle-contract "~1.1.8"
-    truffle-contract-sources "~0.0.1"
-    truffle-deployer "~0.1.2"
-    truffle-error "~0.0.2"
-    truffle-expect "~0.0.3"
-    truffle-init "~1.0.2"
-    truffle-migrate "~0.0.5"
-    truffle-provider "~0.0.1"
-    truffle-provisioner "~0.1.0"
-    truffle-require "~0.0.3"
-    truffle-resolver "~1.0.0"
-    truffle-solidity-utils "~0.0.1"
     web3 "0.18.0"
     yargs "^6.6.0"
 
