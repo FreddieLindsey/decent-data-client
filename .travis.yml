@@ -25,10 +25,10 @@ before_install:
 
 install:
   - docker-compose pull
-  - npm install
+  - yarn install
 
 script:
   - docker-compose up -d
-  - npm run test-contracts
-  - npm run test-api
-  - npm run test-web
+  - yarn run test-contracts
+  - yarn run test-api
+  - yarn run test-web
