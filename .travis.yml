@@ -4,6 +4,8 @@ dist: trusty
 
 language: node_js
 
+cache: yarn
+
 notification:
   email:
     success: never
