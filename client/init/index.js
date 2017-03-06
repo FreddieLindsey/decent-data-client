@@ -8,5 +8,4 @@ if (module.hot) {
   let { contractArtifacts } = require('./contracts')
 
   window.contracts = initialise(contractArtifacts, web3)
-  window.ipfs = window.IpfsApi()
 }
