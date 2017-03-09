@@ -1,9 +1,11 @@
 import contract from 'truffle-contract'
 
 import SimpleStorage from '../../contracts/SimpleStorage.sol'
+import IPFSStorage from '../../contracts/IPFSStorage.sol'
 
 export const contractArtifacts = {
-  SimpleStorage
+  SimpleStorage,
+  IPFSStorage
 }
 
 export const initialise = (contractArtifacts, web3) => {
