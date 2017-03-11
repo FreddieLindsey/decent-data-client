@@ -50,7 +50,7 @@ export const ipfsStorageValueGet = (dispatch, index) => {
     return instance.get(index)
   })
   .then((value) => {
-    dispatch(ipfsStorageValueGetSuccess(value))
+    dispatch(ipfsStorageValueGetSuccess(index, value))
   })
   .catch((error) => {
     dispatch(ipfsStorageValueGetError(error))
@@ -63,9 +63,10 @@ const ipfsStorageValueGetPending = () => {
   }
 }
 
-const ipfsStorageValueGetSuccess = (value) => {
+const ipfsStorageValueGetSuccess = (index, value) => {
   return {
     type: IPFSSTORAGE_VALUE_GET_SUCCESS,
+    index,
     value
   }
 }
@@ -78,41 +79,41 @@ const ipfsStorageValueGetError   = (error) => {
 }
 
 // Get Value
-export const IPFSSTORAGE_VALUE_SET_PENDING = 'IPFSSTORAGE_VALUE_SET_PENDING'
-export const IPFSSTORAGE_VALUE_SET_SUCCESS = 'IPFSSTORAGE_VALUE_SET_SUCCESS'
-export const IPFSSTORAGE_VALUE_SET_ERROR   = 'IPFSSTORAGE_VALUE_SET_ERROR'
+export const IPFSSTORAGE_VALUE_ADD_PENDING = 'IPFSSTORAGE_VALUE_ADD_PENDING'
+export const IPFSSTORAGE_VALUE_ADD_SUCCESS = 'IPFSSTORAGE_VALUE_ADD_SUCCESS'
+export const IPFSSTORAGE_VALUE_ADD_ERROR   = 'IPFSSTORAGE_VALUE_ADD_ERROR'
 
-export const ipfsStorageValueSet = (dispatch, value, address) => {
-  dispatch(ipfsStorageValueSetPending())
+export const ipfsStorageValueAdd = (dispatch, value, address) => {
+  dispatch(ipfsStorageValueAddPending())
   window.contracts.IPFSStorage.deployed()
   .then((instance) => {
-    return instance.set(value, { from: address })
+    return instance.add(value, { from: address })
   })
   .then((receipt) => {
     console.dir(receipt)
-    dispatch(ipfsStorageValueSetSuccess(value))
+    dispatch(ipfsStorageValueAddSuccess(value))
   })
   .catch((error) => {
-    dispatch(ipfsStorageValueSetError(error))
+    dispatch(ipfsStorageValueAddError(error))
   })
 }
 
-const ipfsStorageValueSetPending = () => {
+const ipfsStorageValueAddPending = () => {
   return {
-    type: IPFSSTORAGE_VALUE_SET_PENDING
+    type: IPFSSTORAGE_VALUE_ADD_PENDING
   }
 }
 
-const ipfsStorageValueSetSuccess = (value) => {
+const ipfsStorageValueAddSuccess = (value) => {
   return {
-    type: IPFSSTORAGE_VALUE_SET_SUCCESS,
+    type: IPFSSTORAGE_VALUE_ADD_SUCCESS,
     value
   }
 }
 
-const ipfsStorageValueSetError   = (error) => {
+const ipfsStorageValueAddError   = (error) => {
   return {
-    type: IPFSSTORAGE_VALUE_SET_ERROR,
+    type: IPFSSTORAGE_VALUE_ADD_ERROR,
     error
   }
 }
@@ -129,7 +130,7 @@ export const ipfsStorageSizeGet = (dispatch) => {
     return instance.size()
   })
   .then((size) => {
-    dispatch(ipfsStorageSizeGetSuccess(size))
+    dispatch(ipfsStorageSizeGetSuccess(size.toNumber()))
   })
   .catch((error) => {
     dispatch(ipfsStorageSizeGetError(error))

@@ -9,32 +9,24 @@ const initialState = []
 const files = (state = initialState, action) => {
   switch (action.type) {
     case FILE_LOAD_SUCCESS:
-      return handleFileLoadSuccess(state, action.buffer)
+      return handleFileLoadSuccess(state, action.file)
     case FILE_LOAD_ERROR:
-      return handleFileLoadError(state, action.buffer)
+      return handleFileLoadError(state, action.file)
   }
   return state
 }
 
-const initFileBuffer = (buffer) => {
-  return { buffer }
-}
-
-const initFileError = (error) => {
-  return { error }
-}
-
-const handleFileLoadSuccess = (state, buffer) => {
+const handleFileLoadSuccess = (state, file) => {
   return [
     ...state,
-    initFileBuffer(buffer)
+    file
   ]
 }
 
-const handleFileLoadError = (state, error) => {
+const handleFileLoadError = (state, file) => {
   return [
-    initFileError(error),
-    ...state
+    ...state,
+    file
   ]
 }
 

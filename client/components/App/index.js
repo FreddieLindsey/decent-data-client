@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import IPFSFileDropper from '../IPFSFileDropper'
+import FileMetadataList from '../FileMetadataList'
+import FileDropper from '../FileDropper'
 
 import {
   ipfsStorageAddressGet,
   ipfsStorageValueGet,
-  ipfsStorageValueSet,
+  ipfsStorageValueAdd,
   ipfsStorageSizeGet
 } from '../../actions'
 
@@ -21,8 +22,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     handleAddressGet: () => ipfsStorageAddressGet(dispatch),
     handleValueGet: (i) => ipfsStorageValueGet(dispatch, i),
-    handleValueSet: (v, a) => ipfsStorageValueSet(dispatch, v, a),
-    handleSizeGet: () => ipfsStorageSizeGet(dispatch)
+    handleValueSet: (v, a) => ipfsStorageValueAdd(dispatch, v, a),
+    handleSizeGet: (done) => ipfsStorageSizeGet(dispatch, done)
   }
 }
 
@@ -37,7 +38,7 @@ class App extends Component {
     IPFSStorage: PropTypes.shape({
       address: PropTypes.string,
       size: PropTypes.number,
-      value: PropTypes.any
+      values: PropTypes.arrayOf(PropTypes.string)
     }).isRequired,
 
     handleAddressGet: PropTypes.func.isRequired,
@@ -51,12 +52,11 @@ class App extends Component {
     this.props.handleSizeGet()
   }
 
-  handleValueGet () {
-    const getValue = this.textInputGet.value
-    if (!getValue || getValue === '') return
+  getValues() {
     const { size } = this.props.IPFSStorage
-    const index = parseInt(getValue)
-    this.props.handleValueGet(index)
+    for (let i = 0; i < size; i++) {
+      this.props.handleValueGet(i)
+    }
   }
 
   handleValueSet () {
@@ -69,68 +69,46 @@ class App extends Component {
     const {
       address,
       size,
-      value
+      values
     } = this.props.IPFSStorage
+    if (size !== undefined && size !== 0 && values.length === 0)
+      this.getValues()
     return (
       <div className="app" >
         <h1>IPFS Storage</h1>
 
-        { address ?
+        { address &&
           <div>
             <h4>
               IPFS Storage contract deployed at { address }
-              <br />
             </h4>
-            { size &&
+            { size !== undefined &&
               <h5>
-                Size: { size.toString() }
+                Size: { size }
               </h5>
             }
 
-            { value &&
-              <div>
-                <hr />
-                <br />
-                Current value: { value.toString() }
-              </div>
-            }
-
-            { value ?
-              <div>
-                <input ref={(i) => { this.textInputSet = i }} />
-                <button onClick={ () => { this.handleValueSet() }}>
-                  Update Value
-                </button>
-              </div>
-              :
-              <div>
-                <button onClick={ () => { this.handleValueGet() }}>
-                  Get value of contract at index:
-                </button>
-                <input ref={(i) => { this.textInputGet = i }} />
-              </div>
+            { values !== undefined && values.length > 0 &&
+              <ul>
+                <li>ITEM</li>
+              </ul>
             }
           </div>
-          :
-          <button onClick={ () => this.props.handleAddressGet() }>
-            Get address of contract
-          </button>
         }
 
         <br />
         <hr />
         <br />
 
-        <IPFSFileDropper />
+        <FileMetadataList />
 
-        <br />
-        <hr />
+        <FileDropper />
 
-        <span className="hint">
+        {/* <span className="hint">
           <h4>Hint:</h4>
           Open the browser developer console to
           view <strong>redux state changes</strong>, errors and warnings.
-        </span>
+        </span> */}
       </div>
     )
   }

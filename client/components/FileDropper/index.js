@@ -10,9 +10,7 @@ import {
 import './index.scss'
 
 const mapStateToProps = (state) => {
-  return {
-
-  }
+  return {}
 }
 
 const mapDispatchToProps = (dispatch) => {
@@ -21,7 +19,7 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-class IPFSFileDropper extends Component {
+class FileDropper extends Component {
 
   static displayName = 'IPFS File Dropper'
   static propTypes = {
@@ -43,4 +41,4 @@ class IPFSFileDropper extends Component {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(IPFSFileDropper)
+export default connect(mapStateToProps, mapDispatchToProps)(FileDropper)

@@ -5,28 +5,34 @@ import {
   // IPFSSTORAGE_VALUE_GET_PENDING,
   IPFSSTORAGE_VALUE_GET_SUCCESS,
   IPFSSTORAGE_VALUE_GET_ERROR,
-  // IPFSSTORAGE_VALUE_SET_PENDING,
-  IPFSSTORAGE_VALUE_SET_SUCCESS,
-  IPFSSTORAGE_VALUE_SET_ERROR,
+  // IPFSSTORAGE_VALUE_ADD_PENDING,
+  IPFSSTORAGE_VALUE_ADD_SUCCESS,
+  IPFSSTORAGE_VALUE_ADD_ERROR,
   // IPFSSTORAGE_SIZE_GET_PENDING,
   IPFSSTORAGE_SIZE_GET_SUCCESS,
   IPFSSTORAGE_SIZE_GET_ERROR
 } from '../../actions'
 
-const IPFSStorage = (state = {}, action) => {
+const initialState = {
+  address: undefined,
+  size: undefined,
+  values: []
+}
+
+const IPFSStorage = (state = initialState, action) => {
   switch (action.type) {
     case IPFSSTORAGE_ADDRESS_GET_SUCCESS:
       return handleAddressGetSuccess(state, action.address)
     case IPFSSTORAGE_ADDRESS_GET_ERROR:
       return handleAddressGetError(state, action.error)
     case IPFSSTORAGE_VALUE_GET_SUCCESS:
-      return handleValueGetSuccess(state, action.value)
+      return handleValueGetSuccess(state, action.index, action.value)
     case IPFSSTORAGE_VALUE_GET_ERROR:
       return handleValueGetError(state, action.error)
-    case IPFSSTORAGE_VALUE_SET_SUCCESS:
-      return handleValueSetSuccess(state, action.value)
-    case IPFSSTORAGE_VALUE_SET_ERROR:
-      return handleValueSetError(state, action.error)
+    case IPFSSTORAGE_VALUE_ADD_SUCCESS:
+      return handleValueAddSuccess(state, action.value)
+    case IPFSSTORAGE_VALUE_ADD_ERROR:
+      return handleValueAddError(state, action.error)
     case IPFSSTORAGE_SIZE_GET_SUCCESS:
       return handleSizeGetSuccess(state, action.size)
     case IPFSSTORAGE_SIZE_GET_ERROR:
@@ -50,11 +56,13 @@ const handleAddressGetError   = (state, error) => {
   }
 }
 
-const handleValueGetSuccess = (state, value) => {
+const handleValueGetSuccess = (state, index, value) => {
+  let values = state.values
+  values[index] = value
   return {
     ...state,
     error: undefined,
-    value
+    values
   }
 }
 
@@ -65,15 +73,21 @@ const handleValueGetError   = (state, error) => {
   }
 }
 
-const handleValueSetSuccess = (state, value) => {
+const handleValueAddSuccess = (state, value) => {
+  const values = [
+    ...state.values,
+    value
+  ]
+  const size = state.size + 1
   return {
     ...state,
     error: undefined,
-    value
+    size,
+    values
   }
 }
 
-const handleValueSetError   = (state, error) => {
+const handleValueAddError   = (state, error) => {
   return {
     ...state,
     error

@@ -48,6 +48,7 @@
     "express": "^4.15.0",
     "html-webpack-plugin": "^2.28.0",
     "ipfs-api": "^12.1.7",
+    "jquery": "^3.1.1",
     "json-loader": "^0.5.4",
     "mocha": "^3.2.0",
     "morgan": "^1.8.1",
