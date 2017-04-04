@@ -1,8 +1,35 @@
-version: '2'
+version: '2.1'
 
 services:
+  # Can be served locally
+  client:
+    image: alpine
+    container_name: client
+    command: echo 'hello'
+
+  server:
+    image: alpine
+    container_name: server
+    command: echo 'hello'
+
+  ipfs:
+    image: jbenet/go-ipfs
+    container_name: ipfs
+    volumes:
+      - ./.cache/ipfs:/data/ipfs
+
   testrpc:
     image: freddielindsey/ethereumjs-testrpc
     container_name: testrpc
     ports:
       - 8545:8545
+
+networks:
+  default:
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.66.0/24
+      - subnet: 2001:3984:3989::/64
