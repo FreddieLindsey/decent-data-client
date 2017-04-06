@@ -3,14 +3,18 @@ version: '2.1'
 services:
   # Can be served locally
   client:
-    image: alpine
+    image: node:7.6.0
     container_name: client
-    command: echo 'hello'
+    command: npm install; npm start
+    ports:
+      - 3000:3000
 
   server:
-    image: alpine
+    image: node:7.6.0
     container_name: server
-    command: echo 'hello'
+    command: npm install; npm run dev
+    ports:
+      - 8080:8080
 
   ipfs:
     image: jbenet/go-ipfs

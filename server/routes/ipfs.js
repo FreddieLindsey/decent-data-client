@@ -2,7 +2,9 @@ import express from 'express'
 import ipfsApi from 'ipfs-api'
 
 const router = express.Router()
-const ipfs_ = ipfsApi()
+const host = process.env.IPFS_HOST || 'localhost'
+const port = process.env.IPFS_PORT || 5001
+const ipfs_ = ipfsApi(host, port)
 
 router.get('/', (req, res, next) => {
   res.json({ status: 'ok' })
