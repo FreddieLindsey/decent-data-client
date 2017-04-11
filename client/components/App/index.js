@@ -102,13 +102,11 @@ class App extends Component {
 
         <FileMetadataList />
 
-        <FileDropper />
+        <br />
+        <hr />
+        <br />
 
-        {/* <span className="hint">
-          <h4>Hint:</h4>
-          Open the browser developer console to
-          view <strong>redux state changes</strong>, errors and warnings.
-        </span> */}
+        <FileDropper />
       </div>
     )
   }

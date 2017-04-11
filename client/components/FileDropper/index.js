@@ -15,7 +15,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleFilesLoad: (f) => filesLoad(dispatch, f)
+    handleFilesLoad: (f) => dispatch(filesLoad(f))
   }
 }
 

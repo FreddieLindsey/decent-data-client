@@ -68,6 +68,7 @@ module.exports = {
     new webpack.DefinePlugin({
       '__DEV__': true,
       'process.env': {
+        API_ENDPOINT: JSON.stringify('//localhost:8000'),
         NODE_ENV: JSON.stringify('development'),
         IPFS_HOST: JSON.stringify('testrpc'),
         IPFS_PORT: 5001

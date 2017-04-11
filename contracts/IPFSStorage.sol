@@ -1,28 +1,28 @@
 pragma solidity ^0.4.8;
 
 contract IPFSStorage {
-  bytes[] public storedData;
+  uint storedData;
+  mapping (string => bytes) data;
 
-  event Error(string message);
+  /*event Error(string message);*/
 
   function IPFSStorage() {}
 
-  function add(bytes hash) {
-    storedData[storedData.length] = hash;
+  function add(string path, bytes hash) {
+    data[path] = hash;
+    storedData++;
   }
 
-  function get(uint index) constant returns (bytes retVal) {
-    if (index < 0 || index >= storedData.length) {
-      /* Undecided whether to throw an error or not */
-      /*Error('Index not found');
-      throw;*/
-      return;
-    }
-    return storedData[index];
+  function test() {
+    storedData++;
+  }
+
+  function get(string path) constant returns (bytes retVal) {
+    return data[path];
   }
 
   function size() constant returns (uint retVal) {
-    return storedData.length;
+    return storedData;
   }
 
 }

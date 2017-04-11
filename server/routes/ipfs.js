@@ -1,17 +1,52 @@
 import express from 'express'
 import ipfsApi from 'ipfs-api'
 
+import { addresses, contracts } from '../init'
+
+const {
+  IPFSStorage
+} = contracts
+
 const router = express.Router()
 const host = process.env.IPFS_HOST || 'localhost'
 const port = process.env.IPFS_PORT || 5001
 const ipfs_ = ipfsApi(host, port)
 
+let resolved
+setTimeout(() => { resolved = addresses(); }, 1000);
+
+// For status of router
 router.get('/', (req, res, next) => {
   res.json({ status: 'ok' })
 })
 
 router.post('/', (req, res, next) => {
-  res.json({ content: req.body.data })
+  let content = new Buffer(req.body.content)
+  ipfs_.add([{
+    path: req.body.name,
+    content
+  }], (err, resp) => {
+    if (err) {
+      res.status(400)
+      res.json({ error: err.toString() })
+      return
+    }
+
+    IPFSStorage.deployed()
+    .then(i => {
+      return i.add(resp.path, resp.hash, { from: resolved[0] })
+    })
+    .then((receipt) => {
+      res.json(receipt)
+    })
+    .catch(err => {
+      // res.sendStatus(500)
+
+      // TODO: REMOVE DEV ONLY
+      res.status(500)
+      res.json({ error: err.toString(), resp })
+    })
+  })
 })
 
 const showIpfsConfig = () => {

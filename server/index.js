@@ -1,6 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import logger from 'morgan'
+import cors from 'cors'
 
 import {
   default_,
@@ -12,6 +13,7 @@ const app = express();
 if (process.env.NODE_ENV === 'development') {
   console.log('Running DEV mode')
   app.use(logger('dev'));
+  app.use(cors()) // TODO: Decide on CORS for production
 }
 
 // Use bodyparser to get data from a POST

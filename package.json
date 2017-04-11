@@ -53,11 +53,13 @@
     "react-dom": "^15.4.2",
     "react-dropzone": "^3.11.0",
     "react-redux": "^5.0.3",
+    "react-table": "^5.5.0",
     "redux": "^3.6.0",
     "redux-logger": "^2.8.1",
     "redux-thunk": "^2.2.0",
     "sass-loader": "^6.0.2",
     "style-loader": "^0.13.1",
+    "superagent": "^3.5.2",
     "truffle": "^3.1.2",
     "truffle-contract": "^1.1.6",
     "truffle-solidity-loader": "git+https://github.com/sogoiii/truffle-solidity-loader.git#1f1e213d52f033b6863218307b8968ae68220fe1",
@@ -67,9 +69,10 @@
   "dependencies": {
     "babel-cli": "^6.22.2",
     "body-parser": "^1.17.0",
+    "cors": "^2.8.3",
     "express": "^4.15.0",
-    "jquery": "^3.1.1",
     "ipfs-api": "^12.1.7",
+    "jquery": "^3.1.1",
     "web3": "^0.18.2"
   }
 }

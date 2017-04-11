@@ -1,32 +1,33 @@
-import $ from 'jquery'
+import Request from 'superagent'
 
 // Add a file
 export const FILE_LOAD_PENDING = 'FILE_LOAD_PENDING'
 export const FILE_LOAD_SUCCESS = 'FILE_LOAD_SUCCESS'
 export const FILE_LOAD_ERROR   = 'FILE_LOAD_ERROR'
 
-export const filesLoad = (dispatch, files) => {
-  for (const f in files) {
-    fileLoad(dispatch, files[f])
+export const filesLoad = (files) => {
+  return (dispatch) => {
+    files.forEach(f => fileLoad(dispatch, f))
   }
 }
 
-export const fileLoad = (dispatch, file) => {
+const fileLoad = (dispatch, file) => {
   dispatch(fileLoadPending())
   const reader = new FileReader()
   reader.onload = (f) => {
     dispatch(fileLoadSuccess({
-      ...file,
-      content: f.target.result
+      name: file.name,
+      content: f.target.result,
+      type: file.type
     }))
   }
   reader.onerror = (error) => {
     dispatch(fileLoadError({
-      ...file,
-      error
+      error,
+      name: file.name
     }))
   }
-  reader.readAsArrayBuffer(file)
+  reader.readAsDataURL(file)
 }
 
 const fileLoadPending = () => {
@@ -54,29 +55,26 @@ export const FILE_SUBMIT_PENDING = 'FILE_SUBMIT_PENDING'
 export const FILE_SUBMIT_SUCCESS = 'FILE_SUBMIT_SUCCESS'
 export const FILE_SUBMIT_ERROR   = 'FILE_SUBMIT_ERROR'
 
-export const fileSubmit = (index) => {
+export const filesSubmit = () => {
   return (dispatch, getState) => {
-    dispatch(fileSubmitPending())
-    $.ajax({
-      url: process.env.API_ENDPOINT + '/ipfs/upload',
-      type: 'POST',
-      data: {
-        file: getState().files[index].buffer
-      },
-      cache: false,
-      dataType: 'json',
-      processData: false, // Don't process the files
-      contentType: false
-    })
-    .then((res) => {
-      console.dir(res)
-      dispatch(fileSubmitSuccess(index))
-    })
-    .catch((err) => {
-      console.dir(err)
-      dispatch(fileSubmitError(err))
-    })
+    getState().files.forEach((f, i) => fileSubmit(dispatch, f, i))
   }
+}
+
+const fileSubmit = (dispatch, file, index) => {
+  dispatch(fileSubmitPending())
+  Request
+    .post(process.env.API_ENDPOINT + '/ipfs')
+    .send(file)
+    .end((err, res) => {
+      if (err) {
+        console.dir(err)
+        dispatch(fileSubmitError(err))
+      } else {
+        console.dir(res)
+        dispatch(fileSubmitSuccess(index))
+      }
+    })
 }
 
 const fileSubmitPending = () => {

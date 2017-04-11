@@ -1,9 +1,14 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import ReactTable from 'react-table'
+import 'react-table/react-table.css'
+
 import {
-  fileSubmit
+  filesSubmit
 } from '../../actions'
+
+import './index.scss'
 
 const mapStateToProps = (state) => {
   const fileSize = state.files.length
@@ -15,7 +20,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleFileSubmit: (i) => dispatch(fileSubmit(i))
+    handleFilesSubmit: () => dispatch(filesSubmit())
   }
 }
 
@@ -24,20 +29,34 @@ class FileMetadataList extends Component {
   static displayName = 'File Metadata List'
   static propTypes = {
     files: PropTypes.any,
-    fileSize: PropTypes.arrayOf(PropTypes.number).isRequired
+    fileSize: PropTypes.number.isRequired,
+    handleFilesSubmit: PropTypes.func.isRequired
   }
 
-  renderFiles () {
-    const { files, fileSize } = this.props
-    return Array(fileSize).fill().map((_, i) => {
-      console.dir(files[i])
-      return (
-        <div key={i}>
-          { files[i].name }
-          <img src={ files[i].preview } />
-        </div>
-      )
-    })
+  getColumns() {
+    return [
+      {
+        header: 'Filename',
+        accessor: 'name'
+      },
+      {
+        id: 'preview',
+        header: 'Preview',
+        accessor: f => {
+          if (f.type.indexOf('image') !== -1) {
+            return (<img
+              className='filemetadatalist-preview'
+              src={ f.content }
+            />)
+          } else {
+            return (<embed
+              className='filemetadatalist-preview'
+              src={ f.content }
+            />)
+          }
+        }
+      }
+    ]
   }
 
   render () {
@@ -45,12 +64,33 @@ class FileMetadataList extends Component {
       files,
       fileSize
     } = this.props
+
+    const reactTableProps = {
+      pageSize: fileSize,
+      resizable: false,
+      showPagination: false
+    }
+
     return (
       <div className="filemetadatalist-container" >
-        { fileSize !== undefined &&
-          files !== undefined &&
-          files.length > 0 &&
-          this.renderFiles() }
+        <h2>File Metadata List</h2>
+        { fileSize > 0 ?
+          <ReactTable
+            data={files}
+            columns={ this.getColumns() }
+            { ...reactTableProps }
+          /> :
+          <div style={{ textAlign: 'center', width: '100%' }} >
+            No files loaded
+          </div>
+        }
+        { fileSize > 0 &&
+          <button
+            className='col-md-12 filemetadatalist-submit'
+            onClick={ () => this.props.handleFilesSubmit() } >
+            Send to IPFS
+          </button>
+        }
       </div>
     )
   }
