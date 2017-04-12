@@ -9,7 +9,7 @@ cache: yarn
 notification:
   email:
     success: never
-    failure: always
+    failure: change
 
 services:
   - docker

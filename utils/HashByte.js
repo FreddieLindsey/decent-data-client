@@ -22,7 +22,19 @@ export default class HashByte {
   }
 
   static toHash = (byteArray) => {
+    if (byteArray % 2 !== 0) new Error('Not convertible from ASCII')
+    let hash = ''
 
+    for (let i = 0; i < byteArray / 2; i++) {
+      if (i == 0 && byteArray.indexOf('0x') === 0) continue
+
+      let charCode = 0
+      charCode += byteArray[i * 2] * 16
+      charCode += byteArray[i * 2 + 1]
+      hash += String.fromCharCode(charCode)
+    }
+
+    return hash
   }
 
 }
