@@ -29,6 +29,7 @@ install:
 
 script:
   - docker-compose up -d
+  - yarn run build
   - yarn run test-contracts
   - yarn run test-api
   - yarn run test-web
