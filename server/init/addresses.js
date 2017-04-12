@@ -6,10 +6,13 @@ web3.eth.getAccounts((err, accounts) => {
   if (err !== null || accounts.length === 0) {
     process.exit(err !== null ? 1 : 2)
   } else {
-    addresses_ = accounts
+    addresses_ = addresses_.concat(accounts)
   }
 })
 
 export const addresses = () => {
-  return addresses_
+  return {
+    all: addresses_,
+    default: addresses_[0]
+  }
 }

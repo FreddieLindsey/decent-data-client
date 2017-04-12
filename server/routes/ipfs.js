@@ -32,19 +32,24 @@ router.post('/', (req, res, next) => {
       return
     }
 
+    const {
+      path,
+      hash
+    } = resp[0]
+
     IPFSStorage.deployed()
     .then(i => {
-      return i.add(resp.path, resp.hash, { from: resolved[0] })
+      return i.add(path, hash.slice(0, 32), hash.slice(32, 64), { from: resolved.all[0] })
     })
     .then((receipt) => {
-      res.json(receipt)
+      res.json({ receipt, additions: resp })
     })
     .catch(err => {
       // res.sendStatus(500)
 
       // TODO: REMOVE DEV ONLY
       res.status(500)
-      res.json({ error: err.toString(), resp })
+      res.json({ error: err.toString() })
     })
   })
 })
