@@ -6,6 +6,8 @@ const hexadecimal = [
 export default class HashByte {
 
   static toByteArray = (hash, size = undefined) => {
+    if (hash === undefined) return hash
+
     let byteArray = ''
     for (let i = 0; i < hash.length; i++) {
       const charCode = hash.charCodeAt(i)
@@ -22,15 +24,17 @@ export default class HashByte {
   }
 
   static toHash = (byteArray) => {
+    if (byteArray === undefined) return byteArray
+
     if (byteArray % 2 !== 0) new Error('Not convertible from ASCII')
     let hash = ''
 
-    for (let i = 0; i < byteArray / 2; i++) {
+    for (let i = 0; i < byteArray.length / 2; i++) {
       if (i == 0 && byteArray.indexOf('0x') === 0) continue
 
       let charCode = 0
-      charCode += byteArray[i * 2] * 16
-      charCode += byteArray[i * 2 + 1]
+      charCode += hexadecimal.indexOf(byteArray[i * 2]) * 16
+      charCode += hexadecimal.indexOf(byteArray[i * 2 + 1])
       hash += String.fromCharCode(charCode)
     }
 
