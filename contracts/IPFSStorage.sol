@@ -21,8 +21,6 @@ contract IPFSStorage {
 
   function get(string path) constant returns (bytes32 hash1, bytes32 hash2) {
     IpfsHash h = hashes[path];
-    if (h.submitter != msg.sender)
-      throw;
     return (h.part1, h.part2);
   }
 
