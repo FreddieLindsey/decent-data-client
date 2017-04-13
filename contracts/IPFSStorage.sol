@@ -12,10 +12,6 @@ contract IPFSStorage {
   mapping (string => IpfsHash) hashes;
 
   function add(string path, bytes32 hash1, bytes32 hash2) returns (string stored) {
-    /*submitter = msg.sender;*/
-    /*part1 = hash1;*/
-    /*part2 = hash2;*/
-    /*storedData = 1;*/
     hashes[path] = IpfsHash({
       submitter: msg.sender, part1: hash1, part2: hash2
     });
@@ -25,10 +21,9 @@ contract IPFSStorage {
 
   function get(string path) constant returns (bytes32 hash1, bytes32 hash2) {
     IpfsHash h = hashes[path];
+    if (h.submitter != msg.sender)
+      throw;
     return (h.part1, h.part2);
-    /*if (msg.sender != submitter)
-      throw;*/
-    /*return part1;*/
   }
 
   function size() constant returns (uint size) {
