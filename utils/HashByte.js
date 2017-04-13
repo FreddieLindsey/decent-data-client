@@ -35,7 +35,13 @@ export default class HashByte {
       let charCode = 0
       charCode += hexadecimal.indexOf(byteArray[i * 2]) * 16
       charCode += hexadecimal.indexOf(byteArray[i * 2 + 1])
-      hash += String.fromCharCode(charCode)
+
+      // Ensure matches A-Z/a-z/0-9
+      if (charCode >= 48 && charCode < 58 ||
+          charCode >= 65 && charCode < 91 ||
+          charCode >= 97 && charCode < 123)
+        hash += String.fromCharCode(charCode)
+
     }
 
     return hash

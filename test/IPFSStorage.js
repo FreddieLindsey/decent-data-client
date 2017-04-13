@@ -5,7 +5,6 @@ const IPFSStorage = artifacts.require('./IPFSStorage.sol')
 contract('IPFSStorage', (accounts) => {
 
   const account = accounts[0]
-  const empty = '0x'.concat(HashByte.toByteArray('', 64))
 
   describe('contract initialisation', () => {
 
@@ -25,8 +24,8 @@ contract('IPFSStorage', (accounts) => {
         return instance.get('random')
       })
       .then((value) => {
-        assert.equal(value[0], empty)
-        assert.equal(value[0], empty)
+        assert.equal(HashByte.toHash(value[0]), '')
+        assert.equal(HashByte.toHash(value[0]), '')
       })
     })
 
@@ -50,14 +49,8 @@ contract('IPFSStorage', (accounts) => {
         return i.get(path)
       })
       .then((value) => {
-        assert.equal(
-          value[0], 
-          '0x'.concat(HashByte.toByteArray(hash.slice(0, 32), 64))
-        )
-        assert.equal(
-          value[1],
-          '0x'.concat(HashByte.toByteArray(hash.slice(32, 64), 64))
-        )
+        assert.equal(HashByte.toHash(value[0]), hash.slice(0, 32))
+        assert.equal(HashByte.toHash(value[1]), hash.slice(32, 64))
       })
     })
 
