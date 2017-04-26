@@ -41,7 +41,11 @@ router.post('/', (req, res, next) => {
     IPFSStorage.deployed()
     .then(i => {
       const hashPad = Pad.pad(hash, 64)
-      return i.add(path, hashPad.slice(0, 32), hashPad.slice(32, 64), { from: resolved.all[0] })
+      console.log(hash)
+      return i.add(
+        path, hash.slice(0, 32), hash.slice(32, 64),
+        { from: resolved.all[0], gas: 3000000 }
+      )
     })
     .then((receipt) => {
       res.json({ receipt, additions: resp })

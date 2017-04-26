@@ -54,6 +54,25 @@ contract('IPFSStorage', (accounts) => {
       })
     })
 
+    it('should increment size on contract', () => {
+      let i, s0;
+      return IPFSStorage.deployed()
+      .then((instance) => {
+        i = instance
+        return i.size()
+      })
+      .then((value) => {
+        s0 = value
+        return i.add(path, hash.slice(0, 32), hash.slice(32, 64), { from: account })
+      })
+      .then(() => {
+        return i.size()
+      })
+      .then((value) => {
+        assert.equal(s0.plus(1).valueOf(), value.valueOf())
+      })
+    })
+
   })
 
 })
