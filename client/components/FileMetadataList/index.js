@@ -11,7 +11,7 @@ import {
 import './index.scss'
 
 const mapStateToProps = (state) => {
-  const fileSize = state.files.loaded.length
+  const fileSize = Object.keys(state.files.loaded).length
   return {
     files: state.files.loaded,
     fileSize
@@ -33,17 +33,31 @@ class FileMetadataList extends Component {
     handleFilesSubmit: PropTypes.func.isRequired
   }
 
+  getFiles() {
+    const {
+      files
+    } = this.props
+
+    let fileArray = []
+    for (const f in files) {
+      fileArray.push({ ...files[f], path: f })
+    }
+
+    fileArray.sort()
+    return fileArray
+  }
+
   getColumns() {
     return [
       {
-        header: 'Filename',
-        accessor: 'name'
+        header: 'Path',
+        accessor: 'path'
       },
       {
         id: 'preview',
         header: 'Preview',
         accessor: f => {
-          if (f.type.indexOf('image') !== -1) {
+          if (f.type && f.type.indexOf('image') !== -1) {
             return (<img
               className='filemetadatalist-preview'
               src={ f.content }
@@ -61,7 +75,6 @@ class FileMetadataList extends Component {
 
   render () {
     const {
-      files,
       fileSize
     } = this.props
 
@@ -76,7 +89,7 @@ class FileMetadataList extends Component {
         <h2>File Metadata List</h2>
         { fileSize > 0 ?
           <ReactTable
-            data={files}
+            data={ this.getFiles() }
             columns={ this.getColumns() }
             { ...reactTableProps }
           /> :

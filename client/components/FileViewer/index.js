@@ -54,14 +54,10 @@ class FileViewer extends Component {
         id: 'preview',
         header: 'Preview',
         accessor: f => (f.hash && !f.retrieving) ?
-          'true' : 
+          'true' :
           f.hash
       }
     ]
-  }
-
-  getFiles() {
-
   }
 
   render () {

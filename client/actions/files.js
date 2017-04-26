@@ -12,41 +12,38 @@ export const filesLoad = (files) => {
 }
 
 const fileLoad = (dispatch, file) => {
-  dispatch(fileLoadPending())
+  dispatch(fileLoadPending(file.name))
   const reader = new FileReader()
   reader.onload = (f) => {
-    dispatch(fileLoadSuccess({
-      name: file.name,
-      content: f.target.result,
-      type: file.type
-    }))
+    dispatch(fileLoadSuccess(file.name, f.target.result, file.type))
   }
   reader.onerror = (error) => {
-    dispatch(fileLoadError({
-      error,
-      name: file.name
-    }))
+    dispatch(fileLoadError(file.name, error))
   }
   reader.readAsDataURL(file)
 }
 
-const fileLoadPending = () => {
+const fileLoadPending = (path) => {
   return {
-    type: FILE_LOAD_PENDING
+    type: FILE_LOAD_PENDING,
+    path
   }
 }
 
-const fileLoadSuccess = (file) => {
+const fileLoadSuccess = (path, content, mime) => {
   return {
     type: FILE_LOAD_SUCCESS,
-    file
+    path,
+    content,
+    mime
   }
 }
 
-const fileLoadError = (file) => {
+const fileLoadError = (path, error) => {
   return {
     type: FILE_LOAD_ERROR,
-    file
+    path,
+    error
   }
 }
 
@@ -100,6 +97,41 @@ export const FILE_RETRIEVE_PENDING = 'FILE_RETRIEVE_PENDING'
 export const FILE_RETRIEVE_SUCCESS = 'FILE_RETRIEVE_SUCCESS'
 export const FILE_RETRIEVE_ERROR   = 'FILE_RETRIEVE_ERROR'
 
-const fileRetrieve = (dispatch, path) => {
-  
+export const fileRetrieve = (dispatch, path) => {
+  dispatch(fileRetrievePending(path))
+  Request
+    .get(process.env.API_ENDPOINT + '/ipfs')
+    .query({ path })
+    .end((err, res) => {
+      if (err) {
+        dispatch(fileRetrieveError(err))
+      } else {
+        dispatch(fileRetrieveSuccess({
+          path,
+          content: res.body
+        }))
+      }
+    })
+}
+
+const fileRetrievePending = (path) => {
+  return {
+    type: FILE_RETRIEVE_PENDING,
+    path
+  }
+}
+
+const fileRetrieveSuccess = (file) => {
+  // path and content
+  return {
+    type: FILE_RETRIEVE_SUCCESS,
+    ...file
+  }
+}
+
+const fileRetrieveError = (error) => {
+  return {
+    type: FILE_RETRIEVE_ERROR,
+    error
+  }
 }
