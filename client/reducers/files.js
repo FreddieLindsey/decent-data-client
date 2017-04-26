@@ -39,6 +39,7 @@ const files = (state = initialState, action) => {
 
 const validateFile = (file) => {
   return {
+    retrieving: false,
     loading: false,
     submitting: false,
     error: null,

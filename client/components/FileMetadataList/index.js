@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 
+import FilePreview from '../FilePreview'
+
 import {
   filesSubmit
 } from '../../actions'
@@ -56,19 +58,7 @@ class FileMetadataList extends Component {
       {
         id: 'preview',
         header: 'Preview',
-        accessor: f => {
-          if (f.type && f.type.indexOf('image') !== -1) {
-            return (<img
-              className='filemetadatalist-preview'
-              src={ f.content }
-            />)
-          } else {
-            return (<embed
-              className='filemetadatalist-preview'
-              src={ f.content }
-            />)
-          }
-        }
+        accessor: f => <FilePreview loaded path={ f.path } />
       }
     ]
   }
