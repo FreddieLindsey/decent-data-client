@@ -21,7 +21,7 @@ contract('IPFSStorage', (accounts) => {
     it('should give two zero hashes for any path', () => {
       return IPFSStorage.deployed()
       .then((instance) => {
-        return instance.get('random')
+        return instance.getHash('random')
       })
       .then((value) => {
         assert.equal(HashByte.toHash(value[0]), '')
@@ -46,7 +46,7 @@ contract('IPFSStorage', (accounts) => {
         )
       })
       .then((value) => {
-        return i.get(path)
+        return i.getHash(path)
       })
       .then((value) => {
         assert.equal(HashByte.toHash(value[0]), hash.slice(0, 32))
