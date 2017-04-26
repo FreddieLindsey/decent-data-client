@@ -13,7 +13,7 @@ import {
 import './index.scss'
 
 const mapStateToProps = (state) => {
-  const contractSize = state.IPFSStorage.size
+  const contractSize = state.IPFSStorage.size || 0
   const fileSize = Object.keys(state.files.stored).length
   return {
     files: state.files.stored,

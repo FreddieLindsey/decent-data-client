@@ -99,6 +99,9 @@ router.post('/', (req, res, next) => {
   })
 })
 
+// TODO: get('/size')
+// TODO: get('/:id')
+
 const showIpfsConfig = () => {
   console.log('Connected to IPFS')
   ipfs_.id().then((instance) => {
