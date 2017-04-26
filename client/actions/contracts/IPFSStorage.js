@@ -89,9 +89,8 @@ export const ipfsStorageValueAdd = (dispatch, value, address) => {
   .then((instance) => {
     return instance.add(value, { from: address })
   })
-  .then((receipt) => {
-    console.dir(receipt)
-    dispatch(ipfsStorageValueAddSuccess(value))
+  .then((response) => {
+    dispatch(ipfsStorageValueAddSuccess(response.additions))
   })
   .catch((error) => {
     dispatch(ipfsStorageValueAddError(error))

@@ -11,9 +11,9 @@ import {
 import './index.scss'
 
 const mapStateToProps = (state) => {
-  const fileSize = state.files.length
+  const fileSize = state.files.loaded.length
   return {
-    files: state.files,
+    files: state.files.loaded,
     fileSize
   }
 }

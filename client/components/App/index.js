@@ -1,13 +1,12 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import FileViewer from '../FileViewer'
 import FileMetadataList from '../FileMetadataList'
 import FileDropper from '../FileDropper'
 
 import {
   ipfsStorageAddressGet,
-  ipfsStorageValueGet,
-  ipfsStorageValueAdd,
   ipfsStorageSizeGet
 } from '../../actions'
 
@@ -21,8 +20,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleAddressGet: () => ipfsStorageAddressGet(dispatch),
-    handleValueGet: (i) => ipfsStorageValueGet(dispatch, i),
-    handleValueSet: (v, a) => ipfsStorageValueAdd(dispatch, v, a),
     handleSizeGet: (done) => ipfsStorageSizeGet(dispatch, done)
   }
 }
@@ -42,8 +39,6 @@ class App extends Component {
     }).isRequired,
 
     handleAddressGet: PropTypes.func.isRequired,
-    handleValueGet: PropTypes.func.isRequired,
-    handleValueSet: PropTypes.func.isRequired,
     handleSizeGet: PropTypes.func.isRequired
   }
 
@@ -52,27 +47,12 @@ class App extends Component {
     this.props.handleSizeGet()
   }
 
-  getValues() {
-    const { size } = this.props.IPFSStorage
-    for (let i = 0; i < size; i++) {
-      this.props.handleValueGet(i)
-    }
-  }
-
-  handleValueSet () {
-    let newValue = this.textInputSet.value
-    if (!newValue || newValue === '') return
-    this.props.handleValueSet(newValue, this.props.accounts.default)
-  }
-
   render () {
     const {
       address,
       size,
       values
     } = this.props.IPFSStorage
-    if (size !== undefined && size !== 0 && values.length === 0)
-      this.getValues()
     return (
       <div className="app" >
         <h1>IPFS Storage</h1>
@@ -87,14 +67,14 @@ class App extends Component {
                 Size: { size }
               </h5>
             }
-
-            { values !== undefined && values.length > 0 &&
-              <ul>
-                <li>ITEM</li>
-              </ul>
-            }
           </div>
         }
+
+        <br />
+        <hr />
+        <br />
+
+        <FileViewer />
 
         <br />
         <hr />

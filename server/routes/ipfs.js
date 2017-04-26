@@ -2,6 +2,7 @@ import express from 'express'
 import ipfsApi from 'ipfs-api'
 
 import { addresses, contracts } from '../init'
+import { Pad, HashByte } from '../../utils'
 
 const {
   IPFSStorage
@@ -39,15 +40,13 @@ router.post('/', (req, res, next) => {
 
     IPFSStorage.deployed()
     .then(i => {
-      return i.add(path, hash.slice(0, 32), hash.slice(32, 64), { from: resolved.all[0] })
+      const hashPad = Pad.pad(hash, 64)
+      return i.add(path, hashPad.slice(0, 32), hashPad.slice(32, 64), { from: resolved.all[0] })
     })
     .then((receipt) => {
       res.json({ receipt, additions: resp })
     })
     .catch(err => {
-      // res.sendStatus(500)
-
-      // TODO: REMOVE DEV ONLY
       res.status(500)
       res.json({ error: err.toString() })
     })

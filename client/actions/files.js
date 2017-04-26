@@ -57,7 +57,7 @@ export const FILE_SUBMIT_ERROR   = 'FILE_SUBMIT_ERROR'
 
 export const filesSubmit = () => {
   return (dispatch, getState) => {
-    getState().files.forEach((f, i) => fileSubmit(dispatch, f, i))
+    getState().files.loaded.forEach((f, i) => fileSubmit(dispatch, f, i))
   }
 }
 
@@ -68,11 +68,9 @@ const fileSubmit = (dispatch, file, index) => {
     .send(file)
     .end((err, res) => {
       if (err) {
-        console.dir(err)
         dispatch(fileSubmitError(err))
       } else {
-        console.dir(res)
-        dispatch(fileSubmitSuccess(index))
+        dispatch(fileSubmitSuccess(res.body.additions))
       }
     })
 }
@@ -83,10 +81,10 @@ const fileSubmitPending = () => {
   }
 }
 
-const fileSubmitSuccess = (index) => {
+const fileSubmitSuccess = (additions) => {
   return {
     type: FILE_SUBMIT_SUCCESS,
-    index
+    additions
   }
 }
 
