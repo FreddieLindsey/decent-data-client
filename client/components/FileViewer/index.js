@@ -11,10 +11,12 @@ import {
 import './index.scss'
 
 const mapStateToProps = (state) => {
+  const contractSize = state.IPFSStorage.size
   const fileSize = state.files.stored.length
   return {
     files: state.files.stored,
-    fileSize
+    fileSize,
+    contractSize,
   }
 }
 
@@ -28,6 +30,7 @@ class FileViewer extends Component {
 
   static displayName = 'File Viewer'
   static propTypes = {
+    contractSize: PropTypes.number.isRequired,
     files: PropTypes.any,
     fileSize: PropTypes.number.isRequired,
     // handleFilesSubmit: PropTypes.func.isRequired
@@ -42,15 +45,33 @@ class FileViewer extends Component {
       {
         header: 'Hash',
         accessor: 'hash'
+      },
+      {
+        header: 'Size',
+        accessor: 'size'
+      },
+      {
+        id: 'preview',
+        header: 'Preview',
+        accessor: f => (f.hash && !f.retrieving) ?
+          'true' : 
+          f.hash
       }
     ]
   }
 
+  getFiles() {
+
+  }
+
   render () {
     const {
+      contractSize,
       files,
       fileSize
     } = this.props
+
+    if (contractSize > fileSize) this.getFiles()
 
     const reactTableProps = {
       pageSize: fileSize,

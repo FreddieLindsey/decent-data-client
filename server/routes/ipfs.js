@@ -1,6 +1,9 @@
 import express from 'express'
 import ipfsApi from 'ipfs-api'
 
+import concat from 'concat-stream'
+import through from 'through2'
+
 import { addresses, contracts } from '../init'
 import { Pad, HashByte } from '../../utils'
 
@@ -16,11 +19,52 @@ const ipfs_ = ipfsApi(host, port)
 let resolved
 setTimeout(() => { resolved = addresses(); }, 1000);
 
-// For status of router
+// Retrieve data from the system
 router.get('/', (req, res, next) => {
-  res.json({ status: 'ok' })
+  if (!req.query.path) {
+    res.status(400)
+    res.json({ error: 'No path parameter' })
+    return
+  }
+
+  IPFSStorage.deployed()
+  .then(i => {
+    return i.getHash(req.query.path)
+  })
+  .then(hashArray => {
+    let hash = HashByte.toHash(hashArray[0]) + HashByte.toHash(hashArray[1])
+    ipfs_.get(hash, (err, stream) => {
+      if (err) {
+        res.status(400)
+        res.json({ error: err.toString() })
+        return
+      }
+
+      let files = []
+      stream.pipe(through.obj((file, enc, next) => {
+        file.content.pipe(concat((content) => {
+          files.push({
+            path: file.path,
+            content: content
+          })
+          next()
+        }))
+      }, () => {
+        if (files.length !== 1 || files[0].path !== hash) {
+          res.status(500)
+          res.json({ error: 'Unknown error' })
+        }
+        res.send(files[0].content)
+      }))
+    })
+  })
+  .catch(err => {
+    res.status(500)
+    res.json({ error: err.toString() })
+  })
 })
 
+// Push data into the system
 router.post('/', (req, res, next) => {
   let content = new Buffer(req.body.content)
   ipfs_.add([{

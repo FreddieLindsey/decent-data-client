@@ -94,3 +94,12 @@ const fileSubmitError = (error) => {
     error
   }
 }
+
+// Retrieving files from IPFS
+export const FILE_RETRIEVE_PENDING = 'FILE_RETRIEVE_PENDING'
+export const FILE_RETRIEVE_SUCCESS = 'FILE_RETRIEVE_SUCCESS'
+export const FILE_RETRIEVE_ERROR   = 'FILE_RETRIEVE_ERROR'
+
+const fileRetrieve = (dispatch, path) => {
+  
+}
