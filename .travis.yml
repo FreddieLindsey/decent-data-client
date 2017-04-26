@@ -25,7 +25,8 @@ before_install:
 
 install:
   - docker-compose pull
-  - yarn install
+  - yarn
+  - yarn run services
 
 script:
   - docker-compose up -d

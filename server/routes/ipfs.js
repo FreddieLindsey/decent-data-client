@@ -22,8 +22,7 @@ setTimeout(() => { resolved = addresses(); }, 1000);
 // Retrieve data from the system
 router.get('/', (req, res, next) => {
   if (!req.query.path) {
-    res.status(400)
-    res.json({ error: 'No path parameter' })
+    res.json({ connected: !!resolved })
     return
   }
 
