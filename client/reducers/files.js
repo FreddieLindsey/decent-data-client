@@ -22,11 +22,11 @@ const files = (state = initialState, action) => {
     case FILE_LOAD_SUCCESS:
       return handleFileLoadSuccess(state, action.path, action.content, action.mime)
     case FILE_LOAD_ERROR:
-      return handleFileLoadError(state, action.file)
+      return handleFileLoadError(state, action.path, action.error)
     case FILE_SUBMIT_SUCCESS:
-      return handleFileSubmitSuccess(state, action.additions)
+      return handleFileSubmitSuccess(state, action.path)
     case FILE_SUBMIT_ERROR:
-      return handleFileSubmitError(state, action.error)
+      return handleFileSubmitError(state, action.path, action.error)
     case FILE_RETRIEVE_PENDING:
       return handleFileRetrievePending(state, action.path)
     case FILE_RETRIEVE_SUCCESS:
@@ -100,7 +100,7 @@ const handleFileSubmitSuccess = (state, path) => {
   }
 }
 
-const handleFileSubmitError = (state, error) => {
+const handleFileSubmitError = (state, path, error) => {
   let loaded = state.loaded
   loaded[path] = validateFile({
     ...loaded[path], submitting: false, error
@@ -108,6 +108,39 @@ const handleFileSubmitError = (state, error) => {
   return {
     ...state,
     loaded
+  }
+}
+
+const handleFileRetrievePending = (state, path) => {
+  let stored = state.stored
+  stored[path] = validateFile({
+    ...stored[path], retrieving: true
+  })
+  return {
+    ...state,
+    stored
+  }
+}
+
+const handleFileRetrieveSuccess = (state, path, content) => {
+  let stored = state.stored
+  stored[path] = validateFile({
+    ...stored[path], content, retrieving: false
+  })
+  return {
+    ...state,
+    stored
+  }
+}
+
+const handleFileRetrieveError = (state, path, error) => {
+  let stored = state.stored
+  stored[path] = validateFile({
+    ...stored[path], error, retrieving: false
+  })
+  return {
+    ...state,
+    stored
   }
 }
 

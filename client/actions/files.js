@@ -54,40 +54,48 @@ export const FILE_SUBMIT_ERROR   = 'FILE_SUBMIT_ERROR'
 
 export const filesSubmit = () => {
   return (dispatch, getState) => {
-    getState().files.loaded.forEach((f, i) => fileSubmit(dispatch, f, i))
+    const index = getState().files.loaded
+    for (const k in index) {
+      fileSubmit(dispatch, index[k], k)
+    }
   }
 }
 
-const fileSubmit = (dispatch, file, index) => {
-  dispatch(fileSubmitPending())
+const fileSubmit = (dispatch, file, path) => {
+  dispatch(fileSubmitPending(path))
   Request
     .post(process.env.API_ENDPOINT + '/ipfs')
-    .send(file)
+    .send({
+      path,
+      content: file.content
+    })
     .end((err, res) => {
       if (err) {
-        dispatch(fileSubmitError(err))
+        dispatch(fileSubmitError(path, err))
       } else {
-        dispatch(fileSubmitSuccess(res.body.additions))
+        dispatch(fileSubmitSuccess(path))
       }
     })
 }
 
-const fileSubmitPending = () => {
+const fileSubmitPending = (path) => {
   return {
-    type: FILE_SUBMIT_PENDING
+    type: FILE_SUBMIT_PENDING,
+    path
   }
 }
 
-const fileSubmitSuccess = (additions) => {
+const fileSubmitSuccess = (path) => {
   return {
     type: FILE_SUBMIT_SUCCESS,
-    additions
+    path
   }
 }
 
-const fileSubmitError = (error) => {
+const fileSubmitError = (path, error) => {
   return {
     type: FILE_SUBMIT_ERROR,
+    path,
     error
   }
 }

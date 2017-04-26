@@ -67,7 +67,7 @@ router.get('/', (req, res, next) => {
 router.post('/', (req, res, next) => {
   let content = new Buffer(req.body.content)
   ipfs_.add([{
-    path: req.body.name,
+    path: req.body.path,
     content
   }], (err, resp) => {
     if (err) {
@@ -83,15 +83,14 @@ router.post('/', (req, res, next) => {
 
     IPFSStorage.deployed()
     .then(i => {
-      const hashPad = Pad.pad(hash, 64)
-      console.log(hash)
       return i.add(
         path, hash.slice(0, 32), hash.slice(32, 64),
         { from: resolved.all[0], gas: 3000000 }
       )
     })
     .then((receipt) => {
-      res.json({ receipt, additions: resp })
+      let added = resp[0]
+      res.json({ receipt, path: added.path, size: added.size })
     })
     .catch(err => {
       res.status(500)

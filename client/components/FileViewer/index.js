@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import ReactTable from 'react-table'
 import 'react-table/react-table.css'
 
+import FilePreview from '../FilePreview'
+
 import {
   // filesLoad
 } from '../../actions'
@@ -12,7 +14,7 @@ import './index.scss'
 
 const mapStateToProps = (state) => {
   const contractSize = state.IPFSStorage.size
-  const fileSize = state.files.stored.length
+  const fileSize = Object.keys(state.files.stored).length
   return {
     files: state.files.stored,
     fileSize,
@@ -21,9 +23,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    // handleFilesSubmit: () => dispatch(filesSubmit())
-  }
+  return {}
 }
 
 class FileViewer extends Component {
@@ -32,30 +32,33 @@ class FileViewer extends Component {
   static propTypes = {
     contractSize: PropTypes.number.isRequired,
     files: PropTypes.any,
-    fileSize: PropTypes.number.isRequired,
-    // handleFilesSubmit: PropTypes.func.isRequired
+    fileSize: PropTypes.number.isRequired
+  }
+
+  getFiles() {
+    const {
+      files
+    } = this.props
+
+    let fileArray = []
+    for (const f in files) {
+      fileArray.push({ ...files[f], path: f })
+    }
+
+    fileArray.sort()
+    return fileArray
   }
 
   getColumns() {
     return [
       {
-        header: 'Filename',
+        header: 'Path',
         accessor: 'path'
-      },
-      {
-        header: 'Hash',
-        accessor: 'hash'
-      },
-      {
-        header: 'Size',
-        accessor: 'size'
       },
       {
         id: 'preview',
         header: 'Preview',
-        accessor: f => (f.hash && !f.retrieving) ?
-          'true' :
-          f.hash
+        accessor: f => <FilePreview path={ f.path } />
       }
     ]
   }
@@ -80,7 +83,7 @@ class FileViewer extends Component {
         <h2>File Viewer</h2>
         { fileSize > 0 ?
           <ReactTable
-            data={files}
+            data={ this.getFiles() }
             columns={ this.getColumns() }
             { ...reactTableProps }
           /> :
