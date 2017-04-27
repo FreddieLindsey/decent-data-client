@@ -4,13 +4,13 @@ import accounts from './accounts'
 import files from './files'
 
 // Contracts
-import SimpleStorage from './contracts/SimpleStorage'
-import IPFSStorage from './contracts/IPFSStorage'
+import {
+  IPFSStorage
+} from './contracts'
 
 const reducers = combineReducers({
   accounts,
   files,
-  SimpleStorage,
   IPFSStorage
 });
 

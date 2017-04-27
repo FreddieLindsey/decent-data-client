@@ -1,10 +1,8 @@
 import contract from 'truffle-contract'
 
-import SimpleStorage from '../../build/contracts/SimpleStorage.json'
 import IPFSStorage from '../../build/contracts/IPFSStorage.json'
 
 export const contractArtifacts = {
-  SimpleStorage,
   IPFSStorage
 }
 
