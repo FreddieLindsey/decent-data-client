@@ -14,6 +14,8 @@ SCRIPT_DIR="$(pwd -P)/$(dirname $0)"
 # Using jbenet/go-ipfs:latest
 
 # TestRPC
+python "$SCRIPT_DIR/../submodules/testrpc/setup.py" "$SCRIPT_DIR/../accounts.json" "$SCRIPT_DIR/../submodules/testrpc/run.sh"
+chmod +x "$SCRIPT_DIR/../submodules/testrpc/run.sh"
 docker build -t $DOCKER_TAG "$SCRIPT_DIR/../submodules/testrpc"
 docker tag $DOCKER_TAG $DOCKER_ROOT_TAG:latest
 docker push $DOCKER_TAG
