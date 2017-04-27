@@ -35,7 +35,7 @@ contract IPFSStorage {
     uint index = contains(paths, path);
 
     /* If already available, check permissions */
-    if (index != paths.items.length && !allowedWrite(msg.sender, path))
+    if (index != size(paths) && !allowedWrite(msg.sender, path))
       throw;
 
     /* Update path */
@@ -45,7 +45,10 @@ contract IPFSStorage {
       part1: hash1,
       part2: hash2
     });
+
+    /* TODO: discuss permissions for new data */
     allowWrite(msg.sender, path);
+    allowRead(msg.sender, path);
   }
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
@@ -54,7 +57,7 @@ contract IPFSStorage {
     uint index = contains(paths, path);
 
     /* If already available, check permissions */
-    if (index != paths.items.length && !allowedRead(msg.sender, path))
+    if (index < size(paths) && !allowedRead(msg.sender, path))
       throw;
 
     /* Return hash of path */
@@ -65,21 +68,20 @@ contract IPFSStorage {
   /* ACCESSIBLE BY ANY PARTY */
   function getIndex(uint index) constant returns (string) {
     /* Get the user's available paths */
-    string[] my_paths = user_paths[msg.sender].items;
+    Set my_paths = user_paths[msg.sender];
 
-    /* Check index is valid */
-    if (index < 0 || index >= my_paths.length)
-      return my_paths[index];
+    /* Check index is valid and return blank if not */
+    if (index < 0 || index >= size(my_paths))
+      return "";
 
     /* Return blank for invalid */
-    return "";
+    return my_paths.items[index];
   }
 
   /* ACCESSIBLE BY ANY PARTY */
   function size() constant returns (uint) {
     /* The size of the user's available paths */
-    return paths.items.length;
-    /*return user_paths[msg.sender].items.length;*/
+    return size(paths);
   }
 
   /* ----------------------------------------------------------------------- */
@@ -87,18 +89,22 @@ contract IPFSStorage {
   /* ----------------------------------------------------------------------- */
 
   function insert(Set storage set, string path) internal {
-    if (contains(set, path) != set.items.length)
+    if (contains(set, path) == size(set))
       set.items.push(path);
   }
 
   function contains(Set storage set, string path) internal returns (uint) {
-    for (uint i = 0; i < set.items.length; i++)
+    for (uint i = 0; i < size(set); i++)
       if (stringEqual(set.items[i], path))
         return i;
+    return size(set);
+  }
+
+  function size(Set storage set) internal returns (uint) {
     return set.items.length;
   }
 
-  /* ----------------------------------------------------------------------- */
+   /* ----------------------------------------------------------------------- */
   /* ACCESS CONTROL */
   /*
      No access by default (0)

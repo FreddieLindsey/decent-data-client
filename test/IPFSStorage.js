@@ -54,6 +54,36 @@ contract('IPFSStorage', (accounts) => {
       })
     })
 
+    it('should allow getting the content back', () => {
+      let i;
+      return IPFSStorage.deployed()
+      .then((instance) => {
+        i = instance
+        return instance.add(
+          path, hash.slice(0, 32), hash.slice(32, 64), { from: account }
+        )
+      })
+      .then((value) => {
+        return i.get(path)
+      })
+      .then((value) => {
+        assert.equal(HashByte.toHash(value[0]), hash.slice(0, 32))
+        assert.equal(HashByte.toHash(value[1]), hash.slice(32, 64))
+      })
+    })
+
+    it('index should be able to be used to get a path', () => {
+      let i;
+      return IPFSStorage.deployed()
+      .then((instance) => {
+        i = instance
+        return instance.getIndex(0)
+      })
+      .then((value) => {
+        assert.equal(value.valueOf(), path)
+      })
+    })
+
     xit('should increment size on contract', () => {
       let i, s0;
       return IPFSStorage.deployed()
