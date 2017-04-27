@@ -1,1 +1,1 @@
-export * as IPFSStorage from './IPFSStorage'
+export * from './IPFSStorage'

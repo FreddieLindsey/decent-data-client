@@ -1,7 +1,7 @@
 describe('IPFS', () => {
 
   it('get status', (done) => {
-    request()
+    Request()
         .get('/ipfs/status')
         .end((err, res) => {
           expect(res).to.have.status(200)

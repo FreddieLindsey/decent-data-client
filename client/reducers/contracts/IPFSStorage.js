@@ -19,7 +19,7 @@ const initialState = {
   values: []
 }
 
-const IPFSStorage = (state = initialState, action) => {
+export const IPFSStorage = (state = initialState, action) => {
   switch (action.type) {
     case IPFSSTORAGE_ADDRESS_GET_SUCCESS:
       return handleAddressGetSuccess(state, action.address)
@@ -108,5 +108,3 @@ const handleSizeGetError   = (state, error) => {
     error
   }
 }
-
-export default IPFSStorage
