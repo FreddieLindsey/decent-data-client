@@ -2,7 +2,7 @@ describe('IPFS', () => {
 
   it('get status', (done) => {
     request()
-        .get('/ipfs')
+        .get('/ipfs/status')
         .end((err, res) => {
           expect(res).to.have.status(200)
           done()
