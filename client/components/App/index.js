@@ -7,12 +7,15 @@ import FileDropper from '../FileDropper'
 
 import {
   ipfsStorageAddressGet,
-  ipfsStorageSizeGet
+  ipfsStorageSizeGet,
+  ipfsStorageIndexGet,
+  fileRetrieve,
 } from '../../actions'
 
 const mapStateToProps = (state) => {
   return {
     accounts: state.accounts,
+    files: state.files.stored,
     IPFSStorage: state.IPFSStorage
   }
 }
@@ -20,7 +23,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleAddressGet: () => ipfsStorageAddressGet(dispatch),
-    handleSizeGet: (done) => ipfsStorageSizeGet(dispatch, done)
+    handleSizeGet: () => ipfsStorageSizeGet(dispatch),
+    handleIndexGet: (i) => ipfsStorageIndexGet(dispatch, i),
+    handleFileRetrieve: (path) => fileRetrieve(dispatch, path),
   }
 }
 
@@ -32,14 +37,16 @@ class App extends Component {
       all: PropTypes.arrayOf(PropTypes.string),
       default: PropTypes.string
     }).isRequired,
+    files: PropTypes.object.isRequired,
     IPFSStorage: PropTypes.shape({
       address: PropTypes.string,
-      size: PropTypes.number,
-      values: PropTypes.arrayOf(PropTypes.string)
+      size: PropTypes.number
     }).isRequired,
 
     handleAddressGet: PropTypes.func.isRequired,
-    handleSizeGet: PropTypes.func.isRequired
+    handleSizeGet: PropTypes.func.isRequired,
+    handleIndexGet: PropTypes.func.isRequired,
+    handleFileRetrieve: PropTypes.func.isRequired,
   }
 
   componentDidMount () {
@@ -47,12 +54,36 @@ class App extends Component {
     this.props.handleSizeGet()
   }
 
+  getData () {
+    const {
+      IPFSStorage: {
+        size
+      },
+      files
+    } = this.props
+
+    if (size && size != 0 && Object.keys(files).length == 0)
+      for (let i = 0; i < size; i++)
+        this.props.handleIndexGet(i)
+
+    for (const k in files) {
+      let item = files[k]
+      if (item.index !== undefined && !item.retrieving && !item.retrieved) {
+        this.props.handleFileRetrieve(k)
+      }
+    }
+  }
+
   render () {
     const {
       address,
-      size,
-      values
+      size
     } = this.props.IPFSStorage
+
+    const {
+      files
+    } = this.props
+
     return (
       <div className="app" >
         <h1>IPFS Storage</h1>
@@ -74,6 +105,7 @@ class App extends Component {
         <hr />
         <br />
 
+        <button onClick={ () => this.getData() }>DATA</button>
         <FileViewer />
 
         <br />

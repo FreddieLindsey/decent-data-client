@@ -1,2 +1,2 @@
 export * from './SimpleStorage'
-export * from './IPFSStorage'
+export * from './ipfsStorage'

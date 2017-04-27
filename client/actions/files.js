@@ -112,12 +112,9 @@ export const fileRetrieve = (dispatch, path) => {
     .query({ path })
     .end((err, res) => {
       if (err) {
-        dispatch(fileRetrieveError(err))
+        dispatch(fileRetrieveError(path, err))
       } else {
-        dispatch(fileRetrieveSuccess({
-          path,
-          content: res.body
-        }))
+        dispatch(fileRetrieveSuccess(path, res.text))
       }
     })
 }
@@ -129,11 +126,12 @@ const fileRetrievePending = (path) => {
   }
 }
 
-const fileRetrieveSuccess = (file) => {
+const fileRetrieveSuccess = (path, content) => {
   // path and content
   return {
     type: FILE_RETRIEVE_SUCCESS,
-    ...file
+    path,
+    content
   }
 }
 

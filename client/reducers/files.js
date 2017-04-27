@@ -8,6 +8,9 @@ import {
   FILE_RETRIEVE_PENDING,
   FILE_RETRIEVE_SUCCESS,
   FILE_RETRIEVE_ERROR,
+  // IPFSSTORAGE_INDEX_GET_PENDING,
+  IPFSSTORAGE_INDEX_GET_SUCCESS,
+  IPFSSTORAGE_INDEX_GET_ERROR,
 } from '../actions'
 
 const initialState = {
@@ -33,6 +36,10 @@ const files = (state = initialState, action) => {
       return handleFileRetrieveSuccess(state, action.path, action.content)
     case FILE_RETRIEVE_ERROR:
       return handleFileRetrieveError(state, action.path, action.error)
+    case IPFSSTORAGE_INDEX_GET_SUCCESS:
+      return handleIpfsStorageIndexGetSuccess(state, action.index, action.path)
+    case IPFSSTORAGE_INDEX_GET_ERROR:
+      return handleIpfsStorageIndexGetError(state, action.index, action.error)
   }
   return state
 }
@@ -40,8 +47,11 @@ const files = (state = initialState, action) => {
 const validateFile = (file) => {
   return {
     retrieving: false,
+    retrieved: false,
     loading: false,
+    loaded: false,
     submitting: false,
+    submitted: false,
     error: null,
     content: null,
     mime: null,
@@ -51,7 +61,9 @@ const validateFile = (file) => {
 
 const handleFileLoadPending = (state, path) => {
   let loaded = state.loaded
-  loaded[path] = validateFile({ loading: true })
+  loaded[path] = validateFile({
+    loading: true, loaded: false
+  })
   return {
     ...state,
     loaded
@@ -61,7 +73,7 @@ const handleFileLoadPending = (state, path) => {
 const handleFileLoadSuccess = (state, path, content, mime) => {
   let loaded = state.loaded
   loaded[path] = validateFile({
-    ...loaded[path], content, mime, loading: false
+    ...loaded[path], content, mime, loading: false, loaded: true
   })
   return {
     ...state,
@@ -72,7 +84,7 @@ const handleFileLoadSuccess = (state, path, content, mime) => {
 const handleFileLoadError = (state, path, error) => {
   let loaded = state.loaded
   loaded[path] = validateFile({
-    ...loaded[path], error, loading: false
+    ...loaded[path], error, loading: false, loaded: false
   })
   return {
     ...state,
@@ -82,7 +94,9 @@ const handleFileLoadError = (state, path, error) => {
 
 const handleFileSubmitPending = (state, path) => {
   let loaded = state.loaded
-  loaded[path] = validateFile({ ...loaded[path], submitting: true })
+  loaded[path] = validateFile({
+    ...loaded[path], submitting: true, submitted: false
+  })
   return {
     ...state,
     loaded
@@ -91,7 +105,9 @@ const handleFileSubmitPending = (state, path) => {
 
 const handleFileSubmitSuccess = (state, path) => {
   let { loaded, stored } = state
-  stored[path] = validateFile({ ...loaded[path], submitting: false })
+  stored[path] = validateFile({
+    ...loaded[path], submitting: false, submitted: true
+  })
   delete loaded[path]
   return {
     ...state,
@@ -103,7 +119,7 @@ const handleFileSubmitSuccess = (state, path) => {
 const handleFileSubmitError = (state, path, error) => {
   let loaded = state.loaded
   loaded[path] = validateFile({
-    ...loaded[path], submitting: false, error
+    ...loaded[path], submitting: false, submitted: false, error
   })
   return {
     ...state,
@@ -114,7 +130,7 @@ const handleFileSubmitError = (state, path, error) => {
 const handleFileRetrievePending = (state, path) => {
   let stored = state.stored
   stored[path] = validateFile({
-    ...stored[path], retrieving: true
+    ...stored[path], retrieved: false, retrieving: false
   })
   return {
     ...state,
@@ -125,7 +141,7 @@ const handleFileRetrievePending = (state, path) => {
 const handleFileRetrieveSuccess = (state, path, content) => {
   let stored = state.stored
   stored[path] = validateFile({
-    ...stored[path], content, retrieving: false
+    ...stored[path], content, retrieved: true, retrieving: false
   })
   return {
     ...state,
@@ -136,7 +152,29 @@ const handleFileRetrieveSuccess = (state, path, content) => {
 const handleFileRetrieveError = (state, path, error) => {
   let stored = state.stored
   stored[path] = validateFile({
-    ...stored[path], error, retrieving: false
+    ...stored[path], error, retrieved: false, retrieving: false
+  })
+  return {
+    ...state,
+    stored
+  }
+}
+
+const handleIpfsStorageIndexGetSuccess = (state, index, path) => {
+  let stored = state.stored
+  stored[path] = validateFile({
+    ...stored[path], index, retrieved: false, retrieving: false
+  })
+  return {
+    ...state,
+    stored
+  }
+}
+
+const handleIpfsStorageIndexGetError = (state, index, error) => {
+  let stored = state.stored
+  stored['Errored retrieving path for index ' + index] = validateFile({
+    ...stored[path], error, retrieved: false, retrieving: false
   })
   return {
     ...state,
