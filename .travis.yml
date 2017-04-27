@@ -4,10 +4,12 @@ dist: trusty
 
 language: node_js
 
+cache: yarn
+
 notification:
   email:
     success: never
-    failure: always
+    failure: change
 
 services:
   - docker
@@ -23,9 +25,12 @@ before_install:
 
 install:
   - docker-compose pull
-  - npm install
+  - yarn
+  - yarn run services
 
 script:
   - docker-compose up -d
-  - npm run test-contracts
-  - npm run test-web
+  - yarn run build
+  - yarn run test-contracts
+  - yarn run test-api
+  - yarn run test-web

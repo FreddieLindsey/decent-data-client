@@ -11,9 +11,9 @@ module.exports = {
   devServer: {
     stats: 'errors-only',
   },
-  entry: './app/index.js',
+  entry: './client/index.js',
   output: {
-    path: path.resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, 'build', 'client'),
     filename: 'app.js'
   },
   resolve: {
@@ -54,16 +54,24 @@ module.exports = {
     ],
     noParse: /lie\.js|[\s\S]*.(svg|ttf|eot)/
   },
+  node: {
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
+  },
   plugins: [
     // Copy our app's index.html to the build folder.
     new CopyWebpackPlugin([
-      { from: './app/index.html', to: 'index.html' }
+      { from: './client/index.html', to: 'index.html' }
     ]),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       '__DEV__': true,
       'process.env': {
-        'NODE_ENV': JSON.stringify('development')
+        API_ENDPOINT: JSON.stringify('//localhost:8000'),
+        NODE_ENV: JSON.stringify('development'),
+        IPFS_HOST: JSON.stringify('testrpc'),
+        IPFS_PORT: 5001
       }
     })
   ],
