@@ -15,20 +15,27 @@ const router = express.Router()
 const host = process.env.IPFS_HOST || 'localhost'
 const port = process.env.IPFS_PORT || 5001
 const ipfs_ = ipfsApi(host, port)
+const dev = process.env.NODE_ENV === 'development'
+let connected = false
 
 let resolved
 setTimeout(() => { resolved = addresses(); }, 1000);
 
+// For status of router
+router.get('/status', (req, res, next) => {
+  res.json({ ipfs: { connected } })
+})
+
 // Retrieve data from the system
 router.get('/', (req, res, next) => {
   if (!req.query.path) {
-    res.json({ connected: !!resolved })
-    return
+    res.status(400)
+    res.json({ error: 'Missing query for path' })
   }
 
   IPFSStorage.deployed()
   .then(i => {
-    return i.getHash(req.query.path)
+    return i.get(req.query.path)
   })
   .then(hashArray => {
     let hash = HashByte.toHash(hashArray[0]) + HashByte.toHash(hashArray[1])
@@ -103,31 +110,36 @@ router.post('/', (req, res, next) => {
 // TODO: get('/:id')
 
 const showIpfsConfig = () => {
-  console.log('Connected to IPFS')
+  dev && console.log('Connected to IPFS')
   ipfs_.id().then((instance) => {
-    console.log('--- --- --- --- --- --- --- ---')
-    console.log('IPFS CONFIGURATION:')
-    console.log()
+    connected = true
+
+    if (dev) {
+      console.log('--- --- --- --- --- --- --- ---')
+      console.log('IPFS CONFIGURATION:')
+      console.log()
+    }
 
     // Show addresses
-    console.log('ADDRESSES:')
+    dev && console.log('ADDRESSES:')
     for (const i in instance.addresses) {
       let aCs = instance.addresses[i].split('/')
       aCs = aCs.splice(0, aCs.length - 2)
-      console.log('\t' + aCs.join('/'))
+      dev && console.log('\t' + aCs.join('/'))
     }
 
     // Protocols
-    console.log()
-    console.log('ID:\t\t\t' + instance.id)
-    console.log('AGENT VERSION:\t\t' + instance.agentVersion)
-    console.log('PROTOCOL VERSION:\t' + instance.protocolVersion)
-
-    console.log('\nIPFS READY!')
-    console.log('--- --- --- --- --- --- --- ---')
+    if (dev) {
+      console.log()
+      console.log('ID:\t\t\t' + instance.id)
+      console.log('AGENT VERSION:\t\t' + instance.agentVersion)
+      console.log('PROTOCOL VERSION:\t' + instance.protocolVersion)
+      console.log('\nIPFS READY!')
+      console.log('--- --- --- --- --- --- --- ---')
+    }
   })
 }
 
-if (process.env.NODE_ENV === 'development') showIpfsConfig()
+showIpfsConfig()
 
 export const ipfs = router
