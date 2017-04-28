@@ -23,10 +23,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleAddressGet: () => ipfsStorageAddressGet(dispatch),
-    handleSizeGet: () => ipfsStorageSizeGet(dispatch),
-    handleIndexGet: (i) => ipfsStorageIndexGet(dispatch, i),
-    handleFileRetrieve: (path) => fileRetrieve(dispatch, path),
+    handleAddressGet: () => dispatch(ipfsStorageAddressGet()),
+    handleSizeGet: () => dispatch(ipfsStorageSizeGet()),
+    handleIndexGet: (i) => dispatch(ipfsStorageIndexGet(i)),
+    handleFileRetrieve: (path) => dispatch(fileRetrieve(path)),
   }
 }
 

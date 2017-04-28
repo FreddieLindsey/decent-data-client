@@ -3,18 +3,20 @@ export const IPFSSTORAGE_INDEX_GET_PENDING = 'IPFSSTORAGE_INDEX_GET_PENDING'
 export const IPFSSTORAGE_INDEX_GET_SUCCESS = 'IPFSSTORAGE_INDEX_GET_SUCCESS'
 export const IPFSSTORAGE_INDEX_GET_ERROR   = 'IPFSSTORAGE_INDEX_GET_ERROR'
 
-export const ipfsStorageIndexGet = (dispatch, index) => {
-  dispatch(ipfsStorageIndexGetPending(index))
-  window.contracts.IPFSStorage.deployed()
-  .then((instance) => {
-    return instance.getIndex(index)
-  })
-  .then((path) => {
-    dispatch(ipfsStorageIndexGetSuccess(index, path))
-  })
-  .catch((error) => {
-    dispatch(ipfsStorageIndexGetError(index, error))
-  })
+export const ipfsStorageIndexGet = (index) => {
+  return (dispatch) => {
+    dispatch(ipfsStorageIndexGetPending(index))
+    window.contracts.IPFSStorage.deployed()
+    .then((instance) => {
+      return instance.getIndex(index)
+    })
+    .then((path) => {
+      dispatch(ipfsStorageIndexGetSuccess(index, path))
+    })
+    .catch((error) => {
+      dispatch(ipfsStorageIndexGetError(index, error))
+    })
+  }
 }
 
 const ipfsStorageIndexGetPending = (index) => {
