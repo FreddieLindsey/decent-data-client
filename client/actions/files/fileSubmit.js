@@ -20,7 +20,7 @@ const fileSubmit = (file, path, encrypt = true) => {
   return (dispatch, getState) => {
     let content = !encrypt ?
       file.content :
-      EncryptRSA(file.content, getState().security.securekey)
+      EncryptRSA(file.content, getState().security.publicKey)
 
     dispatch(fileSubmitPending(path))
     Request

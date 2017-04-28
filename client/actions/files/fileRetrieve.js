@@ -20,7 +20,7 @@ export const fileRetrieve = (path) => {
           // Only attempt to decrypt if encrypted
           let content = res.text.indexOf('data') !== -1 ?
             res.text :
-            DecryptRSA(res.text, getState().security.securekey)
+            DecryptRSA(res.text, getState().security.privateKey)
           dispatch(fileRetrieveSuccess(path, content))
         }
       })
