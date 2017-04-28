@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import FileViewer from '../FileViewer'
 import FileMetadataList from '../FileMetadataList'
 import FileDropper from '../FileDropper'
+import SecureKeyLoader from '../SecureKeyLoader'
 
 import {
   ipfsStorageAddressGet,
@@ -100,6 +101,12 @@ class App extends Component {
             }
           </div>
         }
+
+        <br />
+        <hr />
+        <br />
+
+        <SecureKeyLoader />
 
         <br />
         <hr />
