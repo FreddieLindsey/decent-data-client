@@ -1,36 +1,25 @@
+import forge from 'node-forge'
+
 // APPLICATION REQUIRES ASYMMETRIC KEYS
 // ALLOWED: RSA
-export const validateKey = (contents, done) => {
-  let allowedTypes = ['RSA']
-  let trimmed = contents.trim()
 
-  let error = () => done('File contents not a valid private key')
+const errorPrivate = (done, error = 'Error: not a suitable private key') => done(error)
+const errorPublic  = (done, error = 'Error: not a suitable public key') => done(error)
 
-  /*
-     Assume that a correct key will be of the form
-     ----- BEGIN [TYPE] [PRIVATE/PUBLIC] KEY -----
-     .........
-     ----- END [TYPE] [PRIVATE/PUBLIC] KEY -----
-  */
-  let split = trimmed.split('-')
-  let splitNoBlank = split.filter((e) => e !== '')
-  if (splitNoBlank.length !== 3) {
-    error()
-    return
+export const validatePrivateKey = (contents, done) => {
+  try {
+    let key = forge.pki.privateKeyFromPem(contents)
+    done(undefined, key)
+  } catch (error) {
+    errorPrivate(done, error)
   }
+}
 
-  let start = splitNoBlank[0].split(' ')
-  let key = splitNoBlank[1]
-  let end = splitNoBlank[2].split(' ')
-
-  if (start.length === 4 &&
-      start[0] === 'BEGIN' && start[3] === 'KEY' &&
-      end.length === 4 &&
-      end[0] === 'END' && end[3] === 'KEY' &&
-      start[1] === end[1] && start[2] === end[2] &&
-      allowedTypes.indexOf(start[1]) !== -1 && start[2] === 'PRIVATE') {
-    done(undefined, key, start[1])
-  } else {
-    error()
+export const validatePublicKey = (contents, done) => {
+  try {
+    let key = forge.pki.publicKeyFromPem(contents)
+    done(undefined, key)
+  } catch (error) {
+    errorPublic(done, error)
   }
 }
