@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import FileViewer from '../FileViewer'
 import FileMetadataList from '../FileMetadataList'
 import FileDropper from '../FileDropper'
+import SecureKeyLoader from '../SecureKeyLoader'
 
 import {
   ipfsStorageAddressGet,
@@ -22,10 +23,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleAddressGet: () => ipfsStorageAddressGet(dispatch),
-    handleSizeGet: () => ipfsStorageSizeGet(dispatch),
-    handleIndexGet: (i) => ipfsStorageIndexGet(dispatch, i),
-    handleFileRetrieve: (path) => fileRetrieve(dispatch, path),
+    handleAddressGet: () => dispatch(ipfsStorageAddressGet()),
+    handleSizeGet: () => dispatch(ipfsStorageSizeGet()),
+    handleIndexGet: (i) => dispatch(ipfsStorageIndexGet(i)),
+    handleFileRetrieve: (path) => dispatch(fileRetrieve(path)),
   }
 }
 
@@ -100,6 +101,12 @@ class App extends Component {
             }
           </div>
         }
+
+        <br />
+        <hr />
+        <br />
+
+        <SecureKeyLoader />
 
         <br />
         <hr />

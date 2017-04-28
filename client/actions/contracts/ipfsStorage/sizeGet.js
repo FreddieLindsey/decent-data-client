@@ -3,18 +3,20 @@ export const IPFSSTORAGE_SIZE_GET_PENDING = 'IPFSSTORAGE_SIZE_GET_PENDING'
 export const IPFSSTORAGE_SIZE_GET_SUCCESS = 'IPFSSTORAGE_SIZE_GET_SUCCESS'
 export const IPFSSTORAGE_SIZE_GET_ERROR   = 'IPFSSTORAGE_SIZE_GET_ERROR'
 
-export const ipfsStorageSizeGet = (dispatch) => {
-  dispatch(ipfsStorageSizeGetPending())
-  window.contracts.IPFSStorage.deployed()
-  .then((instance) => {
-    return instance.size()
-  })
-  .then((size) => {
-    dispatch(ipfsStorageSizeGetSuccess(size.toNumber()))
-  })
-  .catch((error) => {
-    dispatch(ipfsStorageSizeGetError(error))
-  })
+export const ipfsStorageSizeGet = () => {
+  return (dispatch) => {
+    dispatch(ipfsStorageSizeGetPending())
+    window.contracts.IPFSStorage.deployed()
+    .then((instance) => {
+      return instance.size()
+    })
+    .then((size) => {
+      dispatch(ipfsStorageSizeGetSuccess(size.toNumber()))
+    })
+    .catch((error) => {
+      dispatch(ipfsStorageSizeGetError(error))
+    })
+  }
 }
 
 const ipfsStorageSizeGetPending = () => {
