@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import Dropdown from 'react-dropdown'
 import Dropzone from 'react-dropzone'
 
+import { Redirect } from 'react-router'
+
 import styles from './index.scss'
 
 import {
@@ -14,18 +16,16 @@ import {
 
 const mapStateToProps = (state) => {
   const { error, privateKey, publicKey } = state.security
-  const { all } = state.accounts
+  const { all, current } = state.accounts
   return {
     security: {
       error,
-      keys: {
-        privateKey: !!privateKey,
-        publicKey: !!publicKey
-      }
+      privateKey: !!privateKey,
+      publicKey: !!publicKey
     },
     accounts: {
       all,
-      current: state.accounts.default // TODO: Change property != keyword
+      current
     }
   }
 }
@@ -44,14 +44,12 @@ class Authenticate extends Component {
   static propTypes = {
     accounts: PropTypes.shape({
       all: PropTypes.arrayOf(PropTypes.string).isRequired,
-      current: PropTypes.string
+      current: PropTypes.string.isRequired
     }).isRequired,
     security: PropTypes.shape({
       error: PropTypes.object,
-      keys: PropTypes.shape({
-        privateKey: PropTypes.boolean,
-        publicKey: PropTypes.boolean
-      }).isRequired
+      privateKey: PropTypes.bool.isRequired,
+      publicKey: PropTypes.bool.isRequired
     }),
 
     handleLoadPrivateKey: PropTypes.func.isRequired,
@@ -87,21 +85,19 @@ class Authenticate extends Component {
     )
   }
 
-  render () {
+  renderUnauthenticated = () => {
     const {
       accounts: {
         all,
         current
       },
       security: {
-        keys: {
-          privateKey,
-          publicKey
-        }
+        privateKey,
+        publicKey
       }
     } = this.props
 
-    const generateOption = (a, i) => ({ value: a, label: a, index: i })
+    const generateOption = (a) => ({ value: a, label: a })
     const accountOptions = all.map(generateOption)
 
     return (
@@ -118,7 +114,7 @@ class Authenticate extends Component {
           <div className={ styles.accounts } >
             <Dropdown
               options={ accountOptions }
-              value={ generateOption(current, 0) }
+              value={ generateOption(current) }
               onChange={ (s) => this.props.handleAccountsChange(s.value) }
             />
           </div>
@@ -131,6 +127,21 @@ class Authenticate extends Component {
         </div>
       </div>
     )
+  }
+
+  renderAuthenticated = () =>
+    <Redirect to={{
+      pathname: '/',
+      state: { from: '/authenticate' }
+    }}/>
+
+  render () {
+    const authenticated =
+      !!this.props.accounts.current &&
+      !!this.props.security.privateKey &&
+      !!this.props.security.publicKey
+
+    return !authenticated ? this.renderUnauthenticated() : this.renderAuthenticated()
   }
 
 }

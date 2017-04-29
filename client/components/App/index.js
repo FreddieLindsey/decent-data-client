@@ -3,10 +3,14 @@ import { connect } from 'react-redux'
 
 import {
   BrowserRouter,
+  Redirect,
   Route
 } from 'react-router-dom'
 
-import Authenticate from '../Authenticate'
+import AppContainer from '../AppContainer'
+
+import Authenticate from '../AuthenticatePage'
+import Index from '../IndexPage'
 
 import FileViewer from '../FileViewer'
 import FileMetadataList from '../FileMetadataList'
@@ -21,7 +25,12 @@ import {
 } from '../../actions'
 
 const mapStateToProps = (state) => {
+  const {
+    privateKey, publicKey
+  } = state.security
+  const { current } = state.accounts
   return {
+    authenticated: (!!current && !!privateKey && !!publicKey),
     accounts: state.accounts,
     files: state.files.stored,
     IPFSStorage: state.IPFSStorage
@@ -41,9 +50,10 @@ class App extends Component {
 
   static displayName = 'App'
   static propTypes = {
+    authenticated: PropTypes.bool.isRequired,
     accounts: PropTypes.shape({
       all: PropTypes.arrayOf(PropTypes.string),
-      default: PropTypes.string
+      current: PropTypes.string
     }).isRequired,
     files: PropTypes.object.isRequired,
     IPFSStorage: PropTypes.shape({
@@ -83,9 +93,25 @@ class App extends Component {
   }
 
   render () {
+    const PrivateRoute = ({ component: Component, ...rest }) => (
+      <Route {...rest} render={ props =>
+        this.props.authenticated ? (
+          <Component {...props}/>
+        ) : (
+          <Redirect to={{
+            pathname: '/authenticate',
+            state: { from: props.location }
+          }}/>
+        )
+      }/>
+    )
+
     return (
       <BrowserRouter >
-        <Route exact path='/' component={Authenticate} />
+        <div>
+          <PrivateRoute path='/' component={ Index } />
+          <Route path='/authenticate' component={ Authenticate } />
+        </div>
       </BrowserRouter>
     )
   }

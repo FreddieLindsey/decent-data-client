@@ -7,7 +7,7 @@ import {
 
 const initialState = {
   all: [],
-  default: null,
+  current: null,
   error: null
 }
 
@@ -28,7 +28,7 @@ const handleAccountsInitSuccess = (state, accounts) => {
   return {
     ...state,
     all: accounts,
-    default: accounts[0]
+    current: accounts[0]
   }
 }
 
@@ -43,7 +43,7 @@ const handleAccountsChange = (state, value) => {
   if (state.all.find(e => e === value) === value)
     return {
       ...state,
-      default: value
+      current: value
     }
 
   return {
