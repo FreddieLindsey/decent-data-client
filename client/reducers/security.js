@@ -4,7 +4,8 @@ import {
   LOAD_PRIVATE_KEY_ERROR,
   LOAD_PUBLIC_KEY_PENDING,
   LOAD_PUBLIC_KEY_SUCCESS,
-  LOAD_PUBLIC_KEY_ERROR
+  LOAD_PUBLIC_KEY_ERROR,
+  ACCOUNTS_CHANGE,
 } from '../actions'
 
 const initialState = {
@@ -23,6 +24,8 @@ export const security = (state = initialState, action) => {
       return handleLoadPublicKeySuccess(state, action.publicKey)
     case LOAD_PUBLIC_KEY_ERROR:
       return handleLoadPublicKeyError(state, action.error)
+    case ACCOUNTS_CHANGE:
+      return handleAccountsChange(state)
   }
   return state
 }
@@ -54,5 +57,13 @@ const handleLoadPublicKeyError = (state, error) => {
   return {
     ...state,
     error
+  }
+}
+
+const handleAccountsChange = (state) => {
+  return {
+    ...state,
+    privateKey: null,
+    publicKey: null
   }
 }

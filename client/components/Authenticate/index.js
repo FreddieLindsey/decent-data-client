@@ -65,7 +65,9 @@ class Authenticate extends Component {
     return (
       <div className={ styles.container } >
         <div className={ styles.main } >
-          Authenticate page
+          <h2 className={ styles.title }>
+            Please authenticate yourself
+          </h2>
           <div className={ styles.accounts } >
             <Dropdown
               options={ accountOptions }
@@ -73,8 +75,9 @@ class Authenticate extends Component {
               onChange={ (s) => this.props.handleAccountsChange(s.value) }
             />
           </div>
-          <div className={ styles.keys} >
-            Keys
+          <div className={ styles.keys + ' row' } >
+            <div className={ styles.privateKey + ' col-md-6' } >Private Key</div>
+            <div className={ styles.publicKey + ' col-md-6' } >Public Key</div>
           </div>
         </div>
       </div>
