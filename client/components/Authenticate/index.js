@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import Dropdown from 'react-dropdown'
+import Dropzone from 'react-dropzone'
 
 import styles from './index.scss'
 
@@ -17,7 +18,10 @@ const mapStateToProps = (state) => {
   return {
     security: {
       error,
-      keys: (!!privateKey && !!publicKey)
+      keys: {
+        privateKey: !!privateKey,
+        publicKey: !!publicKey
+      }
     },
     accounts: {
       all,
@@ -41,10 +45,13 @@ class Authenticate extends Component {
     accounts: PropTypes.shape({
       all: PropTypes.arrayOf(PropTypes.string).isRequired,
       current: PropTypes.string
-    }),
+    }).isRequired,
     security: PropTypes.shape({
       error: PropTypes.object,
-      keys: PropTypes.boolean
+      keys: PropTypes.shape({
+        privateKey: PropTypes.boolean,
+        publicKey: PropTypes.boolean
+      }).isRequired
     }),
 
     handleLoadPrivateKey: PropTypes.func.isRequired,
@@ -52,11 +59,45 @@ class Authenticate extends Component {
     handleAccountsChange: PropTypes.func.isRequired
   }
 
+  renderPrivateKey (only = false) {
+    return (
+      <div className={ only ? 'col-md-6 col-md-offset-3' : 'col-md-6'  } >
+        <Dropzone
+          className={ styles.privateKey }
+          onDrop={ (f) => this.props.handleLoadPrivateKey(f) } >
+          <p className={ styles.privateKeyText } >
+            Private Key
+          </p>
+        </Dropzone>
+      </div>
+    )
+  }
+
+  renderPublicKey (only = false) {
+    return (
+      <div className={ only ? 'col-md-6 col-md-offset-3' : 'col-md-6'  } >
+        <Dropzone
+          className={ styles.publicKey }
+          onDrop={ (f) => this.props.handleLoadPublicKey(f) } >
+          <p className={ styles.publicKeyText } >
+            Public Key
+          </p>
+        </Dropzone>
+      </div>
+    )
+  }
+
   render () {
     const {
       accounts: {
         all,
         current
+      },
+      security: {
+        keys: {
+          privateKey,
+          publicKey
+        }
       }
     } = this.props
 
@@ -83,20 +124,8 @@ class Authenticate extends Component {
           </div>
           <div className={ styles.keys } >
             <div className='row' >
-              <div className='col-md-6' >
-                <div className={ styles.privateKey } >
-                  <p className={ styles.privateKeyText } >
-                    Private Key
-                  </p>
-                </div>
-              </div>
-              <div className='col-md-6' >
-                <div className={ styles.publicKey } >
-                  <p className={ styles.publicKeyText } >
-                    Public Key
-                  </p>
-                </div>
-              </div>
+              { !privateKey && this.renderPrivateKey(publicKey) }
+              { !publicKey && this.renderPublicKey(privateKey) }
             </div>
           </div>
         </div>
