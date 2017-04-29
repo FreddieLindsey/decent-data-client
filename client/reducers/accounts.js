@@ -4,7 +4,12 @@ import {
   ACCOUNTS_INIT_ERROR
 } from '../actions'
 
-const accounts = (state = {}, action) => {
+const initialState = {
+  all: [],
+  default: null
+}
+
+const accounts = (state = initialState, action) => {
   switch (action.type) {
     case ACCOUNTS_INIT_SUCCESS:
       return handleAccountsInitSuccess(state, action.accounts)

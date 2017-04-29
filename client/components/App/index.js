@@ -1,6 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import {
+  BrowserRouter,
+  Route
+} from 'react-router-dom'
+
+import Authenticate from '../Authenticate'
+
 import FileViewer from '../FileViewer'
 import FileMetadataList from '../FileMetadataList'
 import FileDropper from '../FileDropper'
@@ -76,57 +83,10 @@ class App extends Component {
   }
 
   render () {
-    const {
-      address,
-      size
-    } = this.props.IPFSStorage
-
-    const {
-      files
-    } = this.props
-
     return (
-      <div className="app" >
-        <h1>IPFS Storage</h1>
-
-        { address &&
-          <div>
-            <h4>
-              IPFS Storage contract deployed at { address }
-            </h4>
-            { size !== undefined &&
-              <h5>
-                Size: { size }
-              </h5>
-            }
-          </div>
-        }
-
-        <br />
-        <hr />
-        <br />
-
-        <SecureKeyLoader />
-
-        <br />
-        <hr />
-        <br />
-
-        <button onClick={ () => this.getData() }>DATA</button>
-        <FileViewer />
-
-        <br />
-        <hr />
-        <br />
-
-        <FileMetadataList />
-
-        <br />
-        <hr />
-        <br />
-
-        <FileDropper />
-      </div>
+      <BrowserRouter >
+        <Route exact path='/' component={Authenticate} />
+      </BrowserRouter>
     )
   }
 
