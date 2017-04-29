@@ -44,7 +44,7 @@ class Authenticate extends Component {
   static propTypes = {
     accounts: PropTypes.shape({
       all: PropTypes.arrayOf(PropTypes.string).isRequired,
-      current: PropTypes.string.isRequired
+      current: PropTypes.string
     }).isRequired,
     security: PropTypes.shape({
       error: PropTypes.object,
@@ -92,6 +92,7 @@ class Authenticate extends Component {
         current
       },
       security: {
+        error,
         privateKey,
         publicKey
       }
@@ -123,6 +124,12 @@ class Authenticate extends Component {
               { !privateKey && this.renderPrivateKey(publicKey) }
               { !publicKey && this.renderPublicKey(privateKey) }
             </div>
+            {
+              error &&
+              <p className={ styles.keyError } >
+                { error.toString() }
+              </p>
+            }
           </div>
         </div>
       </div>

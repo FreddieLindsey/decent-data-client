@@ -7,8 +7,6 @@ import {
   Route
 } from 'react-router-dom'
 
-import AppContainer from '../AppContainer'
-
 import Authenticate from '../AuthenticatePage'
 import Index from '../IndexPage'
 
