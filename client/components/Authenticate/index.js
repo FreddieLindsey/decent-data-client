@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+
 import Dropdown from 'react-dropdown'
 
 import styles from './index.scss'
@@ -68,6 +69,11 @@ class Authenticate extends Component {
           <h2 className={ styles.title }>
             Please authenticate yourself
           </h2>
+          <p className={ styles.description } >
+            On choosing an account and providing the correct
+            private and public keys, you will gain access to manage the account.
+          </p>
+          <hr />
           <div className={ styles.accounts } >
             <Dropdown
               options={ accountOptions }
@@ -75,9 +81,23 @@ class Authenticate extends Component {
               onChange={ (s) => this.props.handleAccountsChange(s.value) }
             />
           </div>
-          <div className={ styles.keys + ' row' } >
-            <div className={ styles.privateKey + ' col-md-6' } >Private Key</div>
-            <div className={ styles.publicKey + ' col-md-6' } >Public Key</div>
+          <div className={ styles.keys } >
+            <div className='row' >
+              <div className='col-md-6' >
+                <div className={ styles.privateKey } >
+                  <p className={ styles.privateKeyText } >
+                    Private Key
+                  </p>
+                </div>
+              </div>
+              <div className='col-md-6' >
+                <div className={ styles.publicKey } >
+                  <p className={ styles.publicKeyText } >
+                    Public Key
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

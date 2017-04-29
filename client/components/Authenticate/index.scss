@@ -12,12 +12,42 @@
   vertical-align: middle;
 }
 
-.accounts {
-  margin: auto;
+%data {
+  margin: 10px auto;
   max-width: 600px;
 }
 
+.accounts,
+.title,
+.description,
 .keys {
-  margin: auto;
-  max-width: 600px;
+  @extend %data;
+}
+
+.private-key,
+.public-key {
+  border: 2px dashed #0087f7;
+  border-radius: 5px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: table;
+  font-weight: 600;
+  height: 100px;
+  margin-top: 5px;
+  text-align: center;
+  width: 100%;
+}
+
+.private-key {
+  background-color: rgba(75, 140, 240, .1);
+}
+
+.public-key {
+  background-color: rgba(75, 240, 140, .1);
+}
+
+.private-key-text,
+.public-key-text {
+  display: table-cell;
+  vertical-align: middle;
 }

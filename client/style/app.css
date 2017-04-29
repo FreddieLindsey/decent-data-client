@@ -1,4 +1,7 @@
+@import './colours';
+
 body {
+  background-color: $background-default;
   font-family: "Open Sans", sans-serif;
   margin: 0;
 }
