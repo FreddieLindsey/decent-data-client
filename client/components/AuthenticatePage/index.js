@@ -108,8 +108,8 @@ class Authenticate extends Component {
             Please authenticate yourself
           </h2>
           <p className={ styles.description } >
-            On choosing an account and providing the correct
-            private and public keys, you will gain access to manage the account.
+            Upon choosing an account (address), and providing it's correct
+            private and public keys, you will be automatically redirected to your account.
           </p>
           <hr />
           <div className={ styles.accounts } >
