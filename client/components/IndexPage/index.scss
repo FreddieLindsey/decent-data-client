@@ -1,0 +1,12 @@
+.container {
+  color: inherit;
+  display: table;
+  min-height: calc(100vh);
+  text-align: center;
+  width: calc(100vw);
+}
+
+.main {
+  display: table-cell;
+  vertical-align: middle;
+}

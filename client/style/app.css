@@ -1,6 +1,9 @@
+@import './colours';
+
 body {
-  margin: 0;
+  background-color: $background-default;
   font-family: "Open Sans", sans-serif;
+  margin: 0;
 }
 
 label {

@@ -1,0 +1,59 @@
+.container {
+  color: inherit;
+  display: table;
+  min-height: calc(100vh);
+  text-align: center;
+  width: calc(100vw);
+}
+
+.main {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+%data {
+  margin: 10px auto;
+  max-width: 600px;
+}
+
+.accounts,
+.title,
+.description,
+.keys {
+  @extend %data;
+}
+
+.private-key,
+.public-key {
+  border: 2px dashed #0087f7;
+  border-radius: 5px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: table;
+  font-weight: 600;
+  height: 100px;
+  margin-top: 5px;
+  text-align: center;
+  width: 100%;
+}
+
+.private-key {
+  background-color: rgba(75, 140, 240, .1);
+}
+
+.public-key {
+  background-color: rgba(75, 240, 140, .1);
+}
+
+.private-key-text,
+.public-key-text {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.key-error {
+  color: red;
+  font-weight: 600;
+  margin: 10px auto;
+}
