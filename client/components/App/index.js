@@ -9,6 +9,7 @@ import {
 
 import Authenticate from '../AuthenticatePage'
 import Index from '../IndexPage'
+import NotFound from '../NotFound'
 
 import {
   ipfsStorageAddressGet,
@@ -59,8 +60,9 @@ class App extends Component {
     return (
       <BrowserRouter >
         <div>
-          <PrivateRoute path='/' component={ Index } />
-          <Route path='/authenticate' component={ Authenticate } />
+          <PrivateRoute exact path='/' component={ Index } />
+          <Route exact path='/authenticate' component={ Authenticate } />
+          <Route path='*' component={ NotFound } />
         </div>
       </BrowserRouter>
     )
