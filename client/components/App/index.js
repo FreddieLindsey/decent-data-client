@@ -60,7 +60,7 @@ class App extends Component {
     return (
       <BrowserRouter >
         <div>
-          <PrivateRoute exact path='/app' component={ AppAuthenticated } />
+          <PrivateRoute path='/app' component={ AppAuthenticated } />
           <Route exact path='/authenticate' component={ Authenticate } />
           <Route path='*' component={ NotFound } />
         </div>

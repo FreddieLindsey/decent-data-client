@@ -10,9 +10,7 @@ module.exports = {
   devtool: 'source-map',
   devServer: {
     contentBase: 'build/client',
-    historyApiFallback: {
-      index: '/index.html'
-    },
+    historyApiFallback: true,
     stats: { colors: true },
   },
   entry: './client/index.js',
