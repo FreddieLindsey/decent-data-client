@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { Link } from 'react-router-dom'
 
 import styles from './index.scss'
 
@@ -17,6 +18,11 @@ class NotFound extends Component {
             Ooops! I can't find a page with this URL.
           </h2>
           <hr />
+          <Link 
+            className={ styles.link }
+            to={{ pathname: '/', state: { from: '/notfound' }}} >
+            Click here to return to the application
+          </Link>
         </div>
       </div>
     )

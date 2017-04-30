@@ -16,7 +16,11 @@
 }
 
 .number,
-.text {
+.text,
+.link,
+.link:active,
+.link:focus,
+.link:hover {
   color: $font-colour-404;
   text-shadow: -1px 2px 2px $blackish;
 }
@@ -28,4 +32,8 @@
 .main hr {
   border-top: 3px solid $font-colour-404;
   max-width: 500px;
+}
+
+.link {
+
 }
