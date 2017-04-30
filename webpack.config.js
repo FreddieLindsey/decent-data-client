@@ -9,7 +9,11 @@ module.exports = {
   cache: true,
   devtool: 'source-map',
   devServer: {
-    stats: 'errors-only',
+    contentBase: 'build/client',
+    historyApiFallback: {
+      index: '/index.html'
+    },
+    stats: { colors: true },
   },
   entry: './client/index.js',
   output: {

@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom'
 
 import Authenticate from '../AuthenticatePage'
-import Index from '../IndexPage'
+import AppAuthenticated from '../AppAuthenticated'
 import NotFound from '../NotFound'
 
 import {
@@ -60,7 +60,7 @@ class App extends Component {
     return (
       <BrowserRouter >
         <div>
-          <PrivateRoute exact path='/' component={ Index } />
+          <PrivateRoute exact path='/app' component={ AppAuthenticated } />
           <Route exact path='/authenticate' component={ Authenticate } />
           <Route path='*' component={ NotFound } />
         </div>
