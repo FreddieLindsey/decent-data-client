@@ -18,9 +18,9 @@ class NotFound extends Component {
             Ooops! I can't find a page with this URL.
           </h2>
           <hr />
-          <Link 
+          <Link
             className={ styles.link }
-            to={{ pathname: '/', state: { from: '/notfound' }}} >
+            to={{ pathname: '/app', state: { from: '/notfound' }}} >
             Click here to return to the application
           </Link>
         </div>

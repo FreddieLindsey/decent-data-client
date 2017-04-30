@@ -11,7 +11,7 @@ module.exports = {
   devServer: {
     contentBase: 'build/client',
     historyApiFallback: true,
-    stats: { colors: true },
+    stats: 'errors-only',
   },
   entry: './client/index.js',
   output: {
