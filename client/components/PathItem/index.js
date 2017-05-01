@@ -42,16 +42,16 @@ class PathItem extends Component {
                 { path }
               </div>
             </div>
-            <div className='col-xs-2' >
-              <Link
-                to={ '/personal/share/' + path } >
-                <button
-                  className={ styles.sharing } >
-                  Share
-                </button>
-              </Link>
-            </div>
           </Link>
+          <div className='col-xs-2' >
+            <Link
+              to={ '/personal/share/' + path } >
+              <button
+                className={ styles.sharing } >
+                Share
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     )

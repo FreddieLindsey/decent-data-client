@@ -43,7 +43,6 @@ module.exports = {
       },
       {
         test: /\.(s)?css$/,
-        exclude: /(node_modules)/,
         use: [
           {
             loader: 'style-loader'
@@ -61,11 +60,6 @@ module.exports = {
             options: { sourceMap: true }
           }
         ]
-      },
-      {
-        test: /\.(s)?css$/,
-        include: /(node_modules)/,
-        loaders: [ 'style-loader', 'css-loader', 'sass-loader' ]
       },
       {
         test: /\.(png|jpg)$/,

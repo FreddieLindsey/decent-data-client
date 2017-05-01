@@ -3,9 +3,14 @@
 }
 
 .main {
+  color: black;
   display: block;
-  line-height: 30px;
+  line-height: 50px;
   width: 100%;
+}
+
+.main:hover {
+  color: #0087f8;
 }
 
 .logo {
@@ -21,6 +26,7 @@
   border: 0;
   border-radius: 4px;
   box-shadow: 0 0 2px #0087f8;
+  height: 42px;
   margin: 4px 6px;
   width: 100%;
 }
