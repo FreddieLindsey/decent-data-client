@@ -21,23 +21,19 @@ const mapDispatchToProps = (dispatch) => {
 
 class FileDropper extends Component {
 
-  static displayName = 'IPFS File Dropper'
+  static displayName = 'File Dropper'
   static propTypes = {
     handleFilesLoad: PropTypes.func.isRequired
   }
 
-  render() {
-    return (
-      <div>
-        <h2>IPFS File Dropper</h2>
-        <strong>Please only drop files. Folders will not be processed correctly.</strong>
-
-        <Dropzone className={ styles.dropzone } onDrop={(f) => this.props.handleFilesLoad(f) } >
-          Please drop files here
-        </Dropzone>
+  render = () =>
+    <Dropzone
+      className={ styles.dropzone }
+      onDrop={(f) => this.props.handleFilesLoad(f) } >
+      <div className={ styles.dropzoneText }>
+        Upload files
       </div>
-    )
-  }
+    </Dropzone>
 
 }
 

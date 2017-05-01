@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 
+import UploadPage from '../UploadPage'
 import PersonalIndexPage from '../PersonalIndexPage'
 
 import styles from './index.scss'
@@ -23,7 +24,13 @@ class AppAuthenticated extends Component {
             <div className='col-xs-3' >
               <div className={ styles.nav } >
                 <NavLink
-                  to='/'
+                  to='/upload'
+                  className={ styles.navLink }
+                  activeClassName={ styles.navLinkSelected } >
+                  Upload
+                </NavLink>
+                <NavLink
+                  to='/personal'
                   className={ styles.navLink }
                   activeClassName={ styles.navLinkSelected } >
                   Personal
@@ -39,8 +46,10 @@ class AppAuthenticated extends Component {
               <div className='col-xs-9' >
               <div className={ styles.content }>
                 <Switch>
-                  <Route exact path='/' component={ PersonalIndexPage } />
-                  {/* <Route path='/personal/:path' component={ PersonalViewerPage } /> */}
+                  <Route exact path='/upload' component={ UploadPage } />
+                  <Route exact path='/personal' component={ PersonalIndexPage } />
+                  {/* <Route path='/personal/view/:path' component={ ViewBlobPage } /> */}
+                  {/* <Route path='/personal/share/:path' component={ ShareBlobPage } /> */}
                 </Switch>
               </div>
             </div>

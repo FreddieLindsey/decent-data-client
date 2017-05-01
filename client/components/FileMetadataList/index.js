@@ -6,6 +6,8 @@ import 'react-table/react-table.css'
 
 import FilePreview from '../FilePreview'
 
+import styles from './index.scss'
+
 import {
   filesSubmit
 } from '../../actions'
@@ -75,21 +77,20 @@ class FileMetadataList extends Component {
     }
 
     return (
-      <div className="filemetadatalist-container" >
-        <h2>File Metadata List</h2>
+      <div className={ styles.container } >
         { fileSize > 0 ?
           <ReactTable
             data={ this.getFiles() }
             columns={ this.getColumns() }
             { ...reactTableProps }
           /> :
-          <div style={{ textAlign: 'center', width: '100%' }} >
+          <div className={ styles.noFiles } >
             No files loaded
           </div>
         }
         { fileSize > 0 &&
           <button
-            className='col-md-12 filemetadatalist-submit'
+            className={'col-md-12 ' + styles.submit }
             onClick={ () => this.props.handleFilesSubmit() } >
             Send to IPFS
           </button>

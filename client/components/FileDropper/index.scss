@@ -1,14 +1,16 @@
 @import '../../style/colours';
 
 .dropzone {
-  background-color: $light-grey;
-  border: solid 4px darken($light-grey, 20%);
-  border-radius: 100px;
-  box-shadow: 0 0 20px lighten($black, 60%);
-  box-sizing: border-box;
-  height: 300px;
-  line-height: 300px;
-  margin: 20px;
+  background-color: white;
+  border: dotted 2px #0087f8;
+  border-radius: 10px;
+  display: table;
+  height: 80px;
+  width: 100%;
+}
+
+.dropzone-text {
+  display: table-cell;
   text-align: center;
-  width: calc(100% - 2 * 20px);
+  vertical-align: middle;
 }
