@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import PathIndex from '../PathIndex'
+
 import styles from './index.scss'
 
 import {
@@ -41,13 +43,17 @@ class Index extends Component {
     this.getData()
   }
 
-  getData () {
+  componentWillReceiveProps (nextProps) {
+    this.getData(nextProps)
+  }
+
+  getData (props = undefined) {
     const {
       IPFSStorage: {
         size
       },
       files
-    } = this.props
+    } = props ? props : this.props
 
     if (size && size != 0 && Object.keys(files).length == 0)
       for (let i = 0; i < size; i++)
@@ -64,7 +70,7 @@ class Index extends Component {
     return (
       <div className={ styles.container } >
         <div className={ styles.main } >
-          Size of contract: { size }
+          <PathIndex />
         </div>
       </div>
     )

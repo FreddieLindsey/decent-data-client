@@ -10,7 +10,8 @@ import {
   IPFSSTORAGE_VALUE_ADD_ERROR,
   // IPFSSTORAGE_SIZE_GET_PENDING,
   IPFSSTORAGE_SIZE_GET_SUCCESS,
-  IPFSSTORAGE_SIZE_GET_ERROR
+  IPFSSTORAGE_SIZE_GET_ERROR,
+  FILE_SUBMIT_SUCCESS
 } from '../../actions'
 
 const initialState = {
@@ -37,6 +38,8 @@ export const IPFSStorage = (state = initialState, action) => {
       return handleSizeGetSuccess(state, action.size)
     case IPFSSTORAGE_SIZE_GET_ERROR:
       return handleSizeGetError(state, action.error)
+    case FILE_SUBMIT_SUCCESS:
+      return handleFileSubmitSuccess(state)
   }
   return state
 }
@@ -106,5 +109,12 @@ const handleSizeGetError   = (state, error) => {
   return {
     ...state,
     error
+  }
+}
+
+const handleFileSubmitSuccess = (state) => {
+  return {
+    ...state,
+    size: state.size + 1
   }
 }

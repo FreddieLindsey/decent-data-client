@@ -10,7 +10,7 @@ import {
   // filesLoad
 } from '../../actions'
 
-import './index.scss'
+import styles from './index.scss'
 
 const mapStateToProps = (state) => {
   const contractSize = state.IPFSStorage.size || 0
@@ -79,7 +79,7 @@ class FileViewer extends Component {
     }
 
     return (
-      <div className="fileviewer-container" >
+      <div className={ styles.container } >
         <h2>File Viewer</h2>
         { fileSize > 0 ?
           <ReactTable

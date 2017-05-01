@@ -4,11 +4,12 @@ import { connect } from 'react-redux'
 import {
   BrowserRouter,
   Redirect,
-  Route
+  Route,
+  Switch
 } from 'react-router-dom'
 
 import Authenticate from '../AuthenticatePage'
-import Index from '../IndexPage'
+import AppAuthenticated from '../AppAuthenticated'
 import NotFound from '../NotFound'
 
 import {
@@ -59,11 +60,12 @@ class App extends Component {
 
     return (
       <BrowserRouter >
-        <div>
-          <PrivateRoute exact path='/' component={ Index } />
+        <Switch>
+          <PrivateRoute path='/app/personal' component={ AppAuthenticated } />
+          <Redirect from='/app' to='/app/personal' />
           <Route exact path='/authenticate' component={ Authenticate } />
-          <Route path='*' component={ NotFound } />
-        </div>
+          <Route component={ NotFound } />
+        </Switch>
       </BrowserRouter>
     )
   }
