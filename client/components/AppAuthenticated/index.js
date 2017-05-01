@@ -20,8 +20,8 @@ class AppAuthenticated extends Component {
     return (
       <BrowserRouter basename={ '/app' } >
         <div className={ styles.container } >
-          <div className='row' >
-            <div className='col-xs-3' >
+          <div className={ 'row ' + styles.condense } >
+            <div className={ 'col-xs-3 ' + styles.noPad } >
               <div className={ styles.nav } >
                 <NavLink
                   to='/upload'
@@ -43,8 +43,8 @@ class AppAuthenticated extends Component {
                 </NavLink>
               </div>
               </div>
-              <div className='col-xs-9' >
-              <div className={ styles.content }>
+            <div className={ 'col-xs-9 ' + styles.noPad } >
+            <div className={ styles.content }>
                 <Switch>
                   <Route exact path='/upload' component={ UploadPage } />
                   <Route exact path='/personal' component={ PersonalIndexPage } />
