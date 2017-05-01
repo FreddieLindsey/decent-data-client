@@ -1,28 +1,30 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import ReactTable from 'react-table'
-import 'react-table/react-table.css'
-
+import PathEditor from '../PathEditor'
 import FilePreview from '../FilePreview'
 
+import styles from './index.scss'
+
 import {
-  filesSubmit
+  filesSubmit,
+  filesLoadedClear
 } from '../../actions'
 
 import './index.scss'
 
 const mapStateToProps = (state) => {
-  const fileSize = Object.keys(state.files.loaded).length
   return {
-    files: state.files.loaded,
-    fileSize
+    files: {
+      ...state.files.loaded
+    }
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleFilesSubmit: () => dispatch(filesSubmit())
+    handleFilesSubmit: () => dispatch(filesSubmit()),
+    handleFilesClear: () => dispatch(filesLoadedClear())
   }
 }
 
@@ -31,8 +33,8 @@ class FileMetadataList extends Component {
   static displayName = 'File Metadata List'
   static propTypes = {
     files: PropTypes.any,
-    fileSize: PropTypes.number.isRequired,
-    handleFilesSubmit: PropTypes.func.isRequired
+    handleFilesSubmit: PropTypes.func.isRequired,
+    handleFilesClear: PropTypes.func.isRequired
   }
 
   getFiles() {
@@ -49,50 +51,71 @@ class FileMetadataList extends Component {
     return fileArray
   }
 
-  getColumns() {
-    return [
-      {
-        header: 'Path',
-        accessor: 'path'
-      },
-      {
-        id: 'preview',
-        header: 'Preview',
-        accessor: f => <FilePreview loaded path={ f.path } />
-      }
-    ]
-  }
+  renderHeader = () => (
+    <div className='row' >
+      <div className='col-xs-4' >
+        <div className={ styles.header } >
+          Path
+        </div>
+      </div>
+      <div className='col-xs-8' >
+        <div className={ styles.header } >
+          Preview
+        </div>
+      </div>
+    </div>
+  )
 
   render () {
-    const {
-      fileSize
-    } = this.props
-
-    const reactTableProps = {
-      pageSize: fileSize,
-      resizable: false,
-      showPagination: false
+    const files = this.getFiles()
+    const Row = ({ path }) => {
+      return (
+        <div key={ path } >
+          <div className='row' >
+            <div className='col-xs-4' >
+              <PathEditor path={ path } />
+            </div>
+            <div className='col-xs-8' >
+              <FilePreview loaded path={ path } />
+            </div>
+          </div>
+          <hr />
+        </div>
+      )
     }
 
     return (
-      <div className="filemetadatalist-container" >
-        <h2>File Metadata List</h2>
-        { fileSize > 0 ?
-          <ReactTable
-            data={ this.getFiles() }
-            columns={ this.getColumns() }
-            { ...reactTableProps }
-          /> :
-          <div style={{ textAlign: 'center', width: '100%' }} >
+      <div className={ styles.container } >
+        { files.length > 0 ?
+          <div className={ styles.table }>
+            <hr />
+            { this.renderHeader() }
+            <hr />
+            {
+              files.map((f) => Row(f))
+            }
+          </div> :
+          <div className={ styles.noFiles } >
             No files loaded
           </div>
         }
-        { fileSize > 0 &&
-          <button
-            className='col-md-12 filemetadatalist-submit'
-            onClick={ () => this.props.handleFilesSubmit() } >
-            Send to IPFS
-          </button>
+        { files.length > 0 &&
+          <div className='row' >
+            <div className='col-xs-6' >
+              <button
+                className={ styles.clear }
+                onClick={ () => this.props.handleFilesClear() } >
+                Clear
+              </button>
+            </div>
+            <div className='col-xs-6' >
+              <button
+                className={ styles.submit }
+                onClick={ () => this.props.handleFilesSubmit() } >
+                Send to IPFS
+              </button>
+            </div>
+          </div>
         }
       </div>
     )

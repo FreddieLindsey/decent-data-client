@@ -8,6 +8,8 @@ import {
   FILE_RETRIEVE_PENDING,
   FILE_RETRIEVE_SUCCESS,
   FILE_RETRIEVE_ERROR,
+  FILE_CHANGE_PATH,
+  FILE_LOADED_CLEAR,
   // IPFSSTORAGE_INDEX_GET_PENDING,
   IPFSSTORAGE_INDEX_GET_SUCCESS,
   IPFSSTORAGE_INDEX_GET_ERROR,
@@ -36,6 +38,10 @@ const files = (state = initialState, action) => {
       return handleFileRetrieveSuccess(state, action.path, action.content)
     case FILE_RETRIEVE_ERROR:
       return handleFileRetrieveError(state, action.path, action.error)
+    case FILE_CHANGE_PATH:
+      return handleFileChangePath(state, action.oldPath, action.newPath)
+    case FILE_LOADED_CLEAR:
+      return handleFileLoadedClear(state)
     case IPFSSTORAGE_INDEX_GET_SUCCESS:
       return handleIpfsStorageIndexGetSuccess(state, action.index, action.path)
     case IPFSSTORAGE_INDEX_GET_ERROR:
@@ -157,6 +163,24 @@ const handleFileRetrieveError = (state, path, error) => {
   return {
     ...state,
     stored
+  }
+}
+
+const handleFileChangePath = (state, oldPath, newPath) => {
+  let loaded = state.loaded
+  let old = loaded[oldPath]
+  delete loaded[oldPath]
+  loaded[newPath] = old
+  return {
+    ...state,
+    loaded
+  }
+}
+
+const handleFileLoadedClear = (state) => {
+  return {
+    ...state,
+    loaded: {}
   }
 }
 

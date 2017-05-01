@@ -23,14 +23,7 @@ class FilePreview extends Component {
   }
 
   render () {
-    const {
-      content,
-      type
-    } = this.props
-
-    return (type && type.indexOf('image') !== -1) ?
-      <img className={ styles.preview } src={ content } /> :
-      <embed className={ styles.preview } src={ content } />
+    return <embed className={ styles.preview } src={ this.props.content } />
   }
 
 }

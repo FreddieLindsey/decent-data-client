@@ -110,8 +110,8 @@ router.post('/', (req, res, next) => {
 // TODO: get('/:id')
 
 const showIpfsConfig = () => {
-  dev && console.log('Connected to IPFS')
   ipfs_.id().then((instance) => {
+    dev && console.log('Connected to IPFS')
     connected = true
 
     if (dev) {

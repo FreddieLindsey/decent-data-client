@@ -1,11 +1,28 @@
-.filemetadatalist-preview {
-  max-width: 100%;
-  max-height: 200px;
+.container {
+  margin: 20px 0;
 }
 
-.filemetadatalist-submit {
-  background: #7ea;
+.no-files {
+  margin: 40px 0;
+  text-align: center;
+  width: 100%;
+}
+
+.submit,
+.clear {
   border: none;
+  box-sizing: border-box;
   color: #666;
   margin: 5px 0;
+  width: 95%;
+}
+
+.submit {
+  background: #7ea;
+  margin-left: 5%;
+}
+
+.clear {
+  background: #e7a;
+  margin-right: 5%;
 }
