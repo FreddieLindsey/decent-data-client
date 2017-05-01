@@ -20,7 +20,7 @@ class NotFound extends Component {
           <hr />
           <Link
             className={ styles.link }
-            to={{ pathname: '/app', state: { from: '/notfound' }}} >
+            to={{ pathname: '/app/personal', state: { from: '/notfound' }}} >
             Click here to return to the application
           </Link>
         </div>

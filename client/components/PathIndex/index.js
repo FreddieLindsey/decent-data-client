@@ -44,11 +44,8 @@ class PathIndex extends Component {
             <div className='col-xs-2' >
               Type
             </div>
-            <div className='col-xs-8' >
+            <div className='col-xs-10' >
               Path
-            </div>
-            <div className='col-xs-2' >
-              Sharing
             </div>
           </div>
         </div>
