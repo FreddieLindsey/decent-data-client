@@ -31,16 +31,21 @@ class PathItem extends Component {
         <div className='row' >
           <Link
             className={ styles.main }
-            to={ '/personal/' + path } >
+            to={ '/personal/view/' + path } >
             <div className='col-xs-2' >
               <div className={ styles.logo }>
                 { this.getExtension() }
               </div>
             </div>
-            <div className='col-xs-10' >
+            <div className='col-xs-8' >
               <div className={ styles.path } >
                 { path }
               </div>
+            </div>
+            <div className='col-xs-2' >
+              <button className={ styles.sharing } >
+                Sharing
+              </button>
             </div>
           </Link>
         </div>
