@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import {
   BrowserRouter,
   Redirect,
-  Route
+  Route,
+  Switch
 } from 'react-router-dom'
 
 import Authenticate from '../AuthenticatePage'
@@ -59,11 +60,11 @@ class App extends Component {
 
     return (
       <BrowserRouter >
-        <div>
+        <Switch>
           <PrivateRoute path='/app' component={ AppAuthenticated } />
           <Route exact path='/authenticate' component={ Authenticate } />
-          <Route path='*' component={ NotFound } />
-        </div>
+          <Route component={ NotFound } />
+        </Switch>
       </BrowserRouter>
     )
   }

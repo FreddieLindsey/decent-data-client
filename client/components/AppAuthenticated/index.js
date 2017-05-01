@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { BrowserRouter, Route, Switch } from 'react-router-dom'
+import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 
 import IndexPage from '../IndexPage'
 
-import NotFound from '../NotFound'
+import styles from './index.scss'
 
 const mapStateToProps = (state) => ({})
 
@@ -18,10 +18,34 @@ class AppAuthenticated extends Component {
   render () {
     return (
       <BrowserRouter basename={ '/app' } >
-        <Switch>
-          <Route exact path='/' component={ IndexPage } />
-          <Route component={ NotFound } />
-        </Switch>
+        <div className={ styles.container } >
+          <div className='row' >
+            <div className='col-xs-3' >
+              <div className={ styles.nav } >
+                <NavLink
+                  to='/'
+                  className={ styles.navLink }
+                  activeClassName={ styles.navLinkSelected } >
+                  Personal
+                </NavLink>
+                <NavLink
+                  to='/shared'
+                  className={ styles.navLink }
+                  activeClassName={ styles.navLinkSelected } >
+                  Shared
+                </NavLink>
+              </div>
+              </div>
+              <div className='col-xs-9' >
+              <div className={ styles.content }>
+                <Switch>
+                  <Route exact path='/' component={ IndexPage } />
+                  {/* <Route path='/personal/:path' component={ PersonalViewerPage } /> */}
+                </Switch>
+              </div>
+            </div>
+          </div>
+        </div>
       </BrowserRouter>
     )
   }

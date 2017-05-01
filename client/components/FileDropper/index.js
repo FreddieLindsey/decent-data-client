@@ -7,7 +7,7 @@ import {
   filesLoad
 } from '../../actions'
 
-import './index.scss'
+import styles from './index.scss'
 
 const mapStateToProps = (state) => {
   return {}
@@ -32,7 +32,7 @@ class FileDropper extends Component {
         <h2>IPFS File Dropper</h2>
         <strong>Please only drop files. Folders will not be processed correctly.</strong>
 
-        <Dropzone className="dropzone" onDrop={(f) => this.props.handleFilesLoad(f) } >
+        <Dropzone className={ styles.dropzone } onDrop={(f) => this.props.handleFilesLoad(f) } >
           Please drop files here
         </Dropzone>
       </div>

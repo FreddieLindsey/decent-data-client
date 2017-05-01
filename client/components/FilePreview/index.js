@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import './index.scss'
+import styles from './index.scss'
 
 const mapStateToProps = (state, props) => {
   const index = props.loaded ? state.files.loaded : state.files.stored
@@ -29,8 +29,8 @@ class FilePreview extends Component {
     } = this.props
 
     return (type && type.indexOf('image') !== -1) ?
-      <img className='filepreview-preview' src={ content } /> :
-      <embed className='filemetadatalist-preview' src={ content } />
+      <img className={ styles.preview } src={ content } /> :
+      <embed className={ styles.preview } src={ content } />
   }
 
 }
