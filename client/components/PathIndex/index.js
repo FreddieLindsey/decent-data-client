@@ -6,10 +6,11 @@ import PathItem from '../PathItem'
 import styles from './index.scss'
 
 const mapStateToProps = (state, ownProps) => {
+  const files = state.files.stored
+  const size = Object.keys(files).length
   return {
-    files: {
-      ...state.files.stored
-    }
+    size,
+    files
   }
 }
 
@@ -19,7 +20,8 @@ class PathIndex extends Component {
 
   static displayName = 'Path Index'
   static propTypes = {
-    files: PropTypes.shape().isRequired
+    files: PropTypes.shape().isRequired,
+    size: PropTypes.number.isRequired
   }
 
   renderRows = () => (
@@ -33,6 +35,8 @@ class PathIndex extends Component {
   )
 
   render () {
+    const { size } = this.props
+
     return (
       <div className={ styles.container } >
         <div className={ styles.header } >
@@ -48,7 +52,15 @@ class PathIndex extends Component {
             </div>
           </div>
         </div>
-        { this.renderRows() }
+        {
+          size > 0 ?
+          this.renderRows() :
+          <div className={ styles.noFiles }>
+            <hr />
+            No files available
+            <hr />
+          </div>
+        }
       </div>
     )
   }

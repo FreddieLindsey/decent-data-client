@@ -3,10 +3,6 @@ import { connect } from 'react-redux'
 
 import PathIndex from '../PathIndex'
 
-import FileViewer from '../FileViewer'
-import FileMetadataList from '../FileMetadataList'
-import FileDropper from '../FileDropper'
-
 import styles from './index.scss'
 
 import {
@@ -75,9 +71,6 @@ class Index extends Component {
       <div className={ styles.container } >
         <div className={ styles.main } >
           <PathIndex />
-          {/* <FileViewer /> */}
-          <FileMetadataList />
-          <FileDropper />
         </div>
       </div>
     )

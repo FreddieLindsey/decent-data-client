@@ -61,7 +61,8 @@ class App extends Component {
     return (
       <BrowserRouter >
         <Switch>
-          <PrivateRoute path='/app' component={ AppAuthenticated } />
+          <PrivateRoute path='/app/personal' component={ AppAuthenticated } />
+          <Redirect from='/app' to='/app/personal' />
           <Route exact path='/authenticate' component={ Authenticate } />
           <Route component={ NotFound } />
         </Switch>
