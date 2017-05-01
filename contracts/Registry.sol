@@ -66,6 +66,7 @@ contract Registry {
     if (contains(set, c) != size(set)) {
       set.items[contains(set, c)] = set.items[size(set) - 1];
       delete set.items[size(set) - 1];
+      set.items.length -= 1;
     }
   }
 
