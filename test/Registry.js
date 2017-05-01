@@ -4,6 +4,7 @@ const IPFSStorage = artifacts.require('./IPFSStorage.sol')
 contract('Registry', (accounts) => {
 
   const account = accounts[0]
+  let account_IPFS
 
   describe('contract initialisation', () => {
 
@@ -44,6 +45,7 @@ contract('Registry', (accounts) => {
       })
       .then((value) => {
         IPFS = IPFSStorage.at(value)
+        account_IPFS = IPFS
         return IPFS.size()
       })
       .then((value) => {
@@ -90,6 +92,24 @@ contract('Registry', (accounts) => {
       })
       .then((value) => {
         assert.equal(value.valueOf(), s.minus(1).valueOf())
+      })
+    })
+
+    it('should give the storage contract shared', () => {
+      let i, s
+      return Registry.deployed()
+      .then((instance) => {
+        i = instance
+        return i.allowAccess(accounts[1])
+      })
+      .then(() => {
+        return i.sizeShared({ from: accounts[1] })
+      })
+      .then((value) => {
+        return i.getIndex(0, { from: accounts[1] })
+      })
+      .then((addr) => {
+        assert.equal(addr, account_IPFS.address)
       })
     })
 
