@@ -19,11 +19,11 @@ class AppAuthenticated extends Component {
     return (
       <BrowserRouter basename={ '/app' } >
         <div className={ styles.container } >
-          <div className={ 'row ' + styles.condense } >
-            <div className={ 'col-xs-3 ' + styles.noPadLeft } >
+          <div className='row' >
+            <div className='col-xs-3' >
               <div className={ styles.nav } >
                 <NavLink
-                  to='/personal'
+                  to='/'
                   className={ styles.navLink }
                   activeClassName={ styles.navLinkSelected } >
                   Personal
@@ -36,12 +36,11 @@ class AppAuthenticated extends Component {
                 </NavLink>
               </div>
               </div>
-              <div className={ 'col-xs-9 ' + styles.noPadRight } >
+              <div className='col-xs-9' >
               <div className={ styles.content }>
                 <Switch>
-                  <Route exact path='/personal' component={ PersonalIndexPage } />
-                  {/* <Route path='/personal/view/:path' component={ ViewBlobPage } /> */}
-                  {/* <Route path='/personal/share/:path' component={ ShareBlobPage } /> */}
+                  <Route exact path='/' component={ PersonalIndexPage } />
+                  {/* <Route path='/personal/:path' component={ PersonalViewerPage } /> */}
                 </Switch>
               </div>
             </div>
