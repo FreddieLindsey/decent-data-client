@@ -7,7 +7,8 @@ import FilePreview from '../FilePreview'
 import styles from './index.scss'
 
 import {
-  filesSubmit
+  filesSubmit,
+  filesLoadedClear
 } from '../../actions'
 
 import './index.scss'
@@ -22,7 +23,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleFilesSubmit: () => dispatch(filesSubmit())
+    handleFilesSubmit: () => dispatch(filesSubmit()),
+    handleFilesClear: () => dispatch(filesLoadedClear())
   }
 }
 
@@ -31,7 +33,8 @@ class FileMetadataList extends Component {
   static displayName = 'File Metadata List'
   static propTypes = {
     files: PropTypes.any,
-    handleFilesSubmit: PropTypes.func.isRequired
+    handleFilesSubmit: PropTypes.func.isRequired,
+    handleFilesClear: PropTypes.func.isRequired
   }
 
   getFiles() {
@@ -67,8 +70,8 @@ class FileMetadataList extends Component {
     const files = this.getFiles()
     const Row = ({ path }) => {
       return (
-        <div>
-          <div className='row' key={ path } >
+        <div key={ path } >
+          <div className='row' >
             <div className='col-xs-4' >
               <PathEditor path={ path } />
             </div>
@@ -97,11 +100,22 @@ class FileMetadataList extends Component {
           </div>
         }
         { files.length > 0 &&
-          <button
-            className={ 'col-xs-12 ' + styles.submit }
-            onClick={ () => this.props.handleFilesSubmit() } >
-            Send to IPFS
-          </button>
+          <div className='row' >
+            <div className='col-xs-6' >
+              <button
+                className={ styles.clear }
+                onClick={ () => this.props.handleFilesClear() } >
+                Clear
+              </button>
+            </div>
+            <div className='col-xs-6' >
+              <button
+                className={ styles.submit }
+                onClick={ () => this.props.handleFilesSubmit() } >
+                Send to IPFS
+              </button>
+            </div>
+          </div>
         }
       </div>
     )

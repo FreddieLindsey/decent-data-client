@@ -8,9 +8,21 @@
   width: 100%;
 }
 
-.submit {
-  background: #7ea;
+.submit,
+.clear {
   border: none;
+  box-sizing: border-box;
   color: #666;
   margin: 5px 0;
+  width: 95%;
+}
+
+.submit {
+  background: #7ea;
+  margin-left: 5%;
+}
+
+.clear {
+  background: #e7a;
+  margin-right: 5%;
 }
