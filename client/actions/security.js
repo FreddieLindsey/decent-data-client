@@ -14,11 +14,11 @@ export const loadPrivateKey = (key) => {
     const reader = new FileReader()
     reader.onload = (f) => {
       let contents = f.target.result
-      validatePrivateKey(contents, (error, privateKey) => {
+      validatePrivateKey(contents, (error, privateKey, publicKey) => {
         if (error !== undefined) {
           dispatch(loadPrivateKeyError(error))
         } else {
-          dispatch(loadPrivateKeySuccess(privateKey))
+          dispatch(loadPrivateKeySuccess(privateKey, publicKey))
         }
       })
     }
@@ -35,10 +35,11 @@ const loadPrivateKeyPending = () => {
   }
 }
 
-const loadPrivateKeySuccess = (privateKey) => {
+const loadPrivateKeySuccess = (privateKey, publicKey) => {
   return {
     type: LOAD_PRIVATE_KEY_SUCCESS,
-    privateKey
+    privateKey,
+    publicKey
   }
 }
 
