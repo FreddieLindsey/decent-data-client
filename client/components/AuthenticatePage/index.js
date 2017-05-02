@@ -10,18 +10,16 @@ import styles from './index.scss'
 
 import {
   loadPrivateKey,
-  loadPublicKey,
   accountsChange
 } from '../../actions'
 
 const mapStateToProps = (state) => {
-  const { error, privateKey, publicKey } = state.security
+  const { error, privateKey } = state.security
   const { all, current } = state.accounts
   return {
     security: {
       error,
-      privateKey: !!privateKey,
-      publicKey: !!publicKey
+      privateKey: !!privateKey
     },
     accounts: {
       all,
@@ -33,7 +31,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleLoadPrivateKey: (key) => dispatch(loadPrivateKey(key)),
-    handleLoadPublicKey: (key) => dispatch(loadPublicKey(key)),
     handleAccountsChange: (v) => dispatch(accountsChange(v))
   }
 }
@@ -48,41 +45,11 @@ class Authenticate extends Component {
     }).isRequired,
     security: PropTypes.shape({
       error: PropTypes.object,
-      privateKey: PropTypes.bool.isRequired,
-      publicKey: PropTypes.bool.isRequired
+      privateKey: PropTypes.bool.isRequired
     }),
 
     handleLoadPrivateKey: PropTypes.func.isRequired,
-    handleLoadPublicKey: PropTypes.func.isRequired,
     handleAccountsChange: PropTypes.func.isRequired
-  }
-
-  renderPrivateKey (only = false) {
-    return (
-      <div className={ only ? 'col-md-6 col-md-offset-3' : 'col-md-6'  } >
-        <Dropzone
-          className={ styles.privateKey }
-          onDrop={ (f) => this.props.handleLoadPrivateKey(f) } >
-          <p className={ styles.privateKeyText } >
-            Private Key
-          </p>
-        </Dropzone>
-      </div>
-    )
-  }
-
-  renderPublicKey (only = false) {
-    return (
-      <div className={ only ? 'col-md-6 col-md-offset-3' : 'col-md-6'  } >
-        <Dropzone
-          className={ styles.publicKey }
-          onDrop={ (f) => this.props.handleLoadPublicKey(f) } >
-          <p className={ styles.publicKeyText } >
-            Public Key
-          </p>
-        </Dropzone>
-      </div>
-    )
   }
 
   renderUnauthenticated = () => {
@@ -93,8 +60,7 @@ class Authenticate extends Component {
       },
       security: {
         error,
-        privateKey,
-        publicKey
+        privateKey
       }
     } = this.props
 
@@ -121,8 +87,15 @@ class Authenticate extends Component {
           </div>
           <div className={ styles.keys } >
             <div className='row' >
-              { !privateKey && this.renderPrivateKey(publicKey) }
-              { !publicKey && this.renderPublicKey(privateKey) }
+              <div className={ 'col-xs-12' } >
+                <Dropzone
+                  className={ styles.privateKey }
+                  onDrop={ (f) => this.props.handleLoadPrivateKey(f) } >
+                  <p className={ styles.privateKeyText } >
+                    Private Key
+                  </p>
+                </Dropzone>
+              </div>
             </div>
             {
               error &&
@@ -145,10 +118,11 @@ class Authenticate extends Component {
   render () {
     const authenticated =
       !!this.props.accounts.current &&
-      !!this.props.security.privateKey &&
-      !!this.props.security.publicKey
+      !!this.props.security.privateKey
 
-    return !authenticated ? this.renderUnauthenticated() : this.renderAuthenticated()
+    return !authenticated ?
+      this.renderUnauthenticated() :
+      this.renderAuthenticated()
   }
 
 }

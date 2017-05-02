@@ -18,7 +18,7 @@ import {
 
 const mapStateToProps = (state) => {
   const {
-    privateKey, publicKey
+    privateKey
   } = state.security
   const { current } = state.accounts
   return {

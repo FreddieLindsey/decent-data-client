@@ -8,8 +8,9 @@ const errorPublic  = (done, error = 'Error: not a suitable public key') => done(
 
 export const validatePrivateKey = (contents, done) => {
   try {
-    let key = forge.pki.privateKeyFromPem(contents)
-    done(undefined, key)
+    let privateKey = forge.pki.privateKeyFromPem(contents)
+    let publicKey = forge.pki.rsa.setPublicKey(privateKey.n, privateKey.e)
+    done(undefined, privateKey, publicKey)
   } catch (error) {
     errorPrivate(done, error)
   }

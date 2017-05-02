@@ -17,7 +17,7 @@ const initialState = {
 export const security = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_PRIVATE_KEY_SUCCESS:
-      return handleLoadPrivateKeySuccess(state, action.privateKey)
+      return handleLoadPrivateKeySuccess(state, action.privateKey, action.publicKey)
     case LOAD_PRIVATE_KEY_ERROR:
       return handleLoadPrivateKeyError(state, action.error)
     case LOAD_PUBLIC_KEY_SUCCESS:
@@ -30,10 +30,11 @@ export const security = (state = initialState, action) => {
   return state
 }
 
-const handleLoadPrivateKeySuccess = (state, privateKey) => {
+const handleLoadPrivateKeySuccess = (state, privateKey, publicKey) => {
   return {
     ...state,
     privateKey,
+    publicKey,
     error: null
   }
 }
