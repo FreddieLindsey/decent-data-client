@@ -6,28 +6,28 @@ contract GMC {
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
 
-  struct Doctor {
-    bool doctor;
-    bool valid;
-  }
-
   address authority;
-  mapping (address => Doctor) doctors;
+
+  /* addr => 0: not a doctor, 1: doctor, 2: struck off */
+  mapping (address => uint) doctors;
 
   function GMC() {
     authority = msg.sender;
   }
 
   function isDoctor(address addr) constant returns (bool) {
-    return doctors[addr].doctor;
+    return doctors[addr] == 1;
   }
 
-  function isValid(address addr) constant returns (bool) {
-    return doctors[addr].doctor && doctors[addr].valid;
+  function registerDoctor(address addr) {
+    if (doctors[addr] > 1)
+      throw;
+
+    doctors[addr] = 1;
   }
 
   function invalidate(address addr) {
-    doctors[addr].valid = false;
+    doctors[addr] = 2;
   }
 
 }
