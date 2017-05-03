@@ -23,17 +23,36 @@ class PathEditor extends Component {
     handleFileChangePath: PropTypes.func.isRequired
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      value: props.path
+    }
+  }
+
+  handleUpdateFilePath = (value) => {
+    this.setState({
+      value
+    })
+  }
+
+  handleSubmitFilePath = () => {
+    if (this.props.path !== this.state.value) {
+      this.props.handleFileChangePath(this.props.path, this.state.value.trim())
+    }
+  }
+
   render () {
     const {
-      path,
-      handleFileChangePath
-    } = this.props
+      value
+    } = this.state
 
     return (
       <input
         className={ styles.container }
-        value={ path }
-        onChange={ (e) => handleFileChangePath(path, e.target.value) }
+        value={ value }
+        onChange={ (e) => this.handleUpdateFilePath(e.target.value) }
+        onBlur={ () => this.handleSubmitFilePath() }
       />
     )
   }

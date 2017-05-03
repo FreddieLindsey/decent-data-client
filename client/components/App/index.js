@@ -22,7 +22,7 @@ const mapStateToProps = (state) => {
   } = state.security
   const { current } = state.accounts
   return {
-    authenticated: (!!current && !!privateKey && !!publicKey)
+    authenticated: (!!current && !!privateKey)
   }
 }
 
