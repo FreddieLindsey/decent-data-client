@@ -27,6 +27,7 @@ install:
   - docker-compose pull
   - yarn
   - yarn run services
+  - yarn run service-testrpc &
 
 script:
   - docker-compose up -d
