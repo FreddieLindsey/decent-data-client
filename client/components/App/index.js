@@ -18,11 +18,10 @@ import {
 
 const mapStateToProps = (state) => {
   const {
-    privateKey
+    address
   } = state.security
-  const { current } = state.accounts
   return {
-    authenticated: (!!current && !!privateKey)
+    authenticated: !!address
   }
 }
 
