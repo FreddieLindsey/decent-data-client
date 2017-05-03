@@ -1,60 +1,74 @@
 import {
-  LOAD_PRIVATE_KEY_PENDING,
-  LOAD_PRIVATE_KEY_SUCCESS,
-  LOAD_PRIVATE_KEY_ERROR,
-  LOAD_PUBLIC_KEY_PENDING,
-  LOAD_PUBLIC_KEY_SUCCESS,
-  LOAD_PUBLIC_KEY_ERROR,
+  LOAD_ECDSA_PRIVATE_KEY_PENDING,
+  LOAD_ECDSA_PRIVATE_KEY_SUCCESS,
+  LOAD_ECDSA_PRIVATE_KEY_ERROR,
+  LOAD_RSA_PRIVATE_KEY_PENDING,
+  LOAD_RSA_PRIVATE_KEY_SUCCESS,
+  LOAD_RSA_PRIVATE_KEY_ERROR,
   ACCOUNTS_CHANGE,
 } from '../actions'
 
 const initialState = {
-  privateKey: null,
-  publicKey: null,
+  address: null,
+  rsa: {
+    privateKey: null,
+    publicKey: null
+  },
+  ecdsa: {
+    privateKey: null,
+    publicKey: null
+  },
   error: null
 }
 
 export const security = (state = initialState, action) => {
   switch (action.type) {
-    case LOAD_PRIVATE_KEY_SUCCESS:
-      return handleLoadPrivateKeySuccess(state, action.privateKey, action.publicKey)
-    case LOAD_PRIVATE_KEY_ERROR:
-      return handleLoadPrivateKeyError(state, action.error)
-    case LOAD_PUBLIC_KEY_SUCCESS:
-      return handleLoadPublicKeySuccess(state, action.publicKey)
-    case LOAD_PUBLIC_KEY_ERROR:
-      return handleLoadPublicKeyError(state, action.error)
+    case LOAD_ECDSA_PRIVATE_KEY_SUCCESS:
+      const { address, privateKey, publicKey } = action
+      return handleLoadECDSAPrivateKeySuccess(state, privateKey, publicKey, address)
+    case LOAD_ECDSA_PRIVATE_KEY_ERROR:
+      return handleLoadECDSAPrivateKeyError(state, action.error)
+    case LOAD_RSA_PRIVATE_KEY_SUCCESS:
+      return handleLoadRSAPrivateKeySuccess(state, action.privateKey, action.publicKey)
+    case LOAD_RSA_PRIVATE_KEY_ERROR:
+      return handleLoadRSAPrivateKeyError(state, action.error)
     case ACCOUNTS_CHANGE:
       return handleAccountsChange(state)
   }
   return state
 }
 
-const handleLoadPrivateKeySuccess = (state, privateKey, publicKey) => {
+const handleLoadECDSAPrivateKeySuccess = (state, privateKey, publicKey, address) => {
   return {
     ...state,
-    privateKey,
-    publicKey,
+    address,
+    ecdsa: {
+      privateKey,
+      publicKey
+    },
     error: null
   }
 }
 
-const handleLoadPrivateKeyError = (state, error) => {
+const handleLoadECDSAPrivateKeyError = (state, error) => {
   return {
     ...state,
     error
   }
 }
 
-const handleLoadPublicKeySuccess = (state, publicKey) => {
+const handleLoadRSAPrivateKeySuccess = (state, privateKey, publicKey) => {
   return {
     ...state,
-    publicKey,
+    rsa: {
+      privateKey,
+      publicKey
+    },
     error: null
   }
 }
 
-const handleLoadPublicKeyError = (state, error) => {
+const handleLoadRSAPrivateKeyError = (state, error) => {
   return {
     ...state,
     error

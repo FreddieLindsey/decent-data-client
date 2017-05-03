@@ -9,29 +9,20 @@ import { Redirect } from 'react-router'
 import styles from './index.scss'
 
 import {
-  loadPrivateKey,
-  accountsChange
+  loadECDSAPrivateKey
 } from '../../actions'
 
 const mapStateToProps = (state) => {
-  const { error, privateKey } = state.security
-  const { all, current } = state.accounts
+  const { address, error } = state.security
   return {
-    security: {
-      error,
-      privateKey: !!privateKey
-    },
-    accounts: {
-      all,
-      current
-    }
+    authenticated: !!address,
+    error
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleLoadPrivateKey: (key) => dispatch(loadPrivateKey(key)),
-    handleAccountsChange: (v) => dispatch(accountsChange(v))
+    handleLoadPrivateKey: (key) => dispatch(loadECDSAPrivateKey(key))
   }
 }
 
@@ -39,52 +30,24 @@ class Authenticate extends Component {
 
   static displayName = 'Authenticate'
   static propTypes = {
-    accounts: PropTypes.shape({
-      all: PropTypes.arrayOf(PropTypes.string).isRequired,
-      current: PropTypes.string
-    }).isRequired,
-    security: PropTypes.shape({
-      error: PropTypes.object,
-      privateKey: PropTypes.bool.isRequired
-    }),
+    authenticated: PropTypes.bool.isRequired,
+    error: PropTypes.object,
 
-    handleLoadPrivateKey: PropTypes.func.isRequired,
-    handleAccountsChange: PropTypes.func.isRequired
+    handleLoadPrivateKey: PropTypes.func.isRequired
   }
 
   renderUnauthenticated = () => {
     const {
-      accounts: {
-        all,
-        current
-      },
-      security: {
-        error,
-        privateKey
-      }
+      error
     } = this.props
-
-    const generateOption = (a) => ({ value: a, label: a })
-    const accountOptions = all.map(generateOption)
 
     return (
       <div className={ styles.container } >
         <div className={ styles.main } >
           <h2 className={ styles.title }>
-            Please authenticate yourself
+            Please authenticate yourself by providing your private key
           </h2>
-          <p className={ styles.description } >
-            Upon choosing an account (address), and providing it's correct
-            private and public keys, you will be automatically redirected to your account.
-          </p>
           <hr />
-          <div className={ styles.accounts } >
-            <Dropdown
-              options={ accountOptions }
-              value={ generateOption(current) }
-              onChange={ (s) => this.props.handleAccountsChange(s.value) }
-            />
-          </div>
           <div className={ styles.keys } >
             <div className='row' >
               <div className={ 'col-xs-12' } >
@@ -116,13 +79,9 @@ class Authenticate extends Component {
     }}/>
 
   render () {
-    const authenticated =
-      !!this.props.accounts.current &&
-      !!this.props.security.privateKey
-
-    return !authenticated ?
-      this.renderUnauthenticated() :
-      this.renderAuthenticated()
+    return this.props.authenticated ?
+      this.renderAuthenticated() :
+      this.renderUnauthenticated()
   }
 
 }
