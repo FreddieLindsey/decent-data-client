@@ -31,11 +31,11 @@ services:
     volumes:
       - ./.cache/ipfs:/data/ipfs
 
-  testrpc:
-    image: freddielindsey/ethereumjs-testrpc
-    container_name: testrpc
-    ports:
-      - 8545:8545
+  # testrpc:
+  #   image: freddielindsey/ethereumjs-testrpc
+  #   container_name: testrpc
+  #   ports:
+  #     - 8545:8545
 
 networks:
   default:
