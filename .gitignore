@@ -15,3 +15,6 @@ openssl
 
 # Infra
 infra/testrpc/accounts
+
+# Security
+*.pem
