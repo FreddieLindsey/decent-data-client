@@ -29,13 +29,13 @@ export const validateECDSAPrivateKey = (contents, done) => {
     done(
       undefined,
       '0x'+ privateKey.toString('hex'), '0x'+ pub.toString('hex'),
-      determineEthereumAddress(pub))
+      getAddress(pub))
   } else {
     done('Error: Provided key is not a valid ECDSA private key')
   }
 }
 
-const determineEthereumAddress = (publicKey) => {
+const getAddress = (publicKey) => {
   const hash = keccak('keccak256')
   hash.update(publicKey)
   return '0x' + hash.digest().slice(-20).toString('hex')
