@@ -21,6 +21,16 @@ contract IPFSStorage {
     _;
   }
 
+  modifier writable(string path) {
+    if (msg.sender != owner && !allowedWrite(msg.sender, path)) throw;
+    _;
+  }
+
+  modifier readable(string path) {
+    if (msg.sender != owner && !allowedRead(msg.sender, path)) throw;
+    _;
+  }
+
   /* ----------------------------------------------------------------------- */
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
@@ -66,13 +76,9 @@ contract IPFSStorage {
   }
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
-  function add(string path, bytes32 hash1, bytes32 hash2) hasValidPublicKey {
+  function add(string path, bytes32 hash1, bytes32 hash2) writable(path) hasValidPublicKey {
     /* Find the index of the path */
     uint index = contains(paths, path);
-
-    /* If already available, check permissions */
-    if (index != size(paths) && !allowedWrite(msg.sender, path))
-      throw;
 
     /* Update path */
     insert(paths, path);
@@ -117,7 +123,7 @@ contract IPFSStorage {
   /* ACCESSIBLE BY ANY PARTY */
   function size() constant returns (uint) {
     /* The size of the user's available paths */
-    return size(paths);
+    return size(user_paths[msg.sender]);
   }
 
   /* ----------------------------------------------------------------------- */
@@ -127,6 +133,7 @@ contract IPFSStorage {
   function insert(Set storage set, string path) internal {
     if (contains(set, path) == size(set))
       set.items.push(path);
+      set.items.length++;
   }
 
   function contains(Set storage set, string path) internal returns (uint) {
@@ -176,19 +183,19 @@ contract IPFSStorage {
     return (access >= 2);
   }
 
-  function allowedReadLog(address addr, string path) internal returns (bool) {
+  /*function allowedReadLog(address addr, string path) internal returns (bool) {
     IpfsHash h = hashes[path];
     uint access = h.access_control[addr];
     access = access % 8;
     return (access >= 4);
-  }
+  }*/
 
-  function allowedWriteLog(address addr, string path) internal returns (bool) {
+  /*function allowedWriteLog(address addr, string path) internal returns (bool) {
     IpfsHash h = hashes[path];
     uint access = h.access_control[addr];
-    /*access = access % 16;*/
+    access = access % 16;
     return (access >= 8);
-  }
+  }*/
 
   /* ADD ACCESS */
 
@@ -206,19 +213,19 @@ contract IPFSStorage {
     }
   }
 
-  function allowReadLog(address addr, string path) internal {
+  /*function allowReadLog(address addr, string path) internal {
     if (!allowedReadLog(addr, path)) {
       IpfsHash h = hashes[path];
       h.access_control[addr] += 4;
     }
-  }
+  }*/
 
-  function allowWriteLog(address addr, string path) internal {
+  /*function allowWriteLog(address addr, string path) internal {
     if (!allowedWriteLog(addr, path)) {
       IpfsHash h = hashes[path];
       h.access_control[addr] += 8;
     }
-  }
+  }*/
 
   /* REMOVE ACCESS */
 
@@ -236,19 +243,19 @@ contract IPFSStorage {
     }
   }
 
-  function removeReadLog(address addr, string path) internal {
+  /*function removeReadLog(address addr, string path) internal {
     if (allowedReadLog(addr, path)) {
       IpfsHash h = hashes[path];
       h.access_control[addr] -= 4;
     }
-  }
+  }*/
 
-  function removeWriteLog(address addr, string path) internal {
+  /*function removeWriteLog(address addr, string path) internal {
     if (allowedWriteLog(addr, path)) {
       IpfsHash h = hashes[path];
       h.access_control[addr] -= 8;
     }
-  }
+  }*/
 
   /* ----------------------------------------------------------------------- */
   /* UTILS */

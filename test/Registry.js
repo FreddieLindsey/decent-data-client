@@ -8,7 +8,7 @@ contract('Registry', (accounts) => {
 
   describe('contract initialisation', () => {
 
-    it('should have a size of 0 when not registered', () => {
+    xit('should have a size of 0 when not registered', () => {
       return Registry.deployed()
       .then((instance) => {
         return instance.sizeShared()
@@ -18,7 +18,7 @@ contract('Registry', (accounts) => {
       })
     })
 
-    it('should have a size of 0 when first registered', () => {
+    xit('should have a size of 0 when first registered', () => {
       let i
       return Registry.deployed()
       .then((instance) => {
@@ -37,7 +37,7 @@ contract('Registry', (accounts) => {
 
   describe('getting storage contract', () => {
 
-    it('should return valid IPFSStorage contract address', () => {
+    xit('should return valid IPFSStorage contract address', () => {
       let IPFS;
       return Registry.deployed()
       .then((instance) => {
@@ -57,7 +57,7 @@ contract('Registry', (accounts) => {
 
   describe('sharing the storage contract', () => {
 
-    it('should allow someone access', () => {
+    xit('should allow someone access', () => {
       let i, s
       return Registry.deployed()
       .then((instance) => {
@@ -76,7 +76,7 @@ contract('Registry', (accounts) => {
       })
     })
 
-    it('should remove someones access', () => {
+    xit('should remove someones access', () => {
       let i, s
       return Registry.deployed()
       .then((instance) => {
@@ -95,7 +95,7 @@ contract('Registry', (accounts) => {
       })
     })
 
-    it('should give the storage contract shared', () => {
+    xit('should give the storage contract shared', () => {
       let i, s
       return Registry.deployed()
       .then((instance) => {

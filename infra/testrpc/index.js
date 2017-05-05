@@ -59,4 +59,11 @@ check()
 server.listen(PORT, (err, blockchain) => {
   if (err) console.log(err.toString())
   console.log('TESTRPC listening on port ' + PORT)
+  console.log('\n\n')
+  console.log('UNLOCKED ACCOUNTS AT INITIALISATION')
+
+  let counter = 1
+  for (const i in blockchain.unlocked_accounts)
+    console.log(`${counter++}:\t${i}`)
+  console.log('\n\n')
 })

@@ -1,10 +1,25 @@
 import HashByte from '../utils/HashByte'
+import { isThrow } from './utils'
+
+let contracts = {}
+const contractWithPublicKey = (account, publicKeyHash) => {
+  if (!contracts[account]) {
+    let i
+    contracts[account] = {
+      contract: IPFSStorage.new({ from: account }).then((instance) => {
+        i = instance
+        return instance.updatePublicKey(
+          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
+        )
+      }),
+      instance: () => i
+    }
+  }
+
+  return contracts[account]
+}
 
 const IPFSStorage = artifacts.require('./IPFSStorage.sol')
-
-const isThrow = (err) => {
-  return err.toString().indexOf('invalid JUMP') !== -1
-}
 
 contract('IPFSStorage', (accounts) => {
 
@@ -14,9 +29,10 @@ contract('IPFSStorage', (accounts) => {
   describe('contract initialisation', () => {
 
     it('should have a size of 0', () => {
-      return IPFSStorage.new({ from: account })
-      .then((instance) => {
-        return instance.size()
+      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      return contract
+      .then(() => {
+        return instance().size()
       })
       .then((value) => {
         assert.equal(value.valueOf(), 0)
@@ -24,9 +40,10 @@ contract('IPFSStorage', (accounts) => {
     })
 
     it('should give two zero hashes for any path', () => {
-      return IPFSStorage.new({ from: account })
-      .then((instance) => {
-        return instance.get('random')
+      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      return contract
+      .then(() => {
+        return instance().get('random')
       })
       .then((value) => {
         assert.equal(HashByte.toHash(value[0]), '')
@@ -39,25 +56,14 @@ contract('IPFSStorage', (accounts) => {
   describe('setting a public key', () => {
 
     it('should allow setting a public key', () => {
-      return IPFSStorage.new({ from: account })
-      .then((instance) => {
-        return instance.updatePublicKey(
-          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
-        )
-      })
+      contractWithPublicKey(account, publicKeyHash)
     })
 
     it('should only allow setting a public key once', () => {
-      let i
-      return IPFSStorage.new({ from: account })
-      .then((instance) => {
-        i = instance
-        return i.updatePublicKey(
-          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
-        )
-      })
+      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      return contract
       .then(() => {
-        return i.updatePublicKey(
+        return instance().updatePublicKey(
           publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
         )
       })
@@ -67,10 +73,10 @@ contract('IPFSStorage', (accounts) => {
     })
 
     it('should not allow setting a public key if you\'re not the owner', () => {
-      let i
-      return IPFSStorage.new({ from: account })
-      .then((instance) => {
-        return instance.updatePublicKey(
+      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      return contract
+      .then(() => {
+        return instance().updatePublicKey(
           publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: accounts[1] }
         )
       })
@@ -87,21 +93,15 @@ contract('IPFSStorage', (accounts) => {
     const hash = 'Qm061864a08ae30bbd5933cba4cfcf621d401591fd'
 
     it('should be successful', () => {
-      let i;
-      return IPFSStorage.new({ from: account })
-      .then((instance) => {
-        i = instance
-        return instance.updatePublicKey(
-          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
-        )
-      })
+      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      return contract
       .then(() => {
-        return i.add(
+        return instance().add(
           path, hash.slice(0, 32), hash.slice(32, 64), { from: account }
         )
       })
       .then((value) => {
-        return i.get(path)
+        return instance().get(path)
       })
       .then((value) => {
         assert.equal(HashByte.toHash(value[0]), hash.slice(0, 32))
@@ -110,21 +110,15 @@ contract('IPFSStorage', (accounts) => {
     })
 
     it('should allow getting the content back', () => {
-      let i;
-      return IPFSStorage.new({ from: account })
-      .then((instance) => {
-        i = instance
-        return instance.updatePublicKey(
-          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
-        )
-      })
+      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      return contract
       .then(() => {
-        return i.add(
+        return instance().add(
           path, hash.slice(0, 32), hash.slice(32, 64), { from: account }
         )
       })
       .then((value) => {
-        return i.get(path)
+        return instance().get(path)
       })
       .then((value) => {
         assert.equal(HashByte.toHash(value[0]), hash.slice(0, 32))
@@ -133,40 +127,35 @@ contract('IPFSStorage', (accounts) => {
     })
 
     it('index should be able to be used to get a path', () => {
-      let i;
-      return IPFSStorage.new({ from: account })
-      .then((instance) => {
-        i = instance
-        return instance.updatePublicKey(
-          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
-        )
-      })
+      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      return contract
       .then(() => {
-        return i.add(
+        return instance().add(
           path, hash.slice(0, 32), hash.slice(32, 64), { from: account }
         )
       })
       .then(() => {
-        return i.getIndex(0)
+        return instance().getIndex(0)
       })
       .then((value) => {
         assert.equal(value.valueOf(), path)
       })
     })
 
-    xit('should increment size on contract', () => {
-      let i, s0;
-      return IPFSStorage.deployed()
-      .then((instance) => {
-        i = instance
-        return i.size()
+    it('should increment size on contract', () => {
+      let s0
+
+      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      return contract
+      .then(() => {
+        return instance().size()
       })
       .then((value) => {
         s0 = value
-        return i.add(path, hash.slice(0, 32), hash.slice(32, 64), { from: account })
+        return instance().add(path, hash.slice(0, 32), hash.slice(32, 64), { from: account })
       })
       .then(() => {
-        return i.size()
+        return instance().size()
       })
       .then((value) => {
         assert.equal(s0.plus(1).valueOf(), value.valueOf())
