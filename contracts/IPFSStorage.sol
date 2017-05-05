@@ -3,6 +3,25 @@ pragma solidity ^0.4.8;
 contract IPFSStorage {
 
   /* ----------------------------------------------------------------------- */
+  /* MODIFIERS */
+  /* ----------------------------------------------------------------------- */
+
+  modifier onlyOwner() {
+    if (msg.sender != owner) throw;
+    _;
+  }
+
+  modifier noValidPublicKey() {
+    if (validPublicKey()) throw;
+    _;
+  }
+
+  modifier hasValidPublicKey() {
+    if (!validPublicKey()) throw;
+    _;
+  }
+
+  /* ----------------------------------------------------------------------- */
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
 
@@ -15,6 +34,13 @@ contract IPFSStorage {
     bytes32 part2;
     mapping(address => uint) access_control;
   }
+
+  /* Contract owner */
+  address owner;
+
+  /* Public key to encrypt data */
+  bytes32 part1;
+  bytes32 part2;
 
   /* Used for indexing */
   Set paths;
@@ -29,8 +55,18 @@ contract IPFSStorage {
   /* EXTERNAL FUNCTIONS */
   /* ----------------------------------------------------------------------- */
 
+  function IPFSStorage() {
+    owner = msg.sender;
+  }
+
+  /* ONLY ACCESSIBLE TO OWNER. ONLY UPDATED ONCE */
+  function updatePublicKey(bytes32 hash1, bytes32 hash2) onlyOwner noValidPublicKey {
+    part1 = hash1;
+    part2 = hash2;
+  }
+
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
-  function add(string path, bytes32 hash1, bytes32 hash2) {
+  function add(string path, bytes32 hash1, bytes32 hash2) hasValidPublicKey {
     /* Find the index of the path */
     uint index = contains(paths, path);
 
@@ -217,6 +253,10 @@ contract IPFSStorage {
   /* ----------------------------------------------------------------------- */
   /* UTILS */
   /* ----------------------------------------------------------------------- */
+
+  function validPublicKey() internal returns (bool) {
+    return part1 != 0 && part2 != 0;
+  }
 
   function stringEqual(string a, string b) internal returns (bool) {
     bytes memory _a = bytes(a);

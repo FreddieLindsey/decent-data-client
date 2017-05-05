@@ -5,7 +5,7 @@ import { web3 } from '../../../client/init/web3'
 import {
   accountsInitPending,
   accountsInitSuccess
-} from '../../../client/actions/accounts'
+} from '../../../client/actions'
 
 describe('Actions: accounts', () => {
   it('should provide a blank account init pending', () => {
