@@ -1,5 +1,7 @@
 import accounts from '../infra/testrpc/accounts.json'
 
+const IPFSStorage = artifacts.require('./IPFSStorage.sol')
+
 let
   contractsIPFSStorage = {}
 

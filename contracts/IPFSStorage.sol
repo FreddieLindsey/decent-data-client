@@ -25,12 +25,12 @@ contract IPFSStorage {
     _;
   }
 
-  modifier noValidPublicKey() {
+  modifier publicKeyNotExist() {
     if (validPublicKey()) throw;
     _;
   }
 
-  modifier hasValidPublicKey() {
+  modifier publicKeyExist() {
     if (!validPublicKey()) throw;
     _;
   }
@@ -84,13 +84,13 @@ contract IPFSStorage {
   }
 
   /* ONLY ACCESSIBLE TO OWNER. ONLY UPDATED ONCE */
-  function updatePublicKey(bytes32 hash1, bytes32 hash2) /* onlyOwner */ noValidPublicKey {
+  function updatePublicKey(bytes32 hash1, bytes32 hash2) /* onlyOwner */ publicKeyNotExist {
     part1 = hash1;
     part2 = hash2;
   }
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
-  function add(string path, bytes32 hash1, bytes32 hash2) /* writable(path) */ hasValidPublicKey {
+  function add(string path, bytes32 hash1, bytes32 hash2) /* writable(path) */ publicKeyExist {
     /* Find the index of the path */
     uint index = contains(paths, path);
 
