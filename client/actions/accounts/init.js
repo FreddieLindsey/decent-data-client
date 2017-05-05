@@ -11,8 +11,6 @@ export const accountsInit = () => (dispatch) => {
       if (err != null) {
         dispatch(accountsInitError(err))
       } else if (accs.length == 0) {
-        dispatch(accountsInitError('No accounts found!'))
-      } else {
         dispatch(accountsInitSuccess(accs))
       }
     })
