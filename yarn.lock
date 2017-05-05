@@ -8237,9 +8237,9 @@ truffle-resolver@~1.0.0:
     truffle-expect "0.0.3"
     truffle-provisioner "^0.1.0"
 
-"truffle-solidity-loader@git+https://github.com/sogoiii/truffle-solidity-loader.git#1f1e213d52f033b6863218307b8968ae68220fe1":
+"truffle-solidity-loader@git+https://github.com/sogoiii/truffle-solidity-loader.git#16e6c925e6aba4e3907b9d8d2cae43ff279be84b":
   version "0.0.8"
-  resolved "git+https://github.com/sogoiii/truffle-solidity-loader.git#1f1e213d52f033b6863218307b8968ae68220fe1"
+  resolved "git+https://github.com/sogoiii/truffle-solidity-loader.git#16e6c925e6aba4e3907b9d8d2cae43ff279be84b"
   dependencies:
     chalk "^1.1.3"
     find-up "^1.1.2"

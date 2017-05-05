@@ -2,14 +2,19 @@ import HashByte from '../utils/HashByte'
 
 const IPFSStorage = artifacts.require('./IPFSStorage.sol')
 
+const isThrow = (err) => {
+  return err.toString().indexOf('invalid JUMP') !== -1
+}
+
 contract('IPFSStorage', (accounts) => {
 
   const account = accounts[0]
+  const publicKeyHash = 'Qmc809239e912949d06d6a125e1c0cd5a4df0a5669'
 
   describe('contract initialisation', () => {
 
     it('should have a size of 0', () => {
-      return IPFSStorage.deployed()
+      return IPFSStorage.new({ from: account })
       .then((instance) => {
         return instance.size()
       })
@@ -19,13 +24,58 @@ contract('IPFSStorage', (accounts) => {
     })
 
     it('should give two zero hashes for any path', () => {
-      return IPFSStorage.deployed()
+      return IPFSStorage.new({ from: account })
       .then((instance) => {
         return instance.get('random')
       })
       .then((value) => {
         assert.equal(HashByte.toHash(value[0]), '')
         assert.equal(HashByte.toHash(value[0]), '')
+      })
+    })
+
+  })
+
+  describe('setting a public key', () => {
+
+    it('should allow setting a public key', () => {
+      return IPFSStorage.new({ from: account })
+      .then((instance) => {
+        return instance.updatePublicKey(
+          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
+        )
+      })
+    })
+
+    it('should only allow setting a public key once', () => {
+      let i
+      return IPFSStorage.new({ from: account })
+      .then((instance) => {
+        i = instance
+        return i.updatePublicKey(
+          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
+        )
+      })
+      .then(() => {
+        return i.updatePublicKey(
+          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
+        )
+      })
+      .catch((err) => {
+        assert.equal(isThrow(err), true)
+      })
+    })
+
+    it('should not allow setting a public key if you\'re not the owner', () => {
+      let i
+      return IPFSStorage.new({ from: account })
+      .then((instance) => {
+        return instance.updatePublicKey(
+          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: accounts[1] }
+        )
+      })
+      .catch((err) => {
+        assert.equal(isThrow(err), true)
       })
     })
 
@@ -38,10 +88,15 @@ contract('IPFSStorage', (accounts) => {
 
     it('should be successful', () => {
       let i;
-      return IPFSStorage.deployed()
+      return IPFSStorage.new({ from: account })
       .then((instance) => {
         i = instance
-        return instance.add(
+        return instance.updatePublicKey(
+          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
+        )
+      })
+      .then(() => {
+        return i.add(
           path, hash.slice(0, 32), hash.slice(32, 64), { from: account }
         )
       })
@@ -56,10 +111,15 @@ contract('IPFSStorage', (accounts) => {
 
     it('should allow getting the content back', () => {
       let i;
-      return IPFSStorage.deployed()
+      return IPFSStorage.new({ from: account })
       .then((instance) => {
         i = instance
-        return instance.add(
+        return instance.updatePublicKey(
+          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
+        )
+      })
+      .then(() => {
+        return i.add(
           path, hash.slice(0, 32), hash.slice(32, 64), { from: account }
         )
       })
@@ -74,10 +134,20 @@ contract('IPFSStorage', (accounts) => {
 
     it('index should be able to be used to get a path', () => {
       let i;
-      return IPFSStorage.deployed()
+      return IPFSStorage.new({ from: account })
       .then((instance) => {
         i = instance
-        return instance.getIndex(0)
+        return instance.updatePublicKey(
+          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
+        )
+      })
+      .then(() => {
+        return i.add(
+          path, hash.slice(0, 32), hash.slice(32, 64), { from: account }
+        )
+      })
+      .then(() => {
+        return i.getIndex(0)
       })
       .then((value) => {
         assert.equal(value.valueOf(), path)

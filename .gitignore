@@ -11,7 +11,9 @@ npm-debug.log
 
 # Build
 build
-openssl
 
 # Infra
 infra/testrpc/accounts
+
+# Security
+*.pem

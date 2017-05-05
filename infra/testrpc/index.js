@@ -56,8 +56,7 @@ const server = TestRPC.server(opts)
 const PORT = process.env.TESTRPC_PORT || 8545
 
 check()
-server.listen(PORT, (err, blockchain, done) => {
+server.listen(PORT, (err, blockchain) => {
   if (err) console.log(err.toString())
   console.log('TESTRPC listening on port ' + PORT)
-  if (done) done()
 })
