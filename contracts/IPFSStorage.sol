@@ -10,7 +10,9 @@ pragma solidity ^0.4.8;
     - Verification layer
       - Cannot submit data unless a public key has been set
     - Security layer
-      -
+      - Owner can read, write to any path
+      - Can only write to a path which you have been granted access to write to
+      - Can only read from a path which you have been granted access to read from
 */
 contract IPFSStorage {
 
