@@ -1,5 +1,5 @@
 import HashByte from '../utils/HashByte'
-import { isThrow } from './utils'
+import { isThrow, findAccount } from './utils'
 
 let contracts = {}
 const contractWithPublicKey = (account, publicKeyHash) => {
@@ -23,13 +23,14 @@ const IPFSStorage = artifacts.require('./IPFSStorage.sol')
 
 contract('IPFSStorage', (accounts) => {
 
-  const account = accounts[0]
+  const patient_1 = findAccount('patient_1')
+  const patient_2 = findAccount('patient_2')
   const publicKeyHash = 'Qmc809239e912949d06d6a125e1c0cd5a4df0a5669'
 
   describe('contract initialisation', () => {
 
     it('should have a size of 0', () => {
-      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      const { contract, instance } = contractWithPublicKey(patient_1.address, publicKeyHash)
       return contract
       .then(() => {
         return instance().size()
@@ -39,15 +40,14 @@ contract('IPFSStorage', (accounts) => {
       })
     })
 
-    it('should give two zero hashes for any path', () => {
-      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+    it('should throw error for any path', () => {
+      const { contract, instance } = contractWithPublicKey(patient_1.address, publicKeyHash)
       return contract
       .then(() => {
         return instance().get('random')
       })
-      .then((value) => {
-        assert.equal(HashByte.toHash(value[0]), '')
-        assert.equal(HashByte.toHash(value[0]), '')
+      .catch((err) => {
+        assert.equal(isThrow(err), true)
       })
     })
 
@@ -56,15 +56,15 @@ contract('IPFSStorage', (accounts) => {
   describe('setting a public key', () => {
 
     it('should allow setting a public key', () => {
-      contractWithPublicKey(account, publicKeyHash)
+      return contractWithPublicKey(patient_1.address, publicKeyHash)
     })
 
     it('should only allow setting a public key once', () => {
-      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      const { contract, instance } = contractWithPublicKey(patient_1.address, publicKeyHash)
       return contract
       .then(() => {
         return instance().updatePublicKey(
-          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
+          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: patient_1.address }
         )
       })
       .catch((err) => {
@@ -73,11 +73,11 @@ contract('IPFSStorage', (accounts) => {
     })
 
     it('should not allow setting a public key if you\'re not the owner', () => {
-      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      const { contract, instance } = contractWithPublicKey(patient_1.address, publicKeyHash)
       return contract
       .then(() => {
         return instance().updatePublicKey(
-          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: accounts[1] }
+          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: patient_2.address }
         )
       })
       .catch((err) => {
@@ -93,15 +93,15 @@ contract('IPFSStorage', (accounts) => {
     const hash = 'Qm061864a08ae30bbd5933cba4cfcf621d401591fd'
 
     it('should be successful', () => {
-      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      const { contract, instance } = contractWithPublicKey(patient_1.address, publicKeyHash)
       return contract
       .then(() => {
         return instance().add(
-          path, hash.slice(0, 32), hash.slice(32, 64), { from: account }
+          path, hash.slice(0, 32), hash.slice(32, 64), { from: patient_1.address }
         )
       })
       .then((value) => {
-        return instance().get(path)
+        return instance().get(path, { from: patient_1.address })
       })
       .then((value) => {
         assert.equal(HashByte.toHash(value[0]), hash.slice(0, 32))
@@ -110,15 +110,15 @@ contract('IPFSStorage', (accounts) => {
     })
 
     it('should allow getting the content back', () => {
-      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      const { contract, instance } = contractWithPublicKey(patient_1.address, publicKeyHash)
       return contract
       .then(() => {
         return instance().add(
-          path, hash.slice(0, 32), hash.slice(32, 64), { from: account }
+          path, hash.slice(0, 32), hash.slice(32, 64), { from: patient_1.address }
         )
       })
       .then((value) => {
-        return instance().get(path)
+        return instance().get(path, { from: patient_1.address })
       })
       .then((value) => {
         assert.equal(HashByte.toHash(value[0]), hash.slice(0, 32))
@@ -127,38 +127,41 @@ contract('IPFSStorage', (accounts) => {
     })
 
     it('index should be able to be used to get a path', () => {
-      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      const { contract, instance } = contractWithPublicKey(patient_1.address, publicKeyHash)
       return contract
       .then(() => {
         return instance().add(
-          path, hash.slice(0, 32), hash.slice(32, 64), { from: account }
+          path, hash.slice(0, 32), hash.slice(32, 64), { from: patient_1.address }
         )
       })
       .then(() => {
-        return instance().getIndex(0)
+        return instance().getIndex(0, { from: patient_1.address })
       })
       .then((value) => {
-        assert.equal(value.valueOf(), path)
+        console.dir(value)
+        assert.equal(value.valueOf(), path, { from: patient_1.address })
       })
     })
 
     it('should increment size on contract', () => {
       let s0
 
-      const { contract, instance } = contractWithPublicKey(account, publicKeyHash)
+      const { contract, instance } = contractWithPublicKey(patient_1.address, publicKeyHash)
       return contract
       .then(() => {
-        return instance().size()
+        return instance().size({ from: patient_1.address })
       })
       .then((value) => {
         s0 = value
-        return instance().add(path, hash.slice(0, 32), hash.slice(32, 64), { from: account })
+        return instance().add(
+          path, hash.slice(0, 32), hash.slice(32, 64), { from: patient_1.address }
+        )
       })
       .then(() => {
-        return instance().size()
+        return instance().size({ from: patient_1.address })
       })
       .then((value) => {
-        assert.equal(s0.plus(1).valueOf(), value.valueOf())
+        assert.equal(value.valueOf(), s0.plus(1).valueOf())
       })
     })
 

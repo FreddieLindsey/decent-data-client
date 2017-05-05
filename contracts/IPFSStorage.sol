@@ -1,5 +1,17 @@
 pragma solidity ^0.4.8;
 
+/*
+  CORE PRINCIPLES:
+
+    - All paths lead to some hash (null or not null)
+    - Data layer
+      - Allows setting the hash of a path
+      - Allows getting the hash of a path
+    - Verification layer
+      - Cannot submit data unless a public key has been set
+    - Security layer
+      -
+*/
 contract IPFSStorage {
 
   /* ----------------------------------------------------------------------- */
@@ -70,13 +82,13 @@ contract IPFSStorage {
   }
 
   /* ONLY ACCESSIBLE TO OWNER. ONLY UPDATED ONCE */
-  function updatePublicKey(bytes32 hash1, bytes32 hash2) onlyOwner noValidPublicKey {
+  function updatePublicKey(bytes32 hash1, bytes32 hash2) /* onlyOwner */ noValidPublicKey {
     part1 = hash1;
     part2 = hash2;
   }
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
-  function add(string path, bytes32 hash1, bytes32 hash2) writable(path) hasValidPublicKey {
+  function add(string path, bytes32 hash1, bytes32 hash2) /* writable(path) */ hasValidPublicKey {
     /* Find the index of the path */
     uint index = contains(paths, path);
 
@@ -94,14 +106,7 @@ contract IPFSStorage {
   }
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
-  function get(string path) constant returns (bytes32, bytes32) {
-    /* Find the index of the path */
-    uint index = contains(paths, path);
-
-    /* If already available, check permissions */
-    if (index < size(paths) && !allowedRead(msg.sender, path))
-      throw;
-
+  function get(string path) readable(path) constant returns (bytes32, bytes32) {
     /* Return hash of path */
     IpfsHash h = hashes[path];
     return (h.part1, h.part2);
