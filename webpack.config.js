@@ -13,7 +13,9 @@ module.exports = {
     historyApiFallback: true,
     stats: 'errors-only',
   },
-  entry: './client/index.js',
+  entry: [
+    './client/index.js'
+  ],
   output: {
     path: path.resolve(__dirname, 'build', 'client'),
     filename: 'app.js'
