@@ -107,6 +107,12 @@ contract IPFSStorage {
     allowRead(msg.sender, path);
   }
 
+  /* ONLY ACCESSIBLE BY */
+  function remove(string path) writable(path) {
+    remove(paths, path);
+    /* TODO: find a way to remove from all user paths */
+  }
+
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
   function get(string path) readable(path) constant returns (bytes32, bytes32) {
     /* Return hash of path */
@@ -141,6 +147,15 @@ contract IPFSStorage {
     if (contains(set, path) == size(set))
       set.items.push(path);
       set.items.length++;
+  }
+
+  function remove(Set storage set, string path) internal {
+    uint index = contains(set, path);
+    if (index != size(set)) {
+      set.items[index] = set.items[size(set) - 1];
+      set.items[size(set) - 1] = '';
+      set.items.length--;
+    }
   }
 
   function contains(Set storage set, string path) internal returns (uint) {
@@ -206,6 +221,10 @@ contract IPFSStorage {
 
   /* ADD ACCESS */
 
+  function reset(string path) internal {
+
+  }
+
   function allowRead(address addr, string path) internal {
     if (!allowedRead(addr, path)) {
       IpfsHash h = hashes[path];
@@ -265,11 +284,30 @@ contract IPFSStorage {
   }*/
 
   /* ----------------------------------------------------------------------- */
-  /* UTILS */
+  /* STRING LOGIC */
   /* ----------------------------------------------------------------------- */
 
-  function validPublicKey() internal returns (bool) {
-    return part1 != 0 && part2 != 0;
+  function stringSlice(string s, uint start, uint end) internal returns (string) {
+    bytes memory sBytes = bytes(s);
+    bytes memory out = new bytes(end - start);
+    for (uint i = 0; i < end; i++) {
+      out[i] = sBytes[start + i];
+    }
+    return string(out);
+  }
+
+  function stringFindSeparator(string s, byte separator) internal returns (bool[]) {
+    bool[] memory out;
+    bytes memory sBytes;
+
+    uint left = 0;
+    for (uint i = 0; i < sBytes.length; i++) {
+      if (sBytes[i] == separator) {
+        out[i] = true;
+        left = i + 1;
+      }
+    }
+    return out;
   }
 
   function stringEqual(string a, string b) internal returns (bool) {
@@ -281,6 +319,14 @@ contract IPFSStorage {
 			if (_a[i] != _b[i])
 				return false;
 		return true;
+  }
+
+  /* ----------------------------------------------------------------------- */
+  /* UTILS */
+  /* ----------------------------------------------------------------------- */
+
+  function validPublicKey() internal returns (bool) {
+    return part1 != 0 && part2 != 0;
   }
 
 }
