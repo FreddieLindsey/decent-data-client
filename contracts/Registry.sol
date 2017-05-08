@@ -20,12 +20,12 @@ contract Registry {
   /* EXTERNAL FUNCTIONS */
   /* ----------------------------------------------------------------------- */
 
-  function register() {
+  function register(bytes32 pub_1, bytes32 pub_2) {
     if (contracts[msg.sender].init)
       throw;
 
     contracts[msg.sender].init = true;
-    contracts[msg.sender].own = new IPFSStorage();
+    contracts[msg.sender].own = new IPFSStorage(pub_1, pub_2);
   }
 
   function get() constant returns (address) {

@@ -90,11 +90,13 @@ contract IPFSStorage {
   /* ONLY ACCESSIBLE BY OWNER */
   function giveWrite(address writer, string path) onlyOwner {
     allowWrite(writer, path);
+    insert(user_paths[writer], path);
   }
 
   /* ONLY ACCESSIBLE BY OWNER */
-  function giveRead(address writer, string path) onlyOwner {
-    allowRead(writer, path);
+  function giveRead(address reader, string path) onlyOwner {
+    allowRead(reader, path);
+    insert(user_paths[reader], path);
   }
 
   /* CONSTANT FUNCTIONS */
@@ -130,8 +132,8 @@ contract IPFSStorage {
     return writer == owner || allowedWrite(writer, path);
   }
 
-  function canRead(address writer, string path) constant returns (bool) {
-    return writer == owner || allowedRead(writer, path);
+  function canRead(address reader, string path) constant returns (bool) {
+    return reader == owner || allowedRead(reader, path);
   }
 
   /* ----------------------------------------------------------------------- */
