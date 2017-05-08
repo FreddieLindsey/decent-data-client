@@ -107,11 +107,23 @@ contract IPFSStorage {
     allowRead(msg.sender, path);
   }
 
-  /* ONLY ACCESSIBLE BY */
+  /* ONLY ACCESSIBLE BY TODO */
   function remove(string path) writable(path) {
     remove(paths, path);
     /* TODO: find a way to remove from all user paths */
   }
+
+  /* ONLY ACCESSIBLE BY OWNER */
+  function giveWrite(address writer, string path) onlyOwner {
+    allowWrite(writer, path);
+  }
+
+  /* ONLY ACCESSIBLE BY OWNER */
+  function giveRead(address writer, string path) onlyOwner {
+    allowRead(writer, path);
+  }
+
+  /* CONSTANT FUNCTIONS */
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
   function get(string path) readable(path) constant returns (bytes32, bytes32) {
@@ -137,6 +149,15 @@ contract IPFSStorage {
   function size() constant returns (uint) {
     /* The size of the user's available paths */
     return size(user_paths[msg.sender]);
+  }
+
+  /* ACCESSIBLE BY ANY PARTY */
+  function canWrite(address writer, string path) constant returns (bool) {
+    return writer == owner || allowedWrite(writer, path);
+  }
+
+  function canRead(address writer, string path) constant returns (bool) {
+    return writer == owner || allowedRead(writer, path);
   }
 
   /* ----------------------------------------------------------------------- */
