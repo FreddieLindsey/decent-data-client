@@ -25,16 +25,6 @@ contract IPFSStorage {
     _;
   }
 
-  modifier publicKeyNotExist() {
-    if (validPublicKey()) throw;
-    _;
-  }
-
-  modifier publicKeyExist() {
-    if (!validPublicKey()) throw;
-    _;
-  }
-
   modifier writable(string path) {
     if (msg.sender != owner && !allowedWrite(msg.sender, path)) throw;
     _;
@@ -63,8 +53,7 @@ contract IPFSStorage {
   address public owner;
 
   /* Public key to encrypt data */
-  bytes32 part1;
-  bytes32 part2;
+  IpfsHash publicKey;
 
   /* Used for indexing */
   Set paths;
@@ -79,18 +68,13 @@ contract IPFSStorage {
   /* EXTERNAL FUNCTIONS */
   /* ----------------------------------------------------------------------- */
 
-  function IPFSStorage() {
+  function IPFSStorage(bytes32 pub_1, bytes32 pub_2) {
     owner = msg.sender;
-  }
-
-  /* ONLY ACCESSIBLE TO OWNER. ONLY UPDATED ONCE */
-  function updatePublicKey(bytes32 hash1, bytes32 hash2) /* onlyOwner */ publicKeyNotExist {
-    part1 = hash1;
-    part2 = hash2;
+    publicKey = IpfsHash(pub_1, pub_2);
   }
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
-  function add(string path, bytes32 hash1, bytes32 hash2) /* writable(path) */ publicKeyExist {
+  function add(string path, bytes32 hash1, bytes32 hash2) writable(path) {
     /* Find the index of the path */
     uint index = contains(paths, path);
 
@@ -101,16 +85,6 @@ contract IPFSStorage {
       part1: hash1,
       part2: hash2
     });
-
-    /* TODO: discuss permissions for new data */
-    allowWrite(msg.sender, path);
-    allowRead(msg.sender, path);
-  }
-
-  /* ONLY ACCESSIBLE BY TODO */
-  function remove(string path) writable(path) {
-    remove(paths, path);
-    /* TODO: find a way to remove from all user paths */
   }
 
   /* ONLY ACCESSIBLE BY OWNER */
@@ -206,12 +180,6 @@ contract IPFSStorage {
 
   /* VIEW ACCESS */
 
-  function allowedVisible(address addr, string path) internal returns (bool) {
-    IpfsHash h = hashes[path];
-    uint access = h.access_control[addr];
-    return (access != 0);
-  }
-
   function allowedRead(address addr, string path) internal returns (bool) {
     IpfsHash h = hashes[path];
     uint access = h.access_control[addr];
@@ -241,10 +209,6 @@ contract IPFSStorage {
   }*/
 
   /* ADD ACCESS */
-
-  function reset(string path) internal {
-
-  }
 
   function allowRead(address addr, string path) internal {
     if (!allowedRead(addr, path)) {
@@ -345,9 +309,5 @@ contract IPFSStorage {
   /* ----------------------------------------------------------------------- */
   /* UTILS */
   /* ----------------------------------------------------------------------- */
-
-  function validPublicKey() internal returns (bool) {
-    return part1 != 0 && part2 != 0;
-  }
 
 }

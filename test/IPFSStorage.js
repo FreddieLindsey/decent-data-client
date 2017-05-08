@@ -45,60 +45,17 @@ contract('IPFSStorage', (accounts) => {
 
   })
 
-  describe('setting a public key', () => {
+  describe('finding available paths', () => {
 
-    it('should allow setting a public key', () => {
-      return IPFSStorageWithPublicKey(patient_1.address, publicKeyHash)
-    })
+    xit('should give count of available paths', () => {
 
-    it('should only allow setting a public key once', () => {
-      const { contract, instance } = IPFSStorageWithPublicKey(patient_1.address, publicKeyHash)
-      return contract
-      .then(() => {
-        return instance().updatePublicKey(
-          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: patient_1.address }
-        )
-      })
-      .catch((err) => {
-        assert.equal(isThrow(err), true)
-      })
-    })
-
-    it('should not allow setting a public key if you\'re not the owner', () => {
-      const { contract, instance } = IPFSStorageWithPublicKey(patient_1.address, publicKeyHash)
-      return contract
-      .then(() => {
-        return instance().updatePublicKey(
-          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: patient_2.address }
-        )
-      })
-      .catch((err) => {
-        assert.equal(isThrow(err), true)
-      })
     })
 
   })
 
   describe('adding data to contract', () => {
 
-    it('should be successful', () => {
-      const { contract, instance } = IPFSStorageWithPublicKey(patient_1.address, publicKeyHash)
-      return contract
-      .then(() => {
-        return instance().add(
-          path, hash.slice(0, 32), hash.slice(32, 64), { from: patient_1.address }
-        )
-      })
-      .then((value) => {
-        return instance().get(path, { from: patient_1.address })
-      })
-      .then((value) => {
-        assert.equal(HashByte.toHash(value[0]), hash.slice(0, 32))
-        assert.equal(HashByte.toHash(value[1]), hash.slice(32, 64))
-      })
-    })
-
-    it('should allow getting the content back', () => {
+    it('should be successful with write access', () => {
       const { contract, instance } = IPFSStorageWithPublicKey(patient_1.address, publicKeyHash)
       return contract
       .then(() => {
@@ -157,7 +114,27 @@ contract('IPFSStorage', (accounts) => {
 
   describe('getting data from a contract', () => {
 
-    it('should throw error for any path when there is no data', () => {
+    it('should be successful if read access', () => {
+      const { contract, instance } = IPFSStorageWithPublicKey(patient_1.address, publicKeyHash)
+      return contract
+      .then(() => {
+        return instance().add(
+          path, hash.slice(0, 32), hash.slice(32, 64), { from: patient_1.address }
+        )
+      })
+      .then(() => {
+        return instance().giveRead(patient_2.address, path, { from: patient_1.address })
+      })
+      .then(() => {
+        return instance().get(path, { from: patient_2.address })
+      })
+      .then((value) => {
+        assert.equal(HashByte.toHash(value[0]), hash.slice(0, 32))
+        assert.equal(HashByte.toHash(value[1]), hash.slice(32, 64))
+      })
+    })
+
+    it('should throw error if no read access', () => {
       const { contract, instance } =
         IPFSStorageWithPublicKey(patient_1.address, publicKeyHash, true)
       return contract
@@ -171,7 +148,7 @@ contract('IPFSStorage', (accounts) => {
 
   })
 
-  describe('setting permissions', () => {
+  describe('getting and setting permissions', () => {
 
     it('should allow owner write by default', () => {
       const { contract, instance } =

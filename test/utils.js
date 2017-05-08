@@ -16,17 +16,17 @@ export const findAccount = (name) => {
   console.log(`No account found with name ${name}`)
 }
 
-export const IPFSStorageWithPublicKey = (account, publicKeyHash,
+export const IPFSStorageWithPublicKey = (account, publicKeyHash = undefined,
                                          refresh = false) => {
-  if (!contractsIPFSStorage[account] || refresh) {
+  if ((!contractsIPFSStorage[account] || refresh) && publicKeyHash) {
     let i
     contractsIPFSStorage[account] = {
-      contract: IPFSStorage.new({ from: account }).then((instance) => {
-        i = instance
-        return instance.updatePublicKey(
-          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
-        )
-      }),
+      contract:
+        IPFSStorage.new(publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account })
+        .then((instance) => {
+          i = instance
+          return
+        }),
       instance: () => i
     }
   }
