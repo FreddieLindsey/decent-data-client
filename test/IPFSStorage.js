@@ -77,7 +77,7 @@ contract('IPFSStorage', (accounts) => {
 
   describe('adding data to contract', () => {
 
-    it('should be successful with write access', () => {
+    it('should be successful if write access', () => {
       const { contract, instance } = IPFSStorageWithPublicKey(patient_1.address)
       const path_ = path + Math.random().toString()
       return contract
@@ -95,21 +95,17 @@ contract('IPFSStorage', (accounts) => {
       })
     })
 
-    it('index should be able to be used to get a path', () => {
-      const { contract, instance } =
-        IPFSStorageWithPublicKey(patient_1.address, publicKeyHash, true)
+    it('should throw error if no write access', () => {
+      const { contract, instance } = IPFSStorageWithPublicKey(patient_1.address)
       const path_ = path + Math.random().toString()
       return contract
       .then(() => {
         return instance().add(
-          path_, hash.slice(0, 32), hash.slice(32, 64), { from: patient_1.address }
+          path_, hash.slice(0, 32), hash.slice(32, 64), { from: patient_2.address }
         )
       })
-      .then(() => {
-        return instance().getIndex(0, { from: patient_1.address })
-      })
-      .then((value) => {
-        assert.equal(value, path_, { from: patient_1.address })
+      .catch((err) => {
+        assert.equal(isThrow(err), true)
       })
     })
 
@@ -169,6 +165,24 @@ contract('IPFSStorage', (accounts) => {
       })
       .catch((err) => {
         assert.equal(isThrow(err), true)
+      })
+    })
+
+    it('should be able to use an index to get a path available to the user', () => {
+      const { contract, instance } =
+        IPFSStorageWithPublicKey(patient_1.address, publicKeyHash, true)
+      const path_ = path + Math.random().toString()
+      return contract
+      .then(() => {
+        return instance().add(
+          path_, hash.slice(0, 32), hash.slice(32, 64), { from: patient_1.address }
+        )
+      })
+      .then(() => {
+        return instance().getIndex(0, { from: patient_1.address })
+      })
+      .then((value) => {
+        assert.equal(value, path_, { from: patient_1.address })
       })
     })
 
