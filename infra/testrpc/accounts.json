@@ -2,52 +2,61 @@
   {
     "address": "0x753238421d235004acc458814f7beb3b49289835",
     "secretKey": "0x1465284b34ff38fe0a30137a6e7431bc1f0dfe38cc165c7b53feeec117579749",
-    "balance": "0x1337000000000000000000000",
-    "name": "patient_1"
+    "balance": "0x1337000000000000000000000000000",
+    "name": "arbitrator"
   },
   {
     "address": "0xca86788d96319267e8d94dc5ccfa9c468586a8be",
     "secretKey": "0x06310243ed4b2c09e6563d84b040bb84a47180e6ee2df0656f594d1eee314e6f",
-    "balance": "0x1337000000000000000000000"
+    "balance": "0x1337000000000000000000000000000",
+    "name": "hospital"
   },
   {
     "address": "0x36e8930de2c0bdf324791b332450e44949483952",
     "secretKey": "0x0ba29b28d1753ea0e6740d9451a94df75dbd84af6bdbebc0f0236cccae4f5c01",
-    "balance": "0x1337000000000000000000000"
+    "balance": "0x1337000000000000000000000000000",
+    "name": "gmc"
   },
   {
     "address": "0xbf92b35077ec4cd0092ad0444e342bbd04fac2d3",
     "secretKey": "0x79739a0a2f54467e30f14322f0c5b85a4a4c5988b319f288e5c22ef9545b556f",
-    "balance": "0x1337000000000000000000000"
+    "balance": "0x1337000000000000000000000000000",
+    "name": "doctor"
   },
   {
     "address": "0xa694c4a10ac43eaa02437c24dcf4eedaec949639",
     "secretKey": "0x729e781cba2356c47ba49467f0bbe50d8cb2f0995757ca5691994033140f76a3",
-    "balance": "0x1337000000000000000000000"
+    "balance": "0x1337000000000000000000000000000",
+    "name": "patient_1"
   },
   {
     "address": "0x6e149dfbe5c3bb401e52669c76bc2f682353b151",
     "secretKey": "0x69f90ed0bb75d0019b87907433a09acab3be5ad6f35ea1e6178a27fd5e96b972",
-    "balance": "0x1337000000000000000000000"
+    "balance": "0x1337000000000000000000000000000",
+    "name": "patient_2"
   },
   {
     "address": "0x74bc458005a990ffc2eab13347c94f45c32cd296",
     "secretKey": "0x182116eb3352a5f992241478ff987f7e1ed0fb8bbe7ca809c7d4cd2481eb872f",
-    "balance": "0x1337000000000000000000000"
+    "balance": "0x1337000000000000000000000000000",
+    "name": "patient_3"
   },
   {
     "address": "0x5d69b1e5a524b2dca2ad3c039af2ef3f87c4b49f",
     "secretKey": "0x0be582f57ed5c5d7098c72deb78ed1a09f8f39af89e6727ce22efcc06144dc81",
-    "balance": "0x1337000000000000000000000"
+    "balance": "0x1337000000000000000000000000000",
+    "name": "patient_4"
   },
   {
     "address": "0xa1f6d3b2c9904755f813374779f0ca5951a3cf84",
     "secretKey": "0xdb2465504c9b3e4c54a7efd712d378a4b1f28e50f74bd9baf160674842b8417c",
-    "balance": "0x1337000000000000000000000"
+    "balance": "0x1337000000000000000000000000000",
+    "name": "patient_5"
   },
   {
     "address": "0xc6f742d8073b0f06ba8b3956a8b429dcb84f58d6",
     "secretKey": "0x58de4e56656944fb81f54fc1599fb8f82b842f72abada97f540a6d91eb096c13",
-    "balance": "0x1337000000000000000000000"
+    "balance": "0x1337000000000000000000000000000",
+    "name": "patient_6"
   }
 ]

@@ -1,5 +1,19 @@
 pragma solidity ^0.4.8;
 
+/*
+  CORE PRINCIPLES:
+
+    - All paths lead to some hash (null or not null)
+    - Data layer
+      - Allows setting the hash of a path
+      - Allows getting the hash of a path
+    - Verification layer
+      - Cannot submit data unless a public key has been set
+    - Security layer
+      - Owner can read, write to any path
+      - Can only write to a path which you have been granted access to write to
+      - Can only read from a path which you have been granted access to read from
+*/
 contract IPFSStorage {
 
   /* ----------------------------------------------------------------------- */
@@ -11,13 +25,20 @@ contract IPFSStorage {
     _;
   }
 
-  modifier noValidPublicKey() {
-    if (validPublicKey()) throw;
+  modifier ownerAdd(string path) {
+    if (msg.sender == owner) {
+      insert(user_paths[owner], path);
+    }
     _;
   }
 
-  modifier hasValidPublicKey() {
-    if (!validPublicKey()) throw;
+  modifier writable(string path) {
+    if (msg.sender != owner && !allowedWrite(msg.sender, path)) throw;
+    _;
+  }
+
+  modifier readable(string path) {
+    if (msg.sender != owner && !allowedRead(msg.sender, path)) throw;
     _;
   }
 
@@ -36,14 +57,10 @@ contract IPFSStorage {
   }
 
   /* Contract owner */
-  address owner;
+  address public owner;
 
   /* Public key to encrypt data */
-  bytes32 part1;
-  bytes32 part2;
-
-  /* Used for indexing */
-  Set paths;
+  IpfsHash publicKey;
 
   /* Specific user's available paths */
   mapping (address => Set) user_paths;
@@ -55,47 +72,36 @@ contract IPFSStorage {
   /* EXTERNAL FUNCTIONS */
   /* ----------------------------------------------------------------------- */
 
-  function IPFSStorage() {
+  function IPFSStorage(bytes32 pub_1, bytes32 pub_2) {
     owner = msg.sender;
-  }
-
-  /* ONLY ACCESSIBLE TO OWNER. ONLY UPDATED ONCE */
-  function updatePublicKey(bytes32 hash1, bytes32 hash2) onlyOwner noValidPublicKey {
-    part1 = hash1;
-    part2 = hash2;
+    publicKey = IpfsHash(pub_1, pub_2);
   }
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
-  function add(string path, bytes32 hash1, bytes32 hash2) hasValidPublicKey {
-    /* Find the index of the path */
-    uint index = contains(paths, path);
-
-    /* If already available, check permissions */
-    if (index != size(paths) && !allowedWrite(msg.sender, path))
-      throw;
-
+  function add(string path, bytes32 hash1, bytes32 hash2) ownerAdd(path) writable(path) {
     /* Update path */
-    insert(paths, path);
-    insert(user_paths[msg.sender], path);
-    hashes[path] = IpfsHash({
-      part1: hash1,
-      part2: hash2
-    });
-
-    /* TODO: discuss permissions for new data */
-    allowWrite(msg.sender, path);
-    allowRead(msg.sender, path);
+    hashes[path].part1 = hash1;
+    hashes[path].part2 = hash2;
   }
 
+  /* ONLY ACCESSIBLE BY OWNER */
+  function giveWrite(address writer, string path) onlyOwner {
+    allowWrite(writer, path);
+    insert(user_paths[owner], path);
+    insert(user_paths[writer], path);
+  }
+
+  /* ONLY ACCESSIBLE BY OWNER */
+  function giveRead(address reader, string path) onlyOwner {
+    allowRead(reader, path);
+    insert(user_paths[owner], path);
+    insert(user_paths[reader], path);
+  }
+
+  /* CONSTANT FUNCTIONS */
+
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
-  function get(string path) constant returns (bytes32, bytes32) {
-    /* Find the index of the path */
-    uint index = contains(paths, path);
-
-    /* If already available, check permissions */
-    if (index < size(paths) && !allowedRead(msg.sender, path))
-      throw;
-
+  function get(string path) readable(path) constant returns (bytes32, bytes32) {
     /* Return hash of path */
     IpfsHash h = hashes[path];
     return (h.part1, h.part2);
@@ -117,7 +123,16 @@ contract IPFSStorage {
   /* ACCESSIBLE BY ANY PARTY */
   function size() constant returns (uint) {
     /* The size of the user's available paths */
-    return size(paths);
+    return size(user_paths[msg.sender]);
+  }
+
+  /* ACCESSIBLE BY ANY PARTY */
+  function canWrite(address writer, string path) constant returns (bool) {
+    return writer == owner || allowedWrite(writer, path);
+  }
+
+  function canRead(address reader, string path) constant returns (bool) {
+    return reader == owner || allowedRead(reader, path);
   }
 
   /* ----------------------------------------------------------------------- */
@@ -127,6 +142,16 @@ contract IPFSStorage {
   function insert(Set storage set, string path) internal {
     if (contains(set, path) == size(set))
       set.items.push(path);
+      set.items.length++;
+  }
+
+  function remove(Set storage set, string path) internal {
+    uint index = contains(set, path);
+    if (index != size(set)) {
+      set.items[index] = set.items[size(set) - 1];
+      set.items[size(set) - 1] = '';
+      set.items.length--;
+    }
   }
 
   function contains(Set storage set, string path) internal returns (uint) {
@@ -156,12 +181,6 @@ contract IPFSStorage {
 
   /* VIEW ACCESS */
 
-  function allowedVisible(address addr, string path) internal returns (bool) {
-    IpfsHash h = hashes[path];
-    uint access = h.access_control[addr];
-    return (access != 0);
-  }
-
   function allowedRead(address addr, string path) internal returns (bool) {
     IpfsHash h = hashes[path];
     uint access = h.access_control[addr];
@@ -176,19 +195,19 @@ contract IPFSStorage {
     return (access >= 2);
   }
 
-  function allowedReadLog(address addr, string path) internal returns (bool) {
+  /*function allowedReadLog(address addr, string path) internal returns (bool) {
     IpfsHash h = hashes[path];
     uint access = h.access_control[addr];
     access = access % 8;
     return (access >= 4);
-  }
+  }*/
 
-  function allowedWriteLog(address addr, string path) internal returns (bool) {
+  /*function allowedWriteLog(address addr, string path) internal returns (bool) {
     IpfsHash h = hashes[path];
     uint access = h.access_control[addr];
-    /*access = access % 16;*/
+    access = access % 16;
     return (access >= 8);
-  }
+  }*/
 
   /* ADD ACCESS */
 
@@ -206,19 +225,19 @@ contract IPFSStorage {
     }
   }
 
-  function allowReadLog(address addr, string path) internal {
+  /*function allowReadLog(address addr, string path) internal {
     if (!allowedReadLog(addr, path)) {
       IpfsHash h = hashes[path];
       h.access_control[addr] += 4;
     }
-  }
+  }*/
 
-  function allowWriteLog(address addr, string path) internal {
+  /*function allowWriteLog(address addr, string path) internal {
     if (!allowedWriteLog(addr, path)) {
       IpfsHash h = hashes[path];
       h.access_control[addr] += 8;
     }
-  }
+  }*/
 
   /* REMOVE ACCESS */
 
@@ -236,26 +255,45 @@ contract IPFSStorage {
     }
   }
 
-  function removeReadLog(address addr, string path) internal {
+  /*function removeReadLog(address addr, string path) internal {
     if (allowedReadLog(addr, path)) {
       IpfsHash h = hashes[path];
       h.access_control[addr] -= 4;
     }
-  }
+  }*/
 
-  function removeWriteLog(address addr, string path) internal {
+  /*function removeWriteLog(address addr, string path) internal {
     if (allowedWriteLog(addr, path)) {
       IpfsHash h = hashes[path];
       h.access_control[addr] -= 8;
     }
+  }*/
+
+  /* ----------------------------------------------------------------------- */
+  /* STRING LOGIC */
+  /* ----------------------------------------------------------------------- */
+
+  function stringSlice(string s, uint start, uint end) internal returns (string) {
+    bytes memory sBytes = bytes(s);
+    bytes memory out = new bytes(end - start);
+    for (uint i = 0; i < end; i++) {
+      out[i] = sBytes[start + i];
+    }
+    return string(out);
   }
 
-  /* ----------------------------------------------------------------------- */
-  /* UTILS */
-  /* ----------------------------------------------------------------------- */
+  function stringFindSeparator(string s, byte separator) internal returns (bool[]) {
+    bool[] memory out;
+    bytes memory sBytes;
 
-  function validPublicKey() internal returns (bool) {
-    return part1 != 0 && part2 != 0;
+    uint left = 0;
+    for (uint i = 0; i < sBytes.length; i++) {
+      if (sBytes[i] == separator) {
+        out[i] = true;
+        left = i + 1;
+      }
+    }
+    return out;
   }
 
   function stringEqual(string a, string b) internal returns (bool) {
@@ -268,5 +306,9 @@ contract IPFSStorage {
 				return false;
 		return true;
   }
+
+  /* ----------------------------------------------------------------------- */
+  /* UTILS */
+  /* ----------------------------------------------------------------------- */
 
 }
