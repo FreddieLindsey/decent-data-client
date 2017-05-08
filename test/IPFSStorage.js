@@ -84,7 +84,7 @@ contract('IPFSStorage', (accounts) => {
         return instance().getIndex(0, { from: patient_1.address })
       })
       .then((value) => {
-        assert.equal(value.valueOf(), path, { from: patient_1.address })
+        assert.equal(value, path, { from: patient_1.address })
       })
     })
 

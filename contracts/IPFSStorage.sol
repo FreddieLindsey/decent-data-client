@@ -25,6 +25,13 @@ contract IPFSStorage {
     _;
   }
 
+  modifier ownerAdd(string path) {
+    if (msg.sender == owner) {
+      insert(user_paths[owner], path);
+    }
+    _;
+  }
+
   modifier writable(string path) {
     if (msg.sender != owner && !allowedWrite(msg.sender, path)) throw;
     _;
@@ -55,9 +62,6 @@ contract IPFSStorage {
   /* Public key to encrypt data */
   IpfsHash publicKey;
 
-  /* Used for indexing */
-  Set paths;
-
   /* Specific user's available paths */
   mapping (address => Set) user_paths;
 
@@ -74,28 +78,23 @@ contract IPFSStorage {
   }
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
-  function add(string path, bytes32 hash1, bytes32 hash2) writable(path) {
-    /* Find the index of the path */
-    uint index = contains(paths, path);
-
+  function add(string path, bytes32 hash1, bytes32 hash2) ownerAdd(path) writable(path) {
     /* Update path */
-    insert(paths, path);
-    insert(user_paths[msg.sender], path);
-    hashes[path] = IpfsHash({
-      part1: hash1,
-      part2: hash2
-    });
+    hashes[path].part1 = hash1;
+    hashes[path].part2 = hash2;
   }
 
   /* ONLY ACCESSIBLE BY OWNER */
   function giveWrite(address writer, string path) onlyOwner {
     allowWrite(writer, path);
+    insert(user_paths[owner], path);
     insert(user_paths[writer], path);
   }
 
   /* ONLY ACCESSIBLE BY OWNER */
   function giveRead(address reader, string path) onlyOwner {
     allowRead(reader, path);
+    insert(user_paths[owner], path);
     insert(user_paths[reader], path);
   }
 
