@@ -27,14 +27,14 @@ contract('IPFSStorage', (accounts) => {
       })
     })
 
-    it('should throw error for any path', () => {
+    it('owner of contract should be public', () => {
       const { contract, instance } = IPFSStorageWithPublicKey(patient_1.address, publicKeyHash)
       return contract
       .then(() => {
-        return instance().get('random')
+        return instance().owner()
       })
-      .catch((err) => {
-        assert.equal(isThrow(err), true)
+      .then((value) => {
+        assert.equal(value, patient_1.address)
       })
     })
 
@@ -125,7 +125,6 @@ contract('IPFSStorage', (accounts) => {
         return instance().getIndex(0, { from: patient_1.address })
       })
       .then((value) => {
-        console.dir(value)
         assert.equal(value.valueOf(), path, { from: patient_1.address })
       })
     })
@@ -149,6 +148,22 @@ contract('IPFSStorage', (accounts) => {
       })
       .then((value) => {
         assert.equal(value.valueOf(), s0.plus(1).valueOf())
+      })
+    })
+
+  })
+
+  describe('getting data from a contract', () => {
+
+    it('should throw error for any path when there is no data', () => {
+      const { contract, instance } =
+        IPFSStorageWithPublicKey(patient_1.address, publicKeyHash, true)
+      return contract
+      .then(() => {
+        return instance().get('random')
+      })
+      .catch((err) => {
+        assert.equal(isThrow(err), true)
       })
     })
 

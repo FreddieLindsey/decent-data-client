@@ -60,7 +60,7 @@ contract IPFSStorage {
   }
 
   /* Contract owner */
-  address owner;
+  address public owner;
 
   /* Public key to encrypt data */
   bytes32 part1;

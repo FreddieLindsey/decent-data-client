@@ -16,8 +16,9 @@ export const findAccount = (name) => {
   console.log(`No account found with name ${name}`)
 }
 
-export const IPFSStorageWithPublicKey = (account, publicKeyHash) => {
-  if (!contractsIPFSStorage[account]) {
+export const IPFSStorageWithPublicKey = (account, publicKeyHash,
+                                         refresh = false) => {
+  if (!contractsIPFSStorage[account] || refresh) {
     let i
     contractsIPFSStorage[account] = {
       contract: IPFSStorage.new({ from: account }).then((instance) => {
