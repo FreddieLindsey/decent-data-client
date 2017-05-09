@@ -30,23 +30,19 @@ contract('Registry', (accounts) => {
 
     it('should be successful when a user has registed', () => {
       const { contract, instance } = RegistryBlank()
+      const storage = IPFSStorageWithPublicKey(patient_1.address, publicKeyHash, true)
       return contract
       .then(() => {
-        return instance().register(
-          publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: patient_1.address }
-        )
+        return storage.contract
+      })
+      .then(() => {
+        return instance().register(storage.instance().address, { from: patient_1.address })
       })
       .then(() => {
         return instance().get({ from: patient_1.address })
       })
       .then((value) => {
-        return IPFSStorage.at(value)
-      })
-      .then((storage) => {
-        return storage.owner()
-      })
-      .then((owner) => {
-        assert.equal(owner, patient_1.address)
+        assert.equal(value, storage.instance().address)
       })
     })
 

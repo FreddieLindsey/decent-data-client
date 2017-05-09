@@ -10,8 +10,8 @@ contract Registry {
   /* ----------------------------------------------------------------------- */
 
   struct Register {
-    bool      init;
-    address   store;
+    bool        init;
+    IPFSStorage store;
   }
 
   mapping (address => Register) contracts;
@@ -20,11 +20,11 @@ contract Registry {
   /* EXTERNAL FUNCTIONS */
   /* ----------------------------------------------------------------------- */
 
-  function register(bytes32 pub_1, bytes32 pub_2) {
+  function register(IPFSStorage store) {
     if (contracts[msg.sender].init) throw;
+    if (store.owner() != msg.sender) throw;
 
-    contracts[msg.sender].init = true;
-    contracts[msg.sender].store = new IPFSStorage(msg.sender, pub_1, pub_2);
+    contracts[msg.sender] = Register(true, store);
   }
 
   /* ----------------------------------------------------------------------- */

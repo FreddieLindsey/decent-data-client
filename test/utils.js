@@ -24,9 +24,7 @@ export const IPFSStorageWithPublicKey = (account, publicKeyHash = undefined,
     let i
     contractsIPFSStorage[account] = {
       contract:
-        IPFSStorage.new(
-          account, publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
-        )
+        IPFSStorage.new(publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account })
         .then((instance) => {
           i = instance
           return
@@ -44,7 +42,7 @@ export const RegistryBlank = (refresh = false) => {
     contractRegistry = {
       contract:
         Registry.new({ from: findAccount('arbitrator').address })
-        .then((instance) => i = instance),
+        .then((instance) => { i = instance }),
       instance: () => i
     }
   }
