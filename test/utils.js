@@ -4,7 +4,7 @@ const Registry = artifacts.require('./Registry.sol')
 const IPFSStorage = artifacts.require('./IPFSStorage.sol')
 
 let
-  contractRegistry = undefined,
+  contractRegistry = {},
   contractsIPFSStorage = {}
 
 export const isThrow = (err) => {
@@ -37,7 +37,7 @@ export const IPFSStorageWithPublicKey = (account, publicKeyHash = undefined,
 }
 
 export const RegistryBlank = (refresh = false) => {
-  if (refresh || !contractRegistry) {
+  if (refresh || !contractRegistry.contract) {
     let i
     contractRegistry = {
       contract:

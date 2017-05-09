@@ -6,39 +6,40 @@ import './IPFSStorage.sol';
 contract Registry {
 
   /* ----------------------------------------------------------------------- */
+  /* MODIFIERS */
+  /* ----------------------------------------------------------------------- */
+
+  modifier notInitialised() {
+    if (register[msg.sender] != 0) throw;
+    _;
+  }
+
+  modifier initialised(address person) {
+    if (register[person] == 0) throw;
+    _;
+  }
+
+  /* ----------------------------------------------------------------------- */
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
 
-  struct Register {
-    bool        init;
-    IPFSStorage store;
-  }
-
-  mapping (address => Register) contracts;
+  mapping (address => address) register;
 
   /* ----------------------------------------------------------------------- */
   /* EXTERNAL FUNCTIONS */
   /* ----------------------------------------------------------------------- */
 
-  function register(IPFSStorage store) {
-    if (contracts[msg.sender].init) throw;
-    if (store.owner() != msg.sender) throw;
-
-    contracts[msg.sender] = Register(true, store);
+  function addStore(address store) notInitialised {
+    if (IPFSStorage(store).owner() != msg.sender) throw;
+    register[msg.sender] = store;
   }
 
   /* ----------------------------------------------------------------------- */
   /* EXTERNAL FUNCTIONS (CONSTANT) */
   /* ----------------------------------------------------------------------- */
 
-  function get() constant returns (address) {
-    return get(msg.sender);
-  }
-
-  function get(address person) constant returns (address) {
-    Register storage r = contracts[person];
-    if (!r.init) throw;
-    return r.store;
+  function getStore(address person) initialised(person) constant returns (address) {
+    return register[person];
   }
 
 }
