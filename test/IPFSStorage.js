@@ -20,7 +20,7 @@ contract('IPFSStorage', (accounts) => {
   const hash = 'Qm061864a08ae30bbd5933cba4cfcf621d401591fd'
 
   // Setup
-  IPFSStorageWithPublicKey(patient_1.address, publicKeyHash)
+  IPFSStorageWithPublicKey(patient_1.address, publicKeyHash, true)
 
   describe('contract initialisation', () => {
 
