@@ -98,6 +98,18 @@ contract IPFSStorage {
     insert(user_paths[reader], path);
   }
 
+  /* ONLY ACCESSIBLE BY OWNER */
+  function takeWrite(address writer, string path) onlyOwner {
+    removeWrite(writer, path);
+    remove(user_paths[writer], path);
+  }
+
+  /* ONLY ACCESSIBLE BY OWNER */
+  function takeRead(address reader, string path) onlyOwner {
+    removeRead(reader, path);
+    remove(user_paths[reader], path);
+  }
+
   /* CONSTANT FUNCTIONS */
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
@@ -142,7 +154,7 @@ contract IPFSStorage {
   function insert(Set storage set, string path) internal {
     if (contains(set, path) == size(set))
       set.items.push(path);
-      set.items.length++;
+      /*set.items.length++;*/
   }
 
   function remove(Set storage set, string path) internal {
