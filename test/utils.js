@@ -1,8 +1,10 @@
 import accounts from '../infra/testrpc/accounts.json'
 
+const Registry = artifacts.require('./Registry.sol')
 const IPFSStorage = artifacts.require('./IPFSStorage.sol')
 
 let
+  contractRegistry = undefined,
   contractsIPFSStorage = {}
 
 export const isThrow = (err) => {
@@ -22,7 +24,9 @@ export const IPFSStorageWithPublicKey = (account, publicKeyHash = undefined,
     let i
     contractsIPFSStorage[account] = {
       contract:
-        IPFSStorage.new(publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account })
+        IPFSStorage.new(
+          account, publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account }
+        )
         .then((instance) => {
           i = instance
           return
@@ -32,4 +36,17 @@ export const IPFSStorageWithPublicKey = (account, publicKeyHash = undefined,
   }
 
   return contractsIPFSStorage[account]
+}
+
+export const RegistryBlank = (refresh = false) => {
+  if (refresh || !contractRegistry) {
+    let i
+    contractRegistry = {
+      contract:
+        Registry.new({ from: findAccount('arbitrator').address })
+        .then((instance) => i = instance),
+      instance: () => i
+    }
+  }
+  return contractRegistry
 }

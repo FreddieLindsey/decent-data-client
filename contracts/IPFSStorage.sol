@@ -72,8 +72,8 @@ contract IPFSStorage {
   /* EXTERNAL FUNCTIONS */
   /* ----------------------------------------------------------------------- */
 
-  function IPFSStorage(bytes32 pub_1, bytes32 pub_2) {
-    owner = msg.sender;
+  function IPFSStorage(address owner_, bytes32 pub_1, bytes32 pub_2) {
+    owner = owner_;
     publicKey = IpfsHash(pub_1, pub_2);
   }
 
