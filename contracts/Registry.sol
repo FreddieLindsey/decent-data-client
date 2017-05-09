@@ -30,7 +30,7 @@ contract Registry {
   /* ----------------------------------------------------------------------- */
 
   function addStore(address store) notInitialised {
-    if (IPFSStorage(store).owner() != msg.sender) throw;
+    if (IPFSStorage(store).getOwner() != msg.sender) throw;
     register[msg.sender] = store;
   }
 
@@ -39,7 +39,7 @@ contract Registry {
   /* ----------------------------------------------------------------------- */
 
   function getStore(address person) initialised(person) constant returns (address) {
-    return register[person];
+    return IPFSStorage(register[person]).getOwner();
   }
 
 }

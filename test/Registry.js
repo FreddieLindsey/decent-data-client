@@ -39,7 +39,7 @@ contract('Registry', (accounts) => {
 
   describe('getting storage contract', () => {
 
-    xit('should be successful when a user has registered', () => {
+    it('should be successful when a user has registered', () => {
       const { contract, instance } = RegistryBlank()
       const storage = IPFSStorageWithPublicKey(patient_1.address)
       let ipfs
@@ -58,7 +58,7 @@ contract('Registry', (accounts) => {
       const { contract, instance } = RegistryBlank()
       return contract
       .then(() => {
-        return instance().getStore(patient_2.address)
+        return instance().getStore(patient_2.address, { from: patient_1.address })
       })
       .catch((err) => {
         assert(isThrow(err))

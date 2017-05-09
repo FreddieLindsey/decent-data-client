@@ -39,7 +39,7 @@ contract('IPFSStorage', (accounts) => {
       const { contract, instance } = IPFSStorageWithPublicKey(patient_1.address)
       return contract
       .then(() => {
-        return instance().owner()
+        return instance().getOwner()
       })
       .then((value) => {
         assert.equal(value, patient_1.address)

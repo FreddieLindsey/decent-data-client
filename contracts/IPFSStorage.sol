@@ -57,7 +57,7 @@ contract IPFSStorage {
   }
 
   /* Contract owner */
-  address public owner;
+  address owner;
 
   /* Public key to encrypt data */
   IpfsHash publicKey;
@@ -111,6 +111,11 @@ contract IPFSStorage {
   }
 
   /* CONSTANT FUNCTIONS */
+
+  /* ACCESSIBLE BY ANY PARTY */
+  function getOwner() constant returns (address) {
+    return owner;
+  }
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
   function get(string path) readable(path) constant returns (bytes32, bytes32) {
