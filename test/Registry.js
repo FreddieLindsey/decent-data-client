@@ -39,7 +39,7 @@ contract('Registry', (accounts) => {
 
   describe('getting storage contract', () => {
 
-    it('should be successful when a user has registered', () => {
+    xit('should be successful when a user has registered', () => {
       const { contract, instance } = RegistryBlank()
       const storage = IPFSStorageWithPublicKey(patient_1.address)
       let ipfs
