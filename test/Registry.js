@@ -15,6 +15,9 @@ contract('Registry', (accounts) => {
 
   const publicKeyHash = 'Qmc809239e912949d06d6a125e1c0cd5a4df0a5669'
 
+  // Setup
+  RegistryBlank(true)
+
   describe('getting storage contract', () => {
 
     it('should throw when a user has not registered', () => {
