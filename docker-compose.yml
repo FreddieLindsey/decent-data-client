@@ -24,12 +24,13 @@ services:
   #     - 8000:8000
 
   ipfs:
-    image: jbenet/go-ipfs
+    build:
+      context: infra/ipfs
+      dockerfile: Dockerfile.ipfs
+    image: freddielindsey/ipfs
     container_name: ipfs
     ports:
       - 5001:5001
-    volumes:
-      - ./.cache/ipfs:/data/ipfs
 
   # testrpc:
   #   image: freddielindsey/ethereumjs-testrpc

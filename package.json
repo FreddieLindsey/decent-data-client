@@ -77,7 +77,7 @@
     "concat-stream": "^1.6.0",
     "cors": "^2.8.3",
     "express": "^4.15.0",
-    "ipfs-api": "^12.1.7",
+    "ipfs-api": "^14.0.1",
     "jquery": "^3.1.1",
     "node-forge": "^0.7.1",
     "through2": "^2.0.3",

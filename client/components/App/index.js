@@ -1,6 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+// TODO: Shouldn't be here, works at the moment
+import ipfsApi from 'ipfs-api'
+window.ipfs = ipfsApi('localhost', 5001)
+
 import {
   BrowserRouter,
   Redirect,
@@ -13,34 +17,27 @@ import AppAuthenticated from '../AppAuthenticated'
 import NotFound from '../NotFound'
 
 import {
-  ipfsStorageAddressGet,
+  registryAddStore,
+  registryGetStore
 } from '../../actions'
 
 const mapStateToProps = (state) => {
   const {
-    address
-  } = state.security
+    security: { address },
+    Registry: { store: { retrieved } }
+  } = state
   return {
-    authenticated: !!address
+    authenticated: !!address && !!retrieved
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    handleAddressGet: () => dispatch(ipfsStorageAddressGet()),
-  }
-}
+const mapDispatchToProps = (dispatch) => ({})
 
 class App extends Component {
 
   static displayName = 'App'
   static propTypes = {
-    authenticated: PropTypes.bool.isRequired,
-    handleAddressGet: PropTypes.func.isRequired,
-  }
-
-  componentDidMount () {
-    this.props.handleAddressGet()
+    authenticated: PropTypes.bool.isRequired
   }
 
   render () {
