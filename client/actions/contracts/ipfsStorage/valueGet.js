@@ -4,13 +4,13 @@ export const IPFSSTORAGE_VALUE_GET_SUCCESS = 'IPFSSTORAGE_VALUE_GET_SUCCESS'
 export const IPFSSTORAGE_VALUE_GET_ERROR   = 'IPFSSTORAGE_VALUE_GET_ERROR'
 
 export const ipfsStorageValueGet = (index) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(ipfsStorageValueGetPending())
     if (index === undefined || typeof index !== 'number') {
       dispatch(ipfsStorageValueGetError('Please give number index to getter'))
       return
     }
-    window.contracts.IPFSStorage.deployed()
+    contracts.IPFSStorage.at(getState().IPFSStorage.address)
     .then((instance) => {
       return instance.get(index)
     })

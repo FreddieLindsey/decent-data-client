@@ -4,9 +4,9 @@ export const IPFSSTORAGE_ADDRESS_GET_SUCCESS = 'IPFSSTORAGE_ADDRESS_GET_SUCCESS'
 export const IPFSSTORAGE_ADDRESS_GET_ERROR   = 'IPFSSTORAGE_ADDRESS_GET_ERROR'
 
 export const ipfsStorageAddressGet = () => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(ipfsStorageAddressGetPending())
-    window.contracts.IPFSStorage.deployed()
+    contracts.IPFSStorage.at(getState().IPFSStorage.address)
     .then((instance) => {
       dispatch(ipfsStorageAddressGetSuccess(instance.address))
     })

@@ -14,6 +14,7 @@ import {
   // IPFSSTORAGE_SIZE_GET_PENDING,
   IPFSSTORAGE_SIZE_GET_SUCCESS,
   IPFSSTORAGE_SIZE_GET_ERROR,
+  REGISTRY_GET_STORE_SUCCESS,
   FILE_SUBMIT_SUCCESS,
 } from '../../actions'
 
@@ -29,6 +30,9 @@ export const IPFSStorage = (state = initialState, action) => {
       return handleCreateSuccess(state, action.address)
     case IPFSSTORAGE_CREATE_ERROR:
       return handleCreateError(state, action.error)
+    case REGISTRY_GET_STORE_SUCCESS:
+      console.dir(action)
+      return handleRegistryGetSuccess(state, action.address)
     case IPFSSTORAGE_ADDRESS_GET_SUCCESS:
       return handleAddressGetSuccess(state, action.address)
     case IPFSSTORAGE_ADDRESS_GET_ERROR:
@@ -62,6 +66,13 @@ const handleCreateError = (state, error) => {
   return {
     ...state,
     error
+  }
+}
+
+const handleRegistryGetSuccess = (state, address) => {
+  return {
+    ...state,
+    address
   }
 }
 

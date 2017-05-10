@@ -39,7 +39,7 @@ contract Registry {
   /* ----------------------------------------------------------------------- */
 
   function getStore(address person) initialised(person) constant returns (address) {
-    return IPFSStorage(register[person]).getOwner();
+    return register[person];
   }
 
 }

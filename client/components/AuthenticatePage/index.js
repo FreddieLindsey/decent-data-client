@@ -26,6 +26,7 @@ const mapStateToProps = (state) => {
     address: !!address,
     ipfsStorage: IPFSStorage,
     registry: Registry,
+    isError: !!error || !!IPFSStorage.error,
     error
   }
 }
@@ -47,6 +48,7 @@ class Authenticate extends Component {
     address: PropTypes.bool.isRequired,
     ipfsStorage: PropTypes.shape({}).isRequired,
     registry: PropTypes.shape({}).isRequired,
+    isError: PropTypes.bool.isRequired,
     error: PropTypes.object,
 
     handleLoadPrivateKey: PropTypes.func.isRequired,
@@ -59,19 +61,33 @@ class Authenticate extends Component {
     const {
       address,
       ipfsStorage,
-      registry
+      registry,
+      isError
     } = nextProps
 
-    if (address && !registry.store.triedGet)
+    if (isError) return
+
+    if (address &&
+        !registry.store.triedGet)
       nextProps.handleGetStore()
 
-    if (address && registry.store.triedGet && !ipfsStorage.address && !registry.store.retrieved)
+    if (address &&
+        registry.store.triedGet &&
+        !ipfsStorage.address &&
+        !registry.store.retrieved)
       nextProps.handleIpfsStorageCreate()
 
-    if (address && registry.store.triedGet && ipfsStorage.address && !registry.store.retrieved)
+    if (address &&
+        registry.store.triedGet &&
+        ipfsStorage.address &&
+        !registry.store.retrieved)
       nextProps.handleAddStore()
 
-    if (address && registry.store.triedGet && registry.store.triedAdd && !registry.store.retrieved)
+    if (address &&
+        registry.store.triedGet &&
+        registry.store.triedAdd &&
+        !registry.store.retrieved &&
+        !registry.store.error)
       nextProps.handleGetStore()
   }
 

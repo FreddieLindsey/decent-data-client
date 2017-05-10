@@ -4,9 +4,9 @@ export const IPFSSTORAGE_INDEX_GET_SUCCESS = 'IPFSSTORAGE_INDEX_GET_SUCCESS'
 export const IPFSSTORAGE_INDEX_GET_ERROR   = 'IPFSSTORAGE_INDEX_GET_ERROR'
 
 export const ipfsStorageIndexGet = (index) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(ipfsStorageIndexGetPending(index))
-    window.contracts.IPFSStorage.deployed()
+    contracts.IPFSStorage.at(getState().IPFSStorage.address)
     .then((instance) => {
       return instance.getIndex(index)
     })

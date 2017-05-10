@@ -33,7 +33,8 @@ export const Registry = (state = initialState, action) => {
 const handleRegistryAddStoreSuccess = (state) => {
   let store = {
     ...state.store,
-    triedAdd: true
+    triedAdd: true,
+    error: undefined
   }
   return {
     ...state,
@@ -57,7 +58,8 @@ const handleRegistryGetStoreSuccess = (state) => {
   let store = {
     ...state.store,
     triedGet: true,
-    retrieved: true
+    retrieved: true,
+    error: undefined
   }
   return {
     ...state,

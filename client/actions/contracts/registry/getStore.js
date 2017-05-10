@@ -21,8 +21,9 @@ const registryGetStorePending = () => ({
   type: REGISTRY_GET_STORE_PENDING
 })
 
-const registryGetStoreSuccess = () => ({
-  type: REGISTRY_GET_STORE_SUCCESS
+const registryGetStoreSuccess = (address) => ({
+  type: REGISTRY_GET_STORE_SUCCESS,
+  address
 })
 
 const registryGetStoreError = (error) => ({

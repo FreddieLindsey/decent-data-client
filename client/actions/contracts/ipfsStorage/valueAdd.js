@@ -4,9 +4,9 @@ export const IPFSSTORAGE_VALUE_ADD_SUCCESS = 'IPFSSTORAGE_VALUE_ADD_SUCCESS'
 export const IPFSSTORAGE_VALUE_ADD_ERROR   = 'IPFSSTORAGE_VALUE_ADD_ERROR'
 
 export const ipfsStorageValueAdd = (value, address) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(ipfsStorageValueAddPending())
-    window.contracts.IPFSStorage.deployed()
+    contracts.IPFSStorage.at(getState().IPFSStorage.address)
     .then((instance) => {
       return instance.add(value, { from: address })
     })
