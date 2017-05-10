@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
+import Dropzone from 'react-dropzone'
+
 import PathIndex from '../PathIndex'
 
 import styles from './index.scss'
@@ -13,6 +15,7 @@ import {
 
 const mapStateToProps = (state) => {
   return {
+    rsaKey: !!state.security.rsa.privateKey,
     files: state.files.stored,
     IPFSStorage: state.IPFSStorage,
   }
@@ -22,6 +25,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     handleSizeGet: () => dispatch(ipfsStorageSizeGet()),
     handleIndexGet: (i) => dispatch(ipfsStorageIndexGet(i)),
+    handleLoadRSAPrivateKey: (f) => dispatch(loadRSAPrivateKey(f))
   }
 }
 
@@ -29,6 +33,7 @@ class Index extends Component {
 
   static displayName = 'Index'
   static propTypes = {
+    rsaKey: PropTypes.bool.isRequired,
     files: PropTypes.object.isRequired,
     IPFSStorage: PropTypes.shape({
       address: PropTypes.string,
@@ -37,6 +42,7 @@ class Index extends Component {
 
     handleSizeGet: PropTypes.func.isRequired,
     handleIndexGet: PropTypes.func.isRequired,
+    handleLoadRSAPrivateKey: PropTypes.func.isRequired
   }
 
   componentWillMount() {
@@ -68,20 +74,41 @@ class Index extends Component {
         props.handleIndexGet(i)
   }
 
+  renderIndex = () => (
+    <div className={ styles.container } >
+      <div className={ styles.main } >
+        <PathIndex />
+      </div>
+    </div>
+  )
+
+  renderNeedKey = () => (
+    <div className={ styles.container } >
+      <div className={ styles.noKey } >
+        <h3 className={ styles.noKeyTitle } >
+          You need to provide your encryption key before you can view data.
+          Supplying the wrong key will result in unreadable data.
+        </h3>
+        <hr />
+        <Dropzone
+          className={ styles.privateKey }
+          onDrop={ (f) => this.props.handleLoadRSAPrivateKey(f) } >
+          <p className={ styles.privateKeyText } >
+            Encryption Key
+          </p>
+        </Dropzone>
+      </div>
+    </div>
+  )
+
   render () {
     const {
-      IPFSStorage: {
-        size
-      }
+      rsaKey
     } = this.props
 
-    return (
-      <div className={ styles.container } >
-        <div className={ styles.main } >
-          <PathIndex />
-        </div>
-      </div>
-    )
+    return rsaKey ?
+      this.renderIndex() :
+      this.renderNeedKey()
   }
 
 }
