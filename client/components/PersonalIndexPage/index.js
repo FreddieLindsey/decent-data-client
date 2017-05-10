@@ -8,6 +8,7 @@ import styles from './index.scss'
 import {
   ipfsStorageSizeGet,
   ipfsStorageIndexGet,
+  loadRSAPrivateKey,
 } from '../../actions'
 
 const mapStateToProps = (state) => {
@@ -38,26 +39,33 @@ class Index extends Component {
     handleIndexGet: PropTypes.func.isRequired,
   }
 
-  componentDidMount () {
-    this.props.handleSizeGet()
-    this.getData()
+  componentWillMount() {
+    this.getCheck()
   }
 
   componentWillReceiveProps (nextProps) {
-    this.getData(nextProps)
+    this.getCheck(nextProps)
   }
 
-  getData (props = undefined) {
+  getCheck (props = this.props) {
+    const { IPFSStorage: { size } } = props
+
+    if (typeof size === 'undefined') props.handleSizeGet()
+
+    if (size > 0) this.getData(props)
+  }
+
+  getData (props = this.props) {
     const {
       IPFSStorage: {
         size
       },
       files
-    } = props ? props : this.props
+    } = props
 
     if (size && size != 0 && Object.keys(files).length == 0)
       for (let i = 0; i < size; i++)
-        this.props.handleIndexGet(i)
+        props.handleIndexGet(i)
   }
 
   render () {
