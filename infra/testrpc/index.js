@@ -15,18 +15,33 @@ const check = () => {
   } catch(err) {
     fs.mkdirSync(accounts_location)
   }
-  rmdir(accounts_location, false)
 
   console.log('GENERATING NEW ACCOUNT DATA')
   for (const i in accounts) {
     const account = accounts[i]
-    const name = (account.name || i) + '.ecdsa'
-    const privateKeyFile = path.resolve(accounts_location, name)
+    const ecdsa = (account.name || i) + '.ecdsa'
+    const ECDSAPrivateKeyFile = path.resolve(accounts_location, ecdsa)
 
     let secretKey = account.secretKey
     if (secretKey.indexOf('0x') === 0) secretKey = secretKey.slice(2)
 
-    fs.writeFileSync(privateKeyFile, secretKey)
+    fs.writeFileSync(ECDSAPrivateKeyFile, secretKey)
+
+    const rsa = (account.name || i) + '.rsa'
+    const RSAPrivateKeyFile = path.resolve(accounts_location, rsa)
+    const makeRSA = () => {
+      forge.pki.rsa.generateKeyPair({ bits: 2048, workers: 2}, (err, keys) => {
+        fs.writeFileSync(RSAPrivateKeyFile, forge.pki.privateKeyToPem(keys.privateKey))
+      })
+    }
+    try {
+      fs.readFile(RSAPrivateKeyFile, (err, data) => {
+        if (err) return makeRSA()
+        forge.pki.privateKeyFromPem(data)
+      })
+    } catch (err) {
+      makeRSA()
+    }
   }
 }
 

@@ -5,6 +5,7 @@ import {
   // REGISTRY_GET_STORE_PENDING,
   REGISTRY_GET_STORE_SUCCESS,
   REGISTRY_GET_STORE_ERROR,
+  LOAD_ECDSA_PRIVATE_KEY_SUCCESS,
 } from '../../actions'
 
 const initialState = {
@@ -26,6 +27,8 @@ export const Registry = (state = initialState, action) => {
       return handleRegistryGetStoreSuccess(state)
     case REGISTRY_GET_STORE_ERROR:
       return handleRegistryGetStoreError(state, action.error)
+    case LOAD_ECDSA_PRIVATE_KEY_SUCCESS:
+      return { ...state, store: initialState.store }
   }
   return state
 }
