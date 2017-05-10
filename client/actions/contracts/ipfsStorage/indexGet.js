@@ -7,9 +7,7 @@ export const ipfsStorageIndexGet = (index) => {
   return (dispatch, getState) => {
     dispatch(ipfsStorageIndexGetPending(index))
     contracts.IPFSStorage.at(getState().IPFSStorage.address)
-    .then((instance) => {
-      return instance.getIndex(index)
-    })
+    .getIndex(index, { from: getState().security.address })
     .then((path) => {
       dispatch(ipfsStorageIndexGetSuccess(index, path))
     })

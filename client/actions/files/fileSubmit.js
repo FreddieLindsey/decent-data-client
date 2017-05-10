@@ -35,13 +35,9 @@ const fileSubmit = (file, path, encrypt = true) => {
       const hash = res[0].hash
       const storage = getState().IPFSStorage.address
       contracts.IPFSStorage.at(storage)
-      .then((instance) => {
-        return instance.add(
-          path, hash.slice(0, 32), hash.slice(32, 64),
-          { from: getState().security.address,
-            gas: 3000000, gasPrice: 10000000 }
-        )
-      })
+      .add(path, hash.slice(0, 32), hash.slice(32, 64),
+        { from: getState().security.address,
+          gas: 3000000, gasPrice: 10000000 })
       .then(() => dispatch(fileSubmitSuccess(path)))
       .catch((err) => dispatch(fileSubmitError(path, err)))
     })

@@ -7,9 +7,7 @@ export const ipfsStorageSizeGet = () => {
   return (dispatch, getState) => {
     dispatch(ipfsStorageSizeGetPending())
     contracts.IPFSStorage.at(getState().IPFSStorage.address)
-    .then((instance) => {
-      return instance.size()
-    })
+    .size({ from: getState().security.address })
     .then((size) => {
       dispatch(ipfsStorageSizeGetSuccess(size.toNumber()))
     })
