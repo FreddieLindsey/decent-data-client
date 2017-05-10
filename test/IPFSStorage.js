@@ -20,7 +20,7 @@ contract('IPFSStorage', (accounts) => {
   const hash = 'Qm061864a08ae30bbd5933cba4cfcf621d401591fd'
 
   // Setup
-  IPFSStorageWithPublicKey(patient_1.address, publicKeyHash)
+  IPFSStorageWithPublicKey(patient_1.address, publicKeyHash, true)
 
   describe('contract initialisation', () => {
 
@@ -39,7 +39,7 @@ contract('IPFSStorage', (accounts) => {
       const { contract, instance } = IPFSStorageWithPublicKey(patient_1.address)
       return contract
       .then(() => {
-        return instance().owner()
+        return instance().getOwner()
       })
       .then((value) => {
         assert.equal(value, patient_1.address)

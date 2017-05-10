@@ -1,35 +1,37 @@
+import {
+  RegistryBlank,
+  IPFSStorageWithPublicKey,
+
+  findAccount,
+  isThrow
+} from './utils'
+
 const Registry = artifacts.require('./Registry.sol')
 const IPFSStorage = artifacts.require('./IPFSStorage.sol')
 
 contract('Registry', (accounts) => {
 
-  const account = accounts[0]
-  let account_IPFS
+  const patient_1 = findAccount('patient_1')
+  const patient_2 = findAccount('patient_2')
 
-  describe('contract initialisation', () => {
+  const publicKeyHash = 'Qmc809239e912949d06d6a125e1c0cd5a4df0a5669'
 
-    xit('should have a size of 0 when not registered', () => {
-      return Registry.deployed()
-      .then((instance) => {
-        return instance.sizeShared()
-      })
-      .then((value) => {
-        assert.equal(value.valueOf(), 0)
-      })
-    })
+  // Setup
+  RegistryBlank(true)
 
-    xit('should have a size of 0 when first registered', () => {
-      let i
-      return Registry.deployed()
-      .then((instance) => {
-        i = instance
-        return i.register()
+  describe('registering a storage contract', () => {
+
+    it('should allow registering a user', () => {
+      const { contract, instance } = RegistryBlank()
+      const storage = IPFSStorageWithPublicKey(patient_1.address, publicKeyHash, true)
+      let ipfs
+      return contract
+      .then(() => {
+        return storage.contract
       })
       .then(() => {
-        return i.sizeShared()
-      })
-      .then((value) => {
-        assert.equal(value.valueOf(), 0)
+        ipfs = storage.instance().address
+        return instance().addStore(ipfs, { from: patient_1.address })
       })
     })
 
@@ -37,79 +39,29 @@ contract('Registry', (accounts) => {
 
   describe('getting storage contract', () => {
 
-    xit('should return valid IPFSStorage contract address', () => {
-      let IPFS;
-      return Registry.deployed()
-      .then((instance) => {
-        return instance.get()
+    xit('should be successful when a user has registered', () => {
+      const { contract, instance } = RegistryBlank()
+      const storage = IPFSStorageWithPublicKey(patient_1.address)
+      let ipfs
+      return contract
+      .then(() => storage.contract)
+      .then(() => {
+        ipfs = storage.instance().address
+        return instance().getStore(patient_1.address, { from: patient_1.address })
       })
       .then((value) => {
-        IPFS = IPFSStorage.at(value)
-        account_IPFS = IPFS
-        return IPFS.size()
-      })
-      .then((value) => {
-        assert.equal(value.valueOf(), 0)
+        assert.equal(value, ipfs)
       })
     })
 
-  })
-
-  describe('sharing the storage contract', () => {
-
-    xit('should allow someone access', () => {
-      let i, s
-      return Registry.deployed()
-      .then((instance) => {
-        i = instance
-        return i.sizeShared({ from: accounts[1] })
-      })
-      .then((value) => {
-        s = value
-        return i.allowAccess(accounts[1])
-      })
+    it('should throw when a user has not registered', () => {
+      const { contract, instance } = RegistryBlank()
+      return contract
       .then(() => {
-        return i.sizeShared({ from: accounts[1] })
+        return instance().getStore(patient_2.address, { from: patient_1.address })
       })
-      .then((value) => {
-        assert.equal(value.valueOf(), s.plus(1).valueOf())
-      })
-    })
-
-    xit('should remove someones access', () => {
-      let i, s
-      return Registry.deployed()
-      .then((instance) => {
-        i = instance
-        return i.sizeShared({ from: accounts[1] })
-      })
-      .then((value) => {
-        s = value
-        return i.removeAccess(accounts[1])
-      })
-      .then(() => {
-        return i.sizeShared({ from: accounts[1] })
-      })
-      .then((value) => {
-        assert.equal(value.valueOf(), s.minus(1).valueOf())
-      })
-    })
-
-    xit('should give the storage contract shared', () => {
-      let i, s
-      return Registry.deployed()
-      .then((instance) => {
-        i = instance
-        return i.allowAccess(accounts[1])
-      })
-      .then(() => {
-        return i.sizeShared({ from: accounts[1] })
-      })
-      .then((value) => {
-        return i.getIndex(0, { from: accounts[1] })
-      })
-      .then((addr) => {
-        assert.equal(addr, account_IPFS.address)
+      .catch((err) => {
+        assert(isThrow(err))
       })
     })
 

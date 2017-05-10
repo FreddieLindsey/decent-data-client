@@ -5,15 +5,13 @@ import files from './files'
 import { security } from './security'
 
 // Contracts
-import {
-  IPFSStorage
-} from './contracts'
+import * as Contracts from './contracts'
 
 const reducers = combineReducers({
   accounts,
   files,
   security,
-  IPFSStorage
+  ...Contracts
 });
 
 export default reducers;

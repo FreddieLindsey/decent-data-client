@@ -24,13 +24,11 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 install:
-  - docker-compose pull
   - yarn
   - yarn run services
   - yarn run testrpc > ./testrpc.log &
 
 script:
-  - docker-compose up -d
   - yarn run build
   - yarn run test-contracts
   - yarn run test-api

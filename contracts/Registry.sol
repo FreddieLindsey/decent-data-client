@@ -2,91 +2,44 @@ pragma solidity ^0.4.8;
 
 import './IPFSStorage.sol';
 
+// Assume Registry deployed by some authority
 contract Registry {
+
+  /* ----------------------------------------------------------------------- */
+  /* MODIFIERS */
+  /* ----------------------------------------------------------------------- */
+
+  modifier notInitialised() {
+    if (register[msg.sender] != 0) throw;
+    _;
+  }
+
+  modifier initialised(address person) {
+    if (register[person] == 0) throw;
+    _;
+  }
 
   /* ----------------------------------------------------------------------- */
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
 
-  struct Register {
-    bool      init;
-    address[] items;
-    address   own;
-  }
-
-  mapping (address => Register) contracts;
+  mapping (address => address) register;
 
   /* ----------------------------------------------------------------------- */
   /* EXTERNAL FUNCTIONS */
   /* ----------------------------------------------------------------------- */
 
-  function register(bytes32 pub_1, bytes32 pub_2) {
-    if (contracts[msg.sender].init)
-      throw;
-
-    contracts[msg.sender].init = true;
-    contracts[msg.sender].own = new IPFSStorage(pub_1, pub_2);
-  }
-
-  function get() constant returns (address) {
-    return mine();
-  }
-
-  function allowAccess(address someone) {
-    insert(contracts[someone], mine());
-  }
-
-  function removeAccess(address someone) {
-    remove(contracts[someone], mine());
-  }
-
-  function sizeShared() constant returns (uint) {
-    return size(contracts[msg.sender]);
-  }
-
-  function getIndex(uint index) constant returns (address) {
-    Register my_register = contracts[msg.sender];
-
-    if (index < 0 || index >= size(my_register))
-      throw;
-
-    return my_register.items[index];
+  function addStore(address store) notInitialised {
+    if (IPFSStorage(store).getOwner() != msg.sender) throw;
+    register[msg.sender] = store;
   }
 
   /* ----------------------------------------------------------------------- */
-  /* SET LOGIC */
+  /* EXTERNAL FUNCTIONS (CONSTANT) */
   /* ----------------------------------------------------------------------- */
 
-  function insert(Register storage set, address c) internal {
-    if (contains(set, c) == size(set))
-      set.items.push(c);
-  }
-
-  function remove(Register storage set, address c) internal {
-    if (contains(set, c) != size(set)) {
-      set.items[contains(set, c)] = set.items[size(set) - 1];
-      delete set.items[size(set) - 1];
-      set.items.length -= 1;
-    }
-  }
-
-  function contains(Register storage set, address c) internal returns (uint) {
-    for (uint i = 0; i < size(set); i++)
-      if (set.items[i] == c)
-        return i;
-    return size(set);
-  }
-
-  function size(Register storage set) internal returns (uint) {
-    return set.items.length;
-  }
-
-  /* ----------------------------------------------------------------------- */
-  /* UTILS */
-  /* ----------------------------------------------------------------------- */
-
-  function mine() internal returns (address) {
-    return contracts[msg.sender].own;
+  function getStore(address person) initialised(person) constant returns (address) {
+    return register[person];
   }
 
 }

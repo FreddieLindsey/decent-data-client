@@ -16,9 +16,6 @@ const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ // || compos
 
 const store = createStore(reducers, {}, composeEnhancer(middleware))
 
-// Get accounts on store load
-store.dispatch(accountsInit())
-
 if (module.hot) {
   // Enable Webpack hot module replacement for reducers
   module.hot.accept('./reducers', () => {

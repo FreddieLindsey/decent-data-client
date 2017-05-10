@@ -1,41 +1,15 @@
 version: '2.1'
 
 services:
-  # Can be served locally
-  # client:
-  #   image: node:7.6.0
-  #   container_name: client
-  #   command: /bin/bash -c "cd /app && yarn install ; yarn start"
-  #   volumes:
-  #     - .:/app
-  #     - ./.cache/client_node_modules:/app/node_modules
-  #   ports:
-  #     - 3000:3000
-  #     - 8080:8080
-
-  # server:
-  #   image: node:7.6.0
-  #   container_name: server
-  #   command: /bin/bash -c "cd /app && yarn install ; yarn run dev"
-  #   volumes:
-  #     - .:/app
-  #     - ./.cache/server_node_modules:/app/node_modules
-  #   ports:
-  #     - 8000:8000
-
   ipfs:
     image: jbenet/go-ipfs
     container_name: ipfs
+    entrypoint: /run.sh
     ports:
       - 5001:5001
     volumes:
+      - ./infra/ipfs/run.sh:/run.sh
       - ./.cache/ipfs:/data/ipfs
-
-  # testrpc:
-  #   image: freddielindsey/ethereumjs-testrpc
-  #   container_name: testrpc
-  #   ports:
-  #     - 8545:8545
 
 networks:
   default:

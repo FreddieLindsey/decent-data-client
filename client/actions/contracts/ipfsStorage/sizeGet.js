@@ -4,9 +4,9 @@ export const IPFSSTORAGE_SIZE_GET_SUCCESS = 'IPFSSTORAGE_SIZE_GET_SUCCESS'
 export const IPFSSTORAGE_SIZE_GET_ERROR   = 'IPFSSTORAGE_SIZE_GET_ERROR'
 
 export const ipfsStorageSizeGet = () => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
     dispatch(ipfsStorageSizeGetPending())
-    window.contracts.IPFSStorage.deployed()
+    contracts.IPFSStorage.at(getState().IPFSStorage.address)
     .then((instance) => {
       return instance.size()
     })
