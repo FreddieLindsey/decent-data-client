@@ -117,6 +117,11 @@ contract IPFSStorage {
     return owner;
   }
 
+  /* ACCESSIBLE BY ANY PARTY */
+  function getPublicKey() constant returns (bytes32, bytes32) {
+    return (publicKey.part1, publicKey.part2);
+  }
+
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
   function get(string path) readable(path) constant returns (bytes32, bytes32) {
     /* Return hash of path */
