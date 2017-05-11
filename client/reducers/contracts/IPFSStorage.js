@@ -10,6 +10,7 @@ import {
   IPFSSTORAGE_INDEX_GET_ERROR,
   IPFSSTORAGE_SELECT_SUCCESS,
   REGISTRY_GET_STORE_SUCCESS,
+  FILE_SUBMIT_SUCCESS,
 } from '../../actions'
 
 const initialState = {
@@ -39,6 +40,8 @@ export const IPFSStorage = (state = initialState, action) => {
       return handleIndexGetError(state, action.address, action.error)
     case IPFSSTORAGE_SELECT_SUCCESS:
       return handleIpfsStorageSelect(state, action.address)
+    case FILE_SUBMIT_SUCCESS:
+      return handleFileSubmitSuccess(state, action.address, action.path)
   }
   return state
 }
@@ -117,5 +120,14 @@ const handleIpfsStorageSelect = (state, selected) => {
   return {
     ...state,
     selected
+  }
+}
+
+const handleFileSubmitSuccess = (state, address, path) => {
+  let identities = state.identities
+  identities[address].files[identities[address].size] = { path }
+  return {
+    ...state,
+    identities
   }
 }
