@@ -18,7 +18,6 @@ const mapStateToProps = (state) => {
   const { identities } = state.IPFSStorage
   return {
     rsaKey: !!state.security.rsa.privateKey,
-    files: state.files.stored,
     IPFSStorage: identities[address],
   }
 }
@@ -36,7 +35,6 @@ class Index extends Component {
   static displayName = 'Index'
   static propTypes = {
     rsaKey: PropTypes.bool.isRequired,
-    files: PropTypes.object.isRequired,
     IPFSStorage: PropTypes.shape({
       address: PropTypes.string.isRequired,
       size: PropTypes.number
@@ -57,7 +55,7 @@ class Index extends Component {
 
   getCheck (props) {
     let props_ = props || this.props
-    const { IPFSStorage: { size }, files } = props_
+    const { IPFSStorage: { files, size } } = props_
 
     if (typeof size === 'undefined')
       props_.handleSizeGet()
