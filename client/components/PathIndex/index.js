@@ -10,6 +10,7 @@ const mapStateToProps = (state, ownProps) => {
   const canShare = address === state.security.address
   const { files } = state.IPFSStorage.identities[address]
   return {
+    address,
     canShare,
     files,
     size: Object.keys(files).length
@@ -22,6 +23,7 @@ class PathIndex extends Component {
 
   static displayName = 'Path Index'
   static propTypes = {
+    address: PropTypes.string.isRequired,
     canShare: PropTypes.bool.isRequired,
     files: PropTypes.object.isRequired,
     size: PropTypes.number.isRequired
@@ -34,6 +36,7 @@ class PathIndex extends Component {
           <PathItem
             key={k}
             share={ this.props.canShare }
+            address={ this.props.address }
             path={ this.props.files[k].path } />
         ))
       }

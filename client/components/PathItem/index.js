@@ -8,6 +8,7 @@ class PathItem extends Component {
 
   static displayName = 'Path Item'
   static propTypes = {
+    address: PropTypes.string,
     share: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired
   }
@@ -23,6 +24,7 @@ class PathItem extends Component {
 
   render () {
     const {
+      address,
       share,
       path
     } = this.props
@@ -33,7 +35,9 @@ class PathItem extends Component {
         <div className='row' >
           <Link
             className={ styles.main }
-            to={ '/personal/view/' + path } >
+            to={ share ? 
+                  '/personal/view/' + path :
+                  '/shared/view/' + address + '/' + path } >
             <div className='col-xs-2' >
               <div className={ styles.logo }>
                 { this.getExtension() }

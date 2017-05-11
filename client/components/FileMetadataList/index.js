@@ -14,7 +14,9 @@ import {
 import './index.scss'
 
 const mapStateToProps = (state) => {
+  const address = state.security.address
   return {
+    address,
     files: {
       ...state.files.loaded
     }
@@ -23,7 +25,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleFilesSubmit: () => dispatch(filesSubmit()),
+    handleFilesSubmit: (a) => dispatch(filesSubmit(a)),
     handleFilesClear: () => dispatch(filesLoadedClear())
   }
 }
@@ -32,6 +34,7 @@ class FileMetadataList extends Component {
 
   static displayName = 'File Metadata List'
   static propTypes = {
+    address: PropTypes.string.isRequired,
     files: PropTypes.any,
     handleFilesSubmit: PropTypes.func.isRequired,
     handleFilesClear: PropTypes.func.isRequired
@@ -67,6 +70,7 @@ class FileMetadataList extends Component {
   )
 
   render () {
+    const { address } = this.props
     const files = this.getFiles()
     const Row = ({ path }) => {
       return (
@@ -111,7 +115,7 @@ class FileMetadataList extends Component {
             <div className='col-xs-6' >
               <button
                 className={ styles.submit }
-                onClick={ () => this.props.handleFilesSubmit() } >
+                onClick={ () => this.props.handleFilesSubmit(address) } >
                 Send to IPFS
               </button>
             </div>

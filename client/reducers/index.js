@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
 
-import accounts from './accounts'
 import files from './files'
 import { security } from './security'
 
@@ -8,7 +7,6 @@ import { security } from './security'
 import * as Contracts from './contracts'
 
 const reducers = combineReducers({
-  accounts,
   files,
   security,
   ...Contracts

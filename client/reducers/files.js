@@ -29,21 +29,23 @@ const files = (state = initialState, action) => {
     case FILE_LOAD_ERROR:
       return handleFileLoadError(state, action.path, action.error)
     case FILE_SUBMIT_SUCCESS:
-      return handleFileSubmitSuccess(state, action.path)
+      return handleFileSubmitSuccess(state, action.path, `${action.address}/${action.path}`)
     case FILE_SUBMIT_ERROR:
-      return handleFileSubmitError(state, action.path, action.error)
+      return handleFileSubmitError(state, `${action.address}/${action.path}`, action.error)
     case FILE_RETRIEVE_PENDING:
-      return handleFileRetrievePending(state, action.path)
+      return handleFileRetrievePending(state, `${action.address}/${action.path}`)
     case FILE_RETRIEVE_SUCCESS:
-      return handleFileRetrieveSuccess(state, action.path, action.content)
+      return handleFileRetrieveSuccess(state, `${action.address}/${action.path}`, action.content)
     case FILE_RETRIEVE_ERROR:
-      return handleFileRetrieveError(state, action.path, action.error)
+      return handleFileRetrieveError(state, `${action.address}/${action.path}`, action.error)
     case FILE_CHANGE_PATH:
-      return handleFileChangePath(state, action.oldPath, action.newPath)
+      return handleFileChangePath(
+        state, `${action.address}/${action.oldPath}`, `${action.address}/${action.newPath}`)
     case FILE_LOADED_CLEAR:
       return handleFileLoadedClear(state)
     case IPFSSTORAGE_INDEX_GET_SUCCESS:
-      return handleIpfsStorageIndexGetSuccess(state, action.index, action.path)
+      return handleIpfsStorageIndexGetSuccess(
+        state, action.index, `${action.address}/${action.path}`)
     case IPFSSTORAGE_INDEX_GET_ERROR:
       return handleIpfsStorageIndexGetError(state, action.index, action.error)
   }
@@ -61,6 +63,8 @@ const validateFile = (file) => {
     error: null,
     content: null,
     mime: null,
+    writable: false,
+    readable: false,
     ...file
   }
 }
@@ -109,9 +113,9 @@ const handleFileSubmitPending = (state, path) => {
   }
 }
 
-const handleFileSubmitSuccess = (state, path) => {
+const handleFileSubmitSuccess = (state, path, newPath) => {
   let { loaded, stored } = state
-  stored[path] = validateFile({
+  stored[newPath] = validateFile({
     ...loaded[path], submitting: false, submitted: true
   })
   delete loaded[path]
