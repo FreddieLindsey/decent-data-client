@@ -19,19 +19,19 @@ export const registryGetStore = (address = undefined) => {
   }
 }
 
-const registryGetStorePending = (identity) => ({
+export const registryGetStorePending = (identity) => ({
   type: REGISTRY_GET_STORE_PENDING,
   identity
 })
 
-const registryGetStoreSuccess = (identity, address, owned) => ({
+export const registryGetStoreSuccess = (identity, address, owned) => ({
   type: REGISTRY_GET_STORE_SUCCESS,
   identity,
   address,
   owned
 })
 
-const registryGetStoreError = (identity, error) => ({
+export const registryGetStoreError = (identity, error) => ({
   type: REGISTRY_GET_STORE_ERROR,
   identity,
   error

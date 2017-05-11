@@ -45,6 +45,7 @@ module.exports = {
       },
       {
         test: /\.(s)?css$/,
+        exclude: /node_modules/,
         use: [
           {
             loader: 'style-loader'
@@ -57,6 +58,20 @@ module.exports = {
               modules: true,
               sourceMap: true
             }
+          }, {
+            loader: 'sass-loader',
+            options: { sourceMap: true }
+          }
+        ]
+      },
+      {
+        test: /\.(s)?css$/,
+        include: /node_modules/,
+        use: [
+          {
+            loader: 'style-loader'
+          }, {
+            loader: 'css-loader',
           }, {
             loader: 'sass-loader',
             options: { sourceMap: true }

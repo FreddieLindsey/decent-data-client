@@ -4,6 +4,7 @@ import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 
 import UploadPage from '../UploadPage'
 import PersonalIndexPage from '../PersonalIndexPage'
+import SharedIndexPage from '../SharedIndexPage'
 
 import styles from './index.scss'
 
@@ -50,6 +51,7 @@ class AppAuthenticated extends Component {
                   <Route exact path='/personal' component={ PersonalIndexPage } />
                   {/* <Route path='/personal/view/:path' component={ ViewBlobPage } /> */}
                   {/* <Route path='/personal/share/:path' component={ ShareBlobPage } /> */}
+                  <Route exact path='/shared' component={ SharedIndexPage } />
                 </Switch>
               </div>
             </div>

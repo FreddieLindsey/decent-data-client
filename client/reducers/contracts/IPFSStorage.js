@@ -8,12 +8,14 @@ import {
   IPFSSTORAGE_INDEX_GET_PENDING,
   IPFSSTORAGE_INDEX_GET_SUCCESS,
   IPFSSTORAGE_INDEX_GET_ERROR,
+  IPFSSTORAGE_SELECT_SUCCESS,
   REGISTRY_GET_STORE_SUCCESS,
 } from '../../actions'
 
 const initialState = {
   mine: undefined,
   identities: {},
+  selected: undefined,
   error: undefined
 }
 
@@ -35,6 +37,8 @@ export const IPFSStorage = (state = initialState, action) => {
         state, action.address, action.index, action.path)
     case IPFSSTORAGE_INDEX_GET_ERROR:
       return handleIndexGetError(state, action.address, action.error)
+    case IPFSSTORAGE_SELECT_SUCCESS:
+      return handleIpfsStorageSelect(state, action.address)
   }
   return state
 }
@@ -106,5 +110,12 @@ const handleIndexGetError   = (state, address, index, error) => {
   return {
     ...state,
     identities
+  }
+}
+
+const handleIpfsStorageSelect = (state, selected) => {
+  return {
+    ...state,
+    selected
   }
 }
