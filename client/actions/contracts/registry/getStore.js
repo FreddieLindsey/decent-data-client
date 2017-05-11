@@ -3,30 +3,36 @@ export const REGISTRY_GET_STORE_PENDING = 'REGISTRY_GET_STORE_PENDING'
 export const REGISTRY_GET_STORE_SUCCESS = 'REGISTRY_GET_STORE_SUCCESS'
 export const REGISTRY_GET_STORE_ERROR = 'REGISTRY_GET_STORE_ERROR'
 
-export const registryGetStore = () => {
+export const registryGetStore = (address = undefined) => {
   return (dispatch, getState) => {
-    const { address } = getState().security
+    const myaddress = getState().security.address
+    const identity = address || myaddress
+    const owned = identity === myaddress
 
-    dispatch(registryGetStorePending())
+    dispatch(registryGetStorePending(identity))
     contracts.Registry.deployed()
     .then((instance) => {
-      return instance.getStore(address, { from: address })
+      return instance.getStore(identity, { from: myaddress })
     })
-    .then((store) => dispatch(registryGetStoreSuccess(store)))
-    .catch((err) => dispatch(registryGetStoreError(err)))
+    .then((store) => dispatch(registryGetStoreSuccess(identity, store, owned)))
+    .catch((err) => dispatch(registryGetStoreError(identity, err)))
   }
 }
 
-const registryGetStorePending = () => ({
-  type: REGISTRY_GET_STORE_PENDING
+const registryGetStorePending = (identity) => ({
+  type: REGISTRY_GET_STORE_PENDING,
+  identity
 })
 
-const registryGetStoreSuccess = (address) => ({
+const registryGetStoreSuccess = (identity, address, owned) => ({
   type: REGISTRY_GET_STORE_SUCCESS,
-  address
+  identity,
+  address,
+  owned
 })
 
-const registryGetStoreError = (error) => ({
+const registryGetStoreError = (identity, error) => ({
   type: REGISTRY_GET_STORE_ERROR,
+  identity,
   error
 })

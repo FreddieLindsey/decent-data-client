@@ -16,11 +16,9 @@ export const filesSubmit = () => {
   }
 }
 
-const fileSubmit = (file, path, encrypt = true) => {
+const fileSubmit = (file, path, address = undefined) => {
   return (dispatch, getState) => {
-    let content = !encrypt ?
-      file.content :
-      EncryptRSA(file.content, getState().security.rsa.publicKey)
+    let content = EncryptRSA(file.content, getState().security.rsa.publicKey)
 
     dispatch(fileSubmitPending(path))
     window.ipfs.add([{
@@ -33,7 +31,7 @@ const fileSubmit = (file, path, encrypt = true) => {
       }
 
       const hash = res[0].hash
-      const storage = getState().IPFSStorage.address
+      const storage = address || getState().IPFSStorage.mine
       contracts.IPFSStorage.at(storage)
       .add(path, hash.slice(0, 32), hash.slice(32, 64),
         { from: getState().security.address,

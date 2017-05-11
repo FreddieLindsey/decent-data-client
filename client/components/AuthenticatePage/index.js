@@ -24,7 +24,7 @@ const mapStateToProps = (state) => {
   } = state
   return {
     authenticated: !!address && !!Registry.store.retrieved ,
-    address: !!address,
+    address,
     ipfsStorage: IPFSStorage,
     registry: Registry,
     isError: !!error || !!IPFSStorage.error,
@@ -48,7 +48,7 @@ class Authenticate extends Component {
   static displayName = 'Authenticate'
   static propTypes = {
     authenticated: PropTypes.bool.isRequired,
-    address: PropTypes.bool.isRequired,
+    address: PropTypes.string,
     ipfsStorage: PropTypes.shape({}).isRequired,
     registry: PropTypes.shape({}).isRequired,
     isError: PropTypes.bool.isRequired,
@@ -82,14 +82,14 @@ class Authenticate extends Component {
     if (address &&
         rsaKey &&
         registry.store.triedGet &&
-        !ipfsStorage.address &&
+        !ipfsStorage.mine &&
         !registry.store.retrieved)
       nextProps.handleIpfsStorageCreate()
 
     if (address &&
         rsaKey &&
         registry.store.triedGet &&
-        ipfsStorage.address &&
+        ipfsStorage.mine &&
         !registry.store.retrieved)
       nextProps.handleAddStore()
 

@@ -14,32 +14,30 @@ import {
 } from '../../actions'
 
 const mapStateToProps = (state) => {
-  const { address } = state.security
-  const { identities } = state.IPFSStorage
   return {
     rsaKey: !!state.security.rsa.privateKey,
     files: state.files.stored,
-    IPFSStorage: identities[address],
+    IPFSStorage: state.IPFSStorage,
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleSizeGet: () => dispatch(ipfsStorageSizeGet()),
-    handleIndexGet: (i) => dispatch(ipfsStorageIndexGet(i)),
+    handleSizeGet: (a) => dispatch(ipfsStorageSizeGet(a)),
+    handleIndexGet: (a, i) => dispatch(ipfsStorageIndexGet(a, i)),
     handleLoadRSAPrivateKey: (f) => dispatch(loadRSAPrivateKey(f))
   }
 }
 
-class Index extends Component {
+class SharedIndex extends Component {
 
-  static displayName = 'Index'
+  static displayName = 'Shared Index'
   static propTypes = {
     rsaKey: PropTypes.bool.isRequired,
     files: PropTypes.object.isRequired,
     IPFSStorage: PropTypes.shape({
-      address: PropTypes.string.isRequired,
-      size: PropTypes.number
+      mine: PropTypes.string,
+      identities: PropTypes.object.isRequired
     }).isRequired,
 
     handleSizeGet: PropTypes.func.isRequired,
@@ -47,7 +45,7 @@ class Index extends Component {
     handleLoadRSAPrivateKey: PropTypes.func.isRequired
   }
 
-  componentWillMount () {
+  componentWillMount() {
     this.getCheck()
   }
 
@@ -55,15 +53,25 @@ class Index extends Component {
     this.getCheck(nextProps)
   }
 
-  getCheck (props) {
-    let props_ = props || this.props
-    const { IPFSStorage: { size }, files } = props_
+  getCheck (props = this.props) {
+    const { IPFSStorage: { size } } = props
 
-    if (typeof size === 'undefined')
-      props_.handleSizeGet()
-    else if (size != 0 && Object.keys(files).length == 0)
+    if (typeof size === 'undefined') props.handleSizeGet()
+
+    if (size > 0) this.getData(props)
+  }
+
+  getData (props = this.props) {
+    const {
+      IPFSStorage: {
+        size
+      },
+      files
+    } = props
+
+    if (size && size != 0 && Object.keys(files).length == 0)
       for (let i = 0; i < size; i++)
-        props_.handleIndexGet(i)
+        props.handleIndexGet(i)
   }
 
   renderIndex = () => (
@@ -94,8 +102,6 @@ class Index extends Component {
   )
 
   render () {
-    this.getCheck()
-
     const {
       rsaKey
     } = this.props
@@ -107,4 +113,4 @@ class Index extends Component {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Index)
+export default connect(mapStateToProps, mapDispatchToProps)(SharedIndex)
