@@ -23,19 +23,24 @@ const fileSubmit = (file, path, encrypt = true) => {
       EncryptRSA(file.content, getState().security.rsa.publicKey)
 
     dispatch(fileSubmitPending(path))
-    Request
-      .post(process.env.API_ENDPOINT + '/ipfs')
-      .send({
-        path,
-        content
-      })
-      .end((err, res) => {
-        if (err) {
-          dispatch(fileSubmitError(path, err))
-        } else {
-          dispatch(fileSubmitSuccess(path))
-        }
-      })
+    window.ipfs.add([{
+      path,
+      content
+    }], (err, res) => {
+      if (err) {
+        dispatch(fileSubmitError(path, err))
+        return
+      }
+
+      const hash = res[0].hash
+      const storage = getState().IPFSStorage.address
+      contracts.IPFSStorage.at(storage)
+      .add(path, hash.slice(0, 32), hash.slice(32, 64),
+        { from: getState().security.address,
+          gas: 3000000, gasPrice: 10000000 })
+      .then(() => dispatch(fileSubmitSuccess(path)))
+      .catch((err) => dispatch(fileSubmitError(path, err)))
+    })
   }
 }
 
