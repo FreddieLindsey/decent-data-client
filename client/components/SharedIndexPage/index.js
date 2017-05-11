@@ -132,13 +132,19 @@ class SharedIndex extends Component {
               />
             </div>
           </div>
-          <div className={ 'col-xs-12' } style={{ 'display': 'table' }} >
-            {
-              rsaKey ?
-              this.renderIndex() :
-              this.renderNeedKey()
-            }
-          </div>
+          {
+            selected ?
+            <div className={ 'col-xs-12' } style={{ 'display': 'table' }} >
+              {
+                rsaKey ?
+                this.renderIndex() :
+                this.renderNeedKey()
+              }
+            </div> :
+            <div className={ 'col-xs-12' } >
+              Please provide an address to query above
+            </div>
+          }
         </div>
       </div>
     )
