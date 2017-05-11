@@ -6,11 +6,14 @@ import PathItem from '../PathItem'
 import styles from './index.scss'
 
 const mapStateToProps = (state, ownProps) => {
-  const files = state.files.stored
-  const size = Object.keys(files).length
+  const address = ownProps.address || state.security.address
+  const canShare = address === state.security.address
+  const { files } = state.IPFSStorage.identities[address]
   return {
-    size,
-    files
+    address,
+    canShare,
+    files,
+    size: Object.keys(files).length
   }
 }
 
@@ -20,7 +23,9 @@ class PathIndex extends Component {
 
   static displayName = 'Path Index'
   static propTypes = {
-    files: PropTypes.shape().isRequired,
+    address: PropTypes.string.isRequired,
+    canShare: PropTypes.bool.isRequired,
+    files: PropTypes.object.isRequired,
     size: PropTypes.number.isRequired
   }
 
@@ -28,7 +33,11 @@ class PathIndex extends Component {
     <div className={ styles.list } >
       {
         Object.keys(this.props.files).map((k) => (
-          <PathItem key={k} path={k} />
+          <PathItem
+            key={k}
+            share={ this.props.canShare }
+            address={ this.props.address }
+            path={ this.props.files[k].path } />
         ))
       }
     </div>

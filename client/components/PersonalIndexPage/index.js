@@ -14,10 +14,11 @@ import {
 } from '../../actions'
 
 const mapStateToProps = (state) => {
+  const { address } = state.security
+  const { identities } = state.IPFSStorage
   return {
     rsaKey: !!state.security.rsa.privateKey,
-    files: state.files.stored,
-    IPFSStorage: state.IPFSStorage,
+    IPFSStorage: identities[address],
   }
 }
 
@@ -34,9 +35,8 @@ class Index extends Component {
   static displayName = 'Index'
   static propTypes = {
     rsaKey: PropTypes.bool.isRequired,
-    files: PropTypes.object.isRequired,
     IPFSStorage: PropTypes.shape({
-      address: PropTypes.string,
+      address: PropTypes.string.isRequired,
       size: PropTypes.number
     }).isRequired,
 
@@ -45,7 +45,7 @@ class Index extends Component {
     handleLoadRSAPrivateKey: PropTypes.func.isRequired
   }
 
-  componentWillMount() {
+  componentWillMount () {
     this.getCheck()
   }
 
@@ -53,25 +53,15 @@ class Index extends Component {
     this.getCheck(nextProps)
   }
 
-  getCheck (props = this.props) {
-    const { IPFSStorage: { size } } = props
+  getCheck (props) {
+    let props_ = props || this.props
+    const { IPFSStorage: { files, size } } = props_
 
-    if (typeof size === 'undefined') props.handleSizeGet()
-
-    if (size > 0) this.getData(props)
-  }
-
-  getData (props = this.props) {
-    const {
-      IPFSStorage: {
-        size
-      },
-      files
-    } = props
-
-    if (size && size != 0 && Object.keys(files).length == 0)
+    if (typeof size === 'undefined')
+      props_.handleSizeGet()
+    else if (size != 0 && Object.keys(files).length == 0)
       for (let i = 0; i < size; i++)
-        props.handleIndexGet(i)
+        props_.handleIndexGet(i)
   }
 
   renderIndex = () => (
@@ -102,6 +92,8 @@ class Index extends Component {
   )
 
   render () {
+    this.getCheck()
+
     const {
       rsaKey
     } = this.props

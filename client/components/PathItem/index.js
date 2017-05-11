@@ -8,6 +8,8 @@ class PathItem extends Component {
 
   static displayName = 'Path Item'
   static propTypes = {
+    address: PropTypes.string,
+    share: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired
   }
 
@@ -22,6 +24,8 @@ class PathItem extends Component {
 
   render () {
     const {
+      address,
+      share,
       path
     } = this.props
 
@@ -31,27 +35,32 @@ class PathItem extends Component {
         <div className='row' >
           <Link
             className={ styles.main }
-            to={ '/personal/view/' + path } >
+            to={ share ? 
+                  '/personal/view/' + path :
+                  '/shared/view/' + address + '/' + path } >
             <div className='col-xs-2' >
               <div className={ styles.logo }>
                 { this.getExtension() }
               </div>
             </div>
-            <div className='col-xs-8' >
+            <div className={ share ? 'col-xs-8' : 'col-xs-10' } >
               <div className={ styles.path } >
                 { path }
               </div>
             </div>
           </Link>
-          <div className='col-xs-2' >
-            <Link
-              to={ '/personal/share/' + path } >
-              <button
-                className={ styles.sharing } >
-                Share
-              </button>
-            </Link>
-          </div>
+          {
+            share &&
+            <div className='col-xs-2' >
+              <Link
+                to={ '/personal/share/' + path } >
+                <button
+                  className={ styles.sharing } >
+                  Share
+                </button>
+              </Link>
+            </div>
+          }
         </div>
       </div>
     )

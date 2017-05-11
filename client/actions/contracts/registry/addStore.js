@@ -7,12 +7,12 @@ export const registryAddStore = () => {
   return (dispatch, getState) => {
     const state = getState()
     const { address } = state.security
-    const ipfsStorage = state.IPFSStorage
+    const { mine } = state.IPFSStorage
 
     dispatch(registryAddStorePending())
     contracts.Registry.deployed()
     .then((instance) => {
-      return instance.addStore(ipfsStorage.address, { from: address })
+      return instance.addStore(mine, { from: address })
     })
     .then(() => dispatch(registryAddStoreSuccess()))
     .catch((err) => dispatch(registryAddStoreError(err)))
