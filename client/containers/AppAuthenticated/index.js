@@ -47,7 +47,7 @@ export default class AppAuthenticated extends Component {
                   <Route exact path='/upload' component={ UploadPage } />
                   <Route exact path='/personal' component={ PersonalIndexPage } />
                   {/* <Route path='/personal/view/:path' component={ ViewBlobPage } /> */}
-                  {/* <Route path='/personal/share/:path' component={ ShareBlobPage } /> */}
+                  <Route path='/personal/share/:path' component={ ShareAdminPage } />
                   <Route exact path='/shared' component={ SharedIndexPage } />
                   <Route component={ NotFoundPage } />
                 </Switch>
