@@ -128,7 +128,7 @@ class SharedIndex extends Component {
                 name={ 'Select account' }
                 value={ selected }
                 options={ accounts }
-                onChange={ (v) => this.props.handleIpfsStorageSelect(v.value) }
+                onChange={ (v) => this.props.handleIpfsStorageSelect(v && v.value || v) }
               />
             </div>
           </div>

@@ -1,26 +1,50 @@
-# Truffle with Webpack Boilerplate
+# Private, decentralised data-sharing
 
 [![Build Status](https://travis-ci.com/FreddieLindsey/truffle-webpack-boilerplate.svg?token=2txBfbss4toxp7qpR4fW&branch=master)](https://travis-ci.com/FreddieLindsey/truffle-webpack-boilerplate)
 
-## Purpose
+## Introduction
 
-There are quite a number of truffle boilerplates out there, but none that really completely worked out of the box. This is particularly the case with Truffle version 3.x. This boilerplate works completely with version 3.x as far as I know.
+Since the introduction of centrally-held, government and corporation-authored ledgers the average citizen has slowly been giving up their privacy for the sake of convenience. However, 323 years since the Bank of England introduced paper money into the UK economy, this project serves as a proof of concept that we can share our data privately in a way which benefits the consumer and the producer equally.
 
-Here, just run the following:
+Fundamentally, the user's privacy is vastly improved compared to current centralised systems, user control is (mostly) maximised, and the security of the network is upheld through being publicly verifiable and available.
+
+## Getting started
+
+- Blockchain technology
+- Off-chain storage
+- Decentralised, distributed client interface
+- Encryption gateway\*
+
+> *\*This is not strictly necessary but at the moment it provides an essential part of the compute layer which is not feasible on Ethereum*
+
+Above are the key components that form the system. Below are instructions on how to run them locally.
 
 ```bash
+# Blockchain technology (EthereumJS's testrpc)
+yarn run testrpc
+
+# Off-chain storage (IPFS)
 yarn run services
+
+# Client interface (webpack-dev-server / react)
 yarn start
+
+# Encryption gateway
+yarn run dev
 ```
 
-This should get you going with a testrpc instance running on Docker. Starting yarn then brings up webpack which migrates and hot-reloads your contracts as you edit them.
+> *Note, these must be started in separate terminals.*
 
 Have fun!
 
-## Docker
+## Demonstration
 
-I couldn't find the Docker image referenced in the [testrpc repository](https://github.com/ethereumjs/testrpc). I have therefore built it and pushed it publicly to Docker. Please kindly recognise that this work is not my own, but that of [ethereumjs](https://github.com/ethereumjs).
+For demonstration purposes, I have created a demo script that does the following:
 
-## Issues
+- Register `doctor`, `patient_1`, and `patient_2`
+- Assign `doctor` as a member of group `GMC` (a contract administered by the `gmc` account)
 
-Please feel free to contact me or submit a PR if you find any issues you'd like to share.
+```bash
+# Run the below once to inject data
+yarn run demo
+```
