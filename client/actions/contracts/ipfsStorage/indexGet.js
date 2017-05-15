@@ -4,7 +4,6 @@ export const IPFSSTORAGE_INDEX_GET_SUCCESS = 'IPFSSTORAGE_INDEX_GET_SUCCESS'
 export const IPFSSTORAGE_INDEX_GET_ERROR   = 'IPFSSTORAGE_INDEX_GET_ERROR'
 
 export const ipfsStorageIndexGet = (index, address = undefined) => {
-  console.log(index)
   return (dispatch, getState) => {
     const identity = address || getState().security.address
     const storage = getState().IPFSStorage.identities[identity].address

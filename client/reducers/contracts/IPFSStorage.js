@@ -15,6 +15,9 @@ import {
 
 const initialState = {
   mine: undefined,
+  meta: {
+    firstTime: false,
+  },
   identities: {},
   selected: undefined,
   error: undefined
@@ -48,9 +51,12 @@ export const IPFSStorage = (state = initialState, action) => {
 
 const handleCreateSuccess = (state, address) => {
   let mine = address
+  let meta = state.meta
+  meta.firstTime = true
   return {
     ...state,
-    mine
+    mine,
+    meta
   }
 }
 
@@ -126,6 +132,7 @@ const handleIpfsStorageSelect = (state, selected) => {
 const handleFileSubmitSuccess = (state, address, path) => {
   let identities = state.identities
   identities[address].files[identities[address].size] = { path }
+  identities[address].size += 1
   return {
     ...state,
     identities

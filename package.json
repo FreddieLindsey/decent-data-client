@@ -6,6 +6,7 @@
     "api": "babel-node server/index.js",
     "build": "webpack",
     "clean": "rm -rf .node-xml* node_modules",
+    "demo": "babel-node infra/testrpc/demo.js",
     "dev": "env NODE_ENV=development babel-watch server/index.js",
     "logs-ipfs": "docker logs ipfs --follow",
     "services": "./scripts/start_services.sh",
