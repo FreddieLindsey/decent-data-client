@@ -25,6 +25,7 @@ import {
 async function register (username, accounts) {
   return validateRSAPrivateKey(
     fs.readFileSync(path.resolve(__dirname, '..', 'accounts', `${username}.rsa`)), (_, s, p) => {
+      let instance
       const publicKeyPem = forge.pki.publicKeyToPem(p)
       ipfs.add([ { path: 'publicKey.pem', content: publicKeyPem }], (err, res) => {
         if (err) return
@@ -37,7 +38,12 @@ async function register (username, accounts) {
           return registry.deployed()
         })
         .then((i) => {
-          return i.addStore(accounts[username].ipfsStorage, {
+          instance = i
+          return instance.getStore(accounts[username].address)
+        })
+        .then(() => username)
+        .catch((err) => {
+          return instance.addStore(accounts[username].ipfsStorage, {
             from: accounts[username].address, gas: 3000000, gasPrice: 10000000
           })
         })

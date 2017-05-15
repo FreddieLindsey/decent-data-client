@@ -37,6 +37,7 @@ console.log('ACCOUNTS LOADED:')
 console.log()
 for (const i in accounts)
   console.log(`${pad(i, 12)}:\t${accounts[i].address}`)
+console.log()
 
 // DEMO SCRIPT
 
@@ -45,5 +46,5 @@ register(['patient_1', 'patient_2', 'doctor'])
 // UTILITIES
 
 async function register (registers) {
-  return await Promise.all(registers.map((u) => register_(u, accounts)))
+  await Promise.all(registers.map((u) => register_(u, accounts)))
 }
