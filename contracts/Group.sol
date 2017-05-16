@@ -11,6 +11,11 @@ contract Group {
     _;
   }
 
+  modifier notBanned(address addr) {
+    if (members[addr] > 1) throw;
+    _;
+  }
+
   /* ----------------------------------------------------------------------- */
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
@@ -28,11 +33,12 @@ contract Group {
     return members[addr] == 1;
   }
 
-  function register(address addr) onlyOwner {
-    if (members[addr] > 1)
-      throw;
-
+  function register(address addr) onlyOwner notBanned(addr) {
     members[addr] = 1;
+  }
+
+  function remove(address addr) onlyOwner notBanned(addr) {
+    members[addr] = 0;
   }
 
   function invalidate(address addr) onlyOwner {

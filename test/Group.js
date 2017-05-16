@@ -48,12 +48,63 @@ contract('Group', () => {
 
   describe('registering members', () => {
 
-    xit('should allow the authority to add a member', () => {
-
+    it('should allow the authority to add a member', () => {
+      const { contract, instance } = Group(accounts('gmc').address)
+      return contract
+      .then(() => instance().register(
+        accounts('doctor').address, { from: accounts('gmc').address })
+      )
     })
 
-    xit('should not allow anyone else to add a member', () => {
+    it('should not allow anyone else to add a member', () => {
+      const { contract, instance } = Group(accounts('gmc').address)
+      return contract
+      .then(() => instance().register(
+        accounts('doctor').address
+      ))
+      .catch((err) => {
+        assert(isThrow(err))
+      })
+    })
 
+    it('should not allow adding a member that has been previously banned', () => {
+      const { contract, instance } = Group(accounts('gmc').address, true)
+      return contract
+      .then(() => instance().register(
+        accounts('doctor').address, { from: accounts('gmc').address })
+      )
+      .then(() => instance().invalidate(
+        accounts('doctor').address, { from: accounts('gmc').address })
+      )
+      .then(() => instance().register(
+        accounts('doctor').address, { from: accounts('gmc').address })
+      )
+      .catch((err) => {
+        assert(isThrow(err))
+      })
+    })
+
+  })
+
+  describe('banning members', () => {
+
+    it('should allow the authority to ban a member', () => {
+      const { contract, instance } = Group(accounts('gmc').address, true)
+      return contract
+      .then(() => instance().invalidate(
+        accounts('doctor').address, { from: accounts('gmc').address })
+      )
+    })
+
+    it('should not allow anyone else to ban a member', () => {
+      const { contract, instance } = Group(accounts('gmc').address)
+      return contract
+      .then(() => instance().invalidate(
+        accounts('doctor').address
+      ))
+      .catch((err) => {
+        assert(isThrow(err))
+      })
     })
 
   })
