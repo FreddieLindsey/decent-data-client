@@ -2,12 +2,12 @@ import accounts_ from '../infra/testrpc/accounts.json'
 
 const Registry = artifacts.require('./Registry.sol')
 const IPFSStorage = artifacts.require('./IPFSStorage.sol')
-const Group = artifacts.require('./Group.sol')
+const Group_ = artifacts.require('./Group.sol')
 
 let
   contractRegistry = {},
   contractsIPFSStorage = {},
-  contractsGroup = {}
+  contractGroup = {}
 
 export const isThrow = (err) => {
   return err.toString().indexOf('invalid JUMP') !== -1
@@ -51,4 +51,17 @@ export const RegistryBlank = (refresh = false) => {
     }
   }
   return contractRegistry
+}
+
+export const Group = (account, refresh = false) => {
+  if (refresh || !contractGroup.contract) {
+    let i
+    contractGroup = {
+      contract:
+        Group_.new({ from: account })
+        .then((instance) => { i = instance }),
+      instance: () => i
+    }
+  }
+  return contractGroup
 }
