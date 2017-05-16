@@ -298,9 +298,7 @@ contract('IPFSStorage', () => {
       const { contract, instance } =
         IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       return contract
-      .then(() => {
-        return instance().giveWrite(accounts('patient_2').address, path)
-      })
+      .then(() => instance().giveWrite(accounts('patient_2').address, path))
       .catch((err) => {
         assert.equal(isThrow(err), true)
       })
@@ -310,9 +308,7 @@ contract('IPFSStorage', () => {
       const { contract, instance } =
         IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       return contract
-      .then(() => {
-        return instance().giveRead(accounts('patient_2').address, path)
-      })
+      .then(() => instance().giveRead(accounts('patient_2').address, path))
       .catch((err) => {
         assert.equal(isThrow(err), true)
       })
