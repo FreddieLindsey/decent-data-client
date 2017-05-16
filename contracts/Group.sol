@@ -20,7 +20,7 @@ contract Group {
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
 
-  address authority;
+  address public authority;
 
   /* addr => 0: not a member, 1: member, 2: struck off */
   mapping (address => uint) members;

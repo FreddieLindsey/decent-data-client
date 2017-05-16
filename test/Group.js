@@ -1,6 +1,6 @@
 import {
   Group,
-  IPFSStorageWithPublicKey,
+  IPFSStorage,
 
   accounts,
   isThrow

@@ -1,12 +1,11 @@
 import HashByte from '../utils/HashByte'
 import {
-  IPFSStorageWithPublicKey,
+  Group,
+  IPFSStorage,
 
   accounts,
   isThrow
 } from './utils'
-
-const IPFSStorage = artifacts.require('./IPFSStorage.sol')
 
 contract('IPFSStorage', () => {
 
@@ -16,12 +15,16 @@ contract('IPFSStorage', () => {
   const hash = 'Qm061864a08ae30bbd5933cba4cfcf621d401591fd'
 
   // Setup
-  IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+  const { contract, instance } = Group(accounts('gmc').address, true)
+  contract.then(() => instance().register(
+    accounts('doctor').address, { from: accounts('gmc').address })
+  )
+  IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
 
   describe('contract initialisation', () => {
 
     it('should have a size of 0', () => {
-      const { contract, instance } = IPFSStorageWithPublicKey(accounts('patient_1').address)
+      const { contract, instance } = IPFSStorage(accounts('patient_1').address)
       return contract
       .then(() => {
         return instance().size()
@@ -33,7 +36,7 @@ contract('IPFSStorage', () => {
 
     // Set to pending as undeterministic results
     xit('owner of contract should be public', () => {
-      const { contract, instance } = IPFSStorageWithPublicKey(accounts('patient_1').address)
+      const { contract, instance } = IPFSStorage(accounts('patient_1').address)
       return contract
       .then(() => instance().getOwner())
       .then((value) => {
@@ -47,7 +50,7 @@ contract('IPFSStorage', () => {
 
     it('should give count of available paths (readable / writeable)', () => {
       const { contract, instance } =
-        IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       return contract
       .then(() => {
         return instance().add(
@@ -74,7 +77,7 @@ contract('IPFSStorage', () => {
 
     it('should be able to use an index to get a path available to the user', () => {
       const { contract, instance } =
-        IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       const path_ = path + Math.random().toString()
       return contract
       .then(() => {
@@ -95,7 +98,7 @@ contract('IPFSStorage', () => {
   describe('adding data to contract', () => {
 
     it('should be successful if write access', () => {
-      const { contract, instance } = IPFSStorageWithPublicKey(accounts('patient_1').address)
+      const { contract, instance } = IPFSStorage(accounts('patient_1').address)
       const path_ = path + Math.random().toString()
       return contract
       .then(() => {
@@ -113,7 +116,7 @@ contract('IPFSStorage', () => {
     })
 
     it('should throw error if no write access', () => {
-      const { contract, instance } = IPFSStorageWithPublicKey(accounts('patient_1').address)
+      const { contract, instance } = IPFSStorage(accounts('patient_1').address)
       const path_ = path + Math.random().toString()
       return contract
       .then(() => {
@@ -129,7 +132,7 @@ contract('IPFSStorage', () => {
     it('should increment size on contract', () => {
       let s0
 
-      const { contract, instance } = IPFSStorageWithPublicKey(accounts('patient_1').address)
+      const { contract, instance } = IPFSStorage(accounts('patient_1').address)
       return contract
       .then(() => {
         return instance().size({ from: accounts('patient_1').address })
@@ -154,7 +157,7 @@ contract('IPFSStorage', () => {
   describe('getting data from a contract', () => {
 
     it('should be successful if read access', () => {
-      const { contract, instance } = IPFSStorageWithPublicKey(accounts('patient_1').address)
+      const { contract, instance } = IPFSStorage(accounts('patient_1').address)
       return contract
       .then(() => {
         return instance().add(
@@ -177,7 +180,7 @@ contract('IPFSStorage', () => {
 
     it('should throw error if no read access', () => {
       const { contract, instance } =
-        IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       return contract
       .then(() => {
         return instance().get('random')
@@ -193,7 +196,7 @@ contract('IPFSStorage', () => {
 
     it('should allow owner write', () => {
       const { contract, instance } =
-        IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       return contract
       .then(() => {
         // Should return true for any path
@@ -206,7 +209,7 @@ contract('IPFSStorage', () => {
 
     it('should allow owner read', () => {
       const { contract, instance } =
-        IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       return contract
       .then(() => {
         // Should return true for any path
@@ -219,7 +222,7 @@ contract('IPFSStorage', () => {
 
     it('should not allow write by default to anyone', () => {
       const { contract, instance } =
-        IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       return contract
       .then(() => {
         // Should return true for any path
@@ -232,7 +235,7 @@ contract('IPFSStorage', () => {
 
     it('should not allow read by default to anyone', () => {
       const { contract, instance } =
-        IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       return contract
       .then(() => {
         // Should return true for any path
@@ -243,9 +246,9 @@ contract('IPFSStorage', () => {
       })
     })
 
-    it('should allow giving an address write access to a path as owner', () => {
+    it('should allow the owner to give an address write access to a path', () => {
       const { contract, instance } =
-        IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       return contract
       .then(() => {
         return instance().canWrite(accounts('patient_2').address, path)
@@ -267,9 +270,9 @@ contract('IPFSStorage', () => {
       })
     })
 
-    it('should allow giving an address read access from a path as owner', () => {
+    it('should allow the owner to give an address read access to a path', () => {
       const { contract, instance } =
-        IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       return contract
       .then(() => {
         return instance().canRead(accounts('patient_2').address, path)
@@ -291,9 +294,9 @@ contract('IPFSStorage', () => {
       })
     })
 
-    it('should not allow giving an address write access to a path as anyone', () => {
+    it('should not allow anyone to give an address write access to a path', () => {
       const { contract, instance } =
-        IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       return contract
       .then(() => {
         return instance().giveWrite(accounts('patient_2').address, path)
@@ -303,15 +306,138 @@ contract('IPFSStorage', () => {
       })
     })
 
-    it('should not allow giving an address read access from a path as anyone', () => {
+    it('should not allow anyone to give an address read access from a path', () => {
       const { contract, instance } =
-        IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       return contract
       .then(() => {
         return instance().giveRead(accounts('patient_2').address, path)
       })
       .catch((err) => {
         assert.equal(isThrow(err), true)
+      })
+    })
+
+  })
+
+  describe('group access', () => {
+
+    it('should allow the owner to add a group', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      return contract
+      .then(() => Group(accounts('gmc').address).contract)
+      .then(() => {
+        const group = Group(accounts('gmc').address).instance().address
+        return instance().addGroup(
+          group, 'GMC', { from: accounts('patient_1').address }
+        )
+      })
+    })
+
+    it('should not allow anyone else to add a group', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      return contract
+      .then(() => Group(accounts('gmc').address).contract)
+      .then(() => {
+        const group = Group(accounts('gmc').address).instance().address
+        return instance().addGroup(
+          group, 'GMC'
+        )
+      })
+      .catch((err) => {
+        assert.equal(isThrow(err), true)
+      })
+    })
+
+    it('should allow the owner to give a group write access to a path', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      return contract
+      .then(() => Group(accounts('gmc').address).contract)
+      .then(() => {
+        const group = Group(accounts('gmc').address).instance().address
+        return instance().addGroup(
+          group, 'GMC', { from: accounts('patient_1').address }
+        )
+      })
+      .then(() => instance().canWriteGroup('GMC', accounts('doctor').address, path))
+      .then((value) => assert.equal(value, false))
+      .then(() => instance().giveWriteGroup('GMC', path, { from: accounts('patient_1').address }))
+      .then(() => instance().canWriteGroup('GMC', accounts('doctor').address, path))
+      .then((value) => {
+        assert.equal(value, true)
+      })
+    })
+
+    it('should allow the owner to give a group read access from a path', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      return contract
+      .then(() => Group(accounts('gmc').address).contract)
+      .then(() => {
+        const group = Group(accounts('gmc').address).instance().address
+        return instance().addGroup(
+          group, 'GMC', { from: accounts('patient_1').address }
+        )
+      })
+      .then(() => instance().canReadGroup('GMC', accounts('doctor').address, path))
+      .then((value) => assert.equal(value, false))
+      .then(() => instance().giveReadGroup('GMC', path, { from: accounts('patient_1').address }))
+      .then(() => instance().canReadGroup('GMC', accounts('doctor').address, path))
+      .then((value) => {
+        assert.equal(value, true)
+      })
+    })
+
+    it('should allow the owner to remove group write access to a path', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      return contract
+      .then(() => Group(accounts('gmc').address).contract)
+      .then(() => {
+        const group = Group(accounts('gmc').address).instance().address
+        return instance().addGroup(
+          group, 'GMC', { from: accounts('patient_1').address }
+        )
+      })
+      .then(() => instance().canWriteGroup('GMC', accounts('doctor').address, path))
+      .then((value) => assert.equal(value, false))
+      .then(() => instance().giveWriteGroup('GMC', path, { from: accounts('patient_1').address }))
+      .then(() => instance().canWriteGroup('GMC', accounts('doctor').address, path))
+      .then((value) => {
+        assert.equal(value, true)
+      })
+      .then(() => instance().takeWriteGroup('GMC', path, { from: accounts('patient_1').address }))
+      .then(() => instance().canWriteGroup('GMC', accounts('doctor').address, path))
+      .then((value) => {
+        assert.equal(value, false)
+      })
+    })
+
+    it('should allow the owner to remove group read access from a path', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      return contract
+      .then(() => Group(accounts('gmc').address).contract)
+      .then(() => {
+        const group = Group(accounts('gmc').address).instance().address
+        return instance().addGroup(
+          group, 'GMC', { from: accounts('patient_1').address }
+        )
+      })
+      .then(() => instance().canReadGroup('GMC', accounts('doctor').address, path))
+      .then((value) => assert.equal(value, false))
+      .then(() => instance().giveReadGroup('GMC', path, { from: accounts('patient_1').address }))
+      .then(() => instance().canReadGroup('GMC', accounts('doctor').address, path))
+      .then((value) => {
+        assert.equal(value, true)
+      })
+      .then(() => instance().takeReadGroup('GMC', path, { from: accounts('patient_1').address }))
+      .then(() => instance().canReadGroup('GMC', accounts('doctor').address, path))
+      .then((value) => {
+        assert.equal(value, false)
       })
     })
 

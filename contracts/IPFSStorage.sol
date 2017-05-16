@@ -1,5 +1,7 @@
 pragma solidity ^0.4.8;
 
+import "./Group.sol";
+
 /*
   CORE PRINCIPLES:
 
@@ -68,6 +70,9 @@ contract IPFSStorage {
   /* Record location */
   mapping (string => IpfsHash) hashes;
 
+  /* Groups */
+  mapping (string => address) groups;
+
   /* ----------------------------------------------------------------------- */
   /* EXTERNAL FUNCTIONS */
   /* ----------------------------------------------------------------------- */
@@ -92,10 +97,30 @@ contract IPFSStorage {
   }
 
   /* ONLY ACCESSIBLE BY OWNER */
+  function giveWriteGroup(string name, string path) onlyOwner {
+    address group = groups[name];
+    if (group == 0) throw;
+
+    allowWrite(group, path);
+    insert(user_paths[owner], path);
+    insert(user_paths[group], path);
+  }
+
+  /* ONLY ACCESSIBLE BY OWNER */
   function giveRead(address reader, string path) onlyOwner {
     allowRead(reader, path);
     insert(user_paths[owner], path);
     insert(user_paths[reader], path);
+  }
+
+  /* ONLY ACCESSIBLE BY OWNER */
+  function giveReadGroup(string name, string path) onlyOwner {
+    address group = groups[name];
+    if (group == 0) throw;
+
+    allowRead(group, path);
+    insert(user_paths[owner], path);
+    insert(user_paths[group], path);
   }
 
   /* ONLY ACCESSIBLE BY OWNER */
@@ -105,9 +130,48 @@ contract IPFSStorage {
   }
 
   /* ONLY ACCESSIBLE BY OWNER */
+  function takeWriteGroup(string name, string path) onlyOwner {
+    address group = groups[name];
+    if (group == 0) throw;
+
+    removeWrite(group, path);
+    remove(user_paths[group], path);
+  }
+
+  /* ONLY ACCESSIBLE BY OWNER */
   function takeRead(address reader, string path) onlyOwner {
     removeRead(reader, path);
     remove(user_paths[reader], path);
+  }
+
+  /* ONLY ACCESSIBLE BY OWNER */
+  function takeReadGroup(string name, string path) onlyOwner {
+    address group = groups[name];
+    if (group == 0) throw;
+
+    removeRead(group, path);
+    remove(user_paths[group], path);
+  }
+
+  /* ONLY ACCESSIBLE BY OWNER */
+  function addGroup(address group, string name) onlyOwner {
+    groups[name] = group;
+  }
+
+  /* ONLY ACCESSIBLE BY OWNER. REMOVE ALL GROUP ACCESS */
+  function removeGroup(string name) onlyOwner {
+    address group = groups[name];
+    if (group == 0) throw;
+
+    /* Remove group address */
+    groups[name] = 0;
+
+    /* Remove permissions on all paths */
+    for (uint i = 0; i < size(user_paths[group]); i++)
+      removeAll(group, user_paths[group].items[i]);
+
+    /* Set number of items for address to none */
+    user_paths[group] = Set(new string[](0));
   }
 
   /* CONSTANT FUNCTIONS */
@@ -153,8 +217,27 @@ contract IPFSStorage {
     return writer == owner || allowedWrite(writer, path);
   }
 
+  /* ACCESSIBLE BY ANY PARTY */
+  function canWriteGroup(string name, address writer, string path) constant returns (bool) {
+    Group group = Group(groups[name]);
+
+    if (!group.member(writer)) throw;
+
+    return allowedWrite(group, path);
+  }
+
+  /* ACCESSIBLE BY ANY PARTY */
   function canRead(address reader, string path) constant returns (bool) {
     return reader == owner || allowedRead(reader, path);
+  }
+
+  /* ACCESSIBLE BY ANY PARTY */
+  function canReadGroup(string name, address reader, string path) constant returns (bool) {
+    Group group = Group(groups[name]);
+
+    if (!group.member(reader)) throw;
+
+    return allowedRead(group, path);
   }
 
   /* ----------------------------------------------------------------------- */
@@ -262,6 +345,11 @@ contract IPFSStorage {
   }*/
 
   /* REMOVE ACCESS */
+
+  function removeAll(address addr, string path) internal {
+    IpfsHash h = hashes[path];
+    h.access_control[addr] = 0;
+  }
 
   function removeRead(address addr, string path) internal {
     if (allowedRead(addr, path)) {

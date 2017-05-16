@@ -1,26 +1,23 @@
 import {
-  RegistryBlank,
-  IPFSStorageWithPublicKey,
+  Registry,
+  IPFSStorage,
 
   accounts,
   isThrow
 } from './utils'
-
-const Registry = artifacts.require('./Registry.sol')
-const IPFSStorage = artifacts.require('./IPFSStorage.sol')
 
 contract('Registry', () => {
 
   const publicKeyHash = 'Qmc809239e912949d06d6a125e1c0cd5a4df0a5669'
 
   // Setup
-  RegistryBlank(true)
+  Registry(true)
 
   describe('registering a storage contract', () => {
 
     it('should allow registering a user', () => {
-      const { contract, instance } = RegistryBlank()
-      const storage = IPFSStorageWithPublicKey(accounts('patient_1').address, publicKeyHash, true)
+      const { contract, instance } = Registry()
+      const storage = IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
       let ipfs
       return contract
       .then(() => {
@@ -37,8 +34,8 @@ contract('Registry', () => {
   describe('getting storage contract', () => {
 
     xit('should be successful when a user has registered', () => {
-      const { contract, instance } = RegistryBlank()
-      const storage = IPFSStorageWithPublicKey(accounts('patient_1').address)
+      const { contract, instance } = Registry()
+      const storage = IPFSStorage(accounts('patient_1').address)
       let ipfs
       return contract
       .then(() => storage.contract)
@@ -54,7 +51,7 @@ contract('Registry', () => {
     })
 
     it('should throw when a user has not registered', () => {
-      const { contract, instance } = RegistryBlank()
+      const { contract, instance } = Registry()
       return contract
       .then(() => {
         return instance().getStore(
