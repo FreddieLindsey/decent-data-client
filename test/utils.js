@@ -1,21 +1,25 @@
-import accounts from '../infra/testrpc/accounts.json'
+import accounts_ from '../infra/testrpc/accounts.json'
 
 const Registry = artifacts.require('./Registry.sol')
 const IPFSStorage = artifacts.require('./IPFSStorage.sol')
+const Group = artifacts.require('./Group.sol')
 
 let
   contractRegistry = {},
-  contractsIPFSStorage = {}
+  contractsIPFSStorage = {},
+  contractsGroup = {}
 
 export const isThrow = (err) => {
   return err.toString().indexOf('invalid JUMP') !== -1
 }
 
-export const findAccount = (name) => {
-  for (const i in accounts)
-    if (accounts[i].name === name)
-      return accounts[i]
-  console.log(`No account found with name ${name}`)
+let accountsData = { init: false, data: {} }
+export const accounts = (name) => {
+  if (!accountsData.init)
+    for (const i in accounts_)
+      accountsData.data[accounts_[i].name] = accounts_[i]
+
+  return accountsData.data[name]
 }
 
 export const IPFSStorageWithPublicKey = (account, publicKeyHash = undefined,
@@ -41,7 +45,7 @@ export const RegistryBlank = (refresh = false) => {
     let i
     contractRegistry = {
       contract:
-        Registry.new({ from: findAccount('arbitrator').address })
+        Registry.new({ from: accounts('arbitrator').address })
         .then((instance) => { i = instance }),
       instance: () => i
     }
