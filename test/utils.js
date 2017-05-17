@@ -1,30 +1,34 @@
-import accounts from '../infra/testrpc/accounts.json'
+import accounts_ from '../infra/testrpc/accounts.json'
 
-const Registry = artifacts.require('./Registry.sol')
-const IPFSStorage = artifacts.require('./IPFSStorage.sol')
+const Registry_ = artifacts.require('./Registry.sol')
+const IPFSStorage_ = artifacts.require('./IPFSStorage.sol')
+const Group_ = artifacts.require('./Group.sol')
 
 let
   contractRegistry = {},
-  contractsIPFSStorage = {}
+  contractsIPFSStorage = {},
+  contractGroup = {}
 
 export const isThrow = (err) => {
   return err.toString().indexOf('invalid JUMP') !== -1
 }
 
-export const findAccount = (name) => {
-  for (const i in accounts)
-    if (accounts[i].name === name)
-      return accounts[i]
-  console.log(`No account found with name ${name}`)
+let accountsData = { init: false, data: {} }
+export const accounts = (name) => {
+  if (!accountsData.init)
+    for (const i in accounts_)
+      accountsData.data[accounts_[i].name] = accounts_[i]
+
+  return accountsData.data[name]
 }
 
-export const IPFSStorageWithPublicKey = (account, publicKeyHash = undefined,
+export const IPFSStorage = (account, publicKeyHash = undefined,
                                          refresh = false) => {
   if ((!contractsIPFSStorage[account] || refresh) && publicKeyHash) {
     let i
     contractsIPFSStorage[account] = {
       contract:
-        IPFSStorage.new(publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account })
+        IPFSStorage_.new(publicKeyHash.slice(0, 32), publicKeyHash.slice(32, 64), { from: account })
         .then((instance) => {
           i = instance
           return
@@ -36,15 +40,28 @@ export const IPFSStorageWithPublicKey = (account, publicKeyHash = undefined,
   return contractsIPFSStorage[account]
 }
 
-export const RegistryBlank = (refresh = false) => {
+export const Registry = (refresh = false) => {
   if (refresh || !contractRegistry.contract) {
     let i
     contractRegistry = {
       contract:
-        Registry.new({ from: findAccount('arbitrator').address })
+        Registry_.new({ from: accounts('arbitrator').address })
         .then((instance) => { i = instance }),
       instance: () => i
     }
   }
   return contractRegistry
+}
+
+export const Group = (account, refresh = false) => {
+  if (refresh || !contractGroup.contract) {
+    let i
+    contractGroup = {
+      contract:
+        Group_.new({ from: account })
+        .then((instance) => { i = instance }),
+      instance: () => i
+    }
+  }
+  return contractGroup
 }
