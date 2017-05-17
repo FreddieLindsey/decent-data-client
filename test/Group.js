@@ -31,7 +31,7 @@ contract('Group', () => {
       )
       .then(() => instance().member(accounts('doctor').address))
       .then((v) => {
-        assert(v)
+        assert(!!v)
       })
     })
 
