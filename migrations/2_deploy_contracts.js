@@ -1,8 +1,8 @@
-const IPFSStorage = artifacts.require('../contracts/IPFSStorage.sol')
-const Registry = artifacts.require('../contracts/Registry.sol')
-const Group = artifacts.require('../contracts/Group.sol')
+const IPFSStorage = artifacts.require('IPFSStorage')
+const Registry = artifacts.require('Registry')
+const Group = artifacts.require('Group')
 
-const StringUtil = artifacts.require('../contracts/libraries/StringUtil.sol')
+const StringUtil = artifacts.require('libraries/StringUtil')
 
 module.exports = function(deployer) {
   deployer.deploy(StringUtil);
