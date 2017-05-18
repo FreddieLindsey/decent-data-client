@@ -1,6 +1,7 @@
 pragma solidity ^0.4.8;
 
 import "./Group.sol";
+import "./libraries/StringUtil.sol";
 
 /*
   CORE PRINCIPLES:
@@ -260,9 +261,13 @@ contract IPFSStorage {
     return path_share.shares.length;
   }
 
-  function indexShare(string path, uint index) onlyOwner constant returns (address, uint) {
+  function indexShare(string path, uint index) onlyOwner constant returns (address, uint, bool) {
     Share[] storage path_share = shares[path].shares;
-    return (path_share[index].identity, path_share[index].permissions);
+    return (
+      path_share[index].identity,
+      path_share[index].permissions,
+      path_share[index].group
+    );
   }
 
   /* ----------------------------------------------------------------------- */
@@ -285,7 +290,7 @@ contract IPFSStorage {
 
   function contains(Set storage set, string path) internal returns (uint) {
     for (uint i = 0; i < size(set); i++)
-      if (stringEqual(set.items[i], path))
+      if (StringUtil.stringEqual(set.items[i], path))
         return i;
     return size(set);
   }
@@ -329,13 +334,9 @@ contract IPFSStorage {
   /* ACCESS CONTROL */
   /*
      No access by default (0)
-     R = 1, W = 2, RL = 4, WL = 8
-     mapping(uint => mapping(address => uint)) access_control
+     R = 1, W = 2
 
-      1: R            2: W            3: R, W            4: RL
-      5: R, RL        6: W, RL        7: R, W, RL        8: WL
-      9: R, WL       10: W, WL       11: R, W, WL       12: RL, WL
-     13: R, RL, WL   14: W, RL, WL   15: R, W, RL, WL
+     0: _           1: R           2: W           3: R, W
   */
   /* ----------------------------------------------------------------------- */
 
@@ -354,20 +355,6 @@ contract IPFSStorage {
     access = access % 4;
     return (access >= 2);
   }
-
-  /*function allowedReadLog(address addr, string path) internal returns (bool) {
-    IpfsHash h = hashes[path];
-    uint access = h.access_control[addr];
-    access = access % 8;
-    return (access >= 4);
-  }*/
-
-  /*function allowedWriteLog(address addr, string path) internal returns (bool) {
-    IpfsHash h = hashes[path];
-    uint access = h.access_control[addr];
-    access = access % 16;
-    return (access >= 8);
-  }*/
 
   /* ADD ACCESS */
 
@@ -391,20 +378,6 @@ contract IPFSStorage {
     }
   }
 
-  /*function allowReadLog(address addr, string path) internal {
-    if (!allowedReadLog(addr, path)) {
-      IpfsHash h = hashes[path];
-      h.access_control[addr] += 4;
-    }
-  }*/
-
-  /*function allowWriteLog(address addr, string path) internal {
-    if (!allowedWriteLog(addr, path)) {
-      IpfsHash h = hashes[path];
-      h.access_control[addr] += 8;
-    }
-  }*/
-
   /* REMOVE ACCESS */
 
   function removeAll(address addr, string path) internal {
@@ -424,58 +397,6 @@ contract IPFSStorage {
       IpfsHash h = hashes[path];
       h.access_control[addr] -= 2;
     }
-  }
-
-  /*function removeReadLog(address addr, string path) internal {
-    if (allowedReadLog(addr, path)) {
-      IpfsHash h = hashes[path];
-      h.access_control[addr] -= 4;
-    }
-  }*/
-
-  /*function removeWriteLog(address addr, string path) internal {
-    if (allowedWriteLog(addr, path)) {
-      IpfsHash h = hashes[path];
-      h.access_control[addr] -= 8;
-    }
-  }*/
-
-  /* ----------------------------------------------------------------------- */
-  /* STRING LOGIC */
-  /* ----------------------------------------------------------------------- */
-
-  function stringSlice(string s, uint start, uint end) internal returns (string) {
-    bytes memory sBytes = bytes(s);
-    bytes memory out = new bytes(end - start);
-    for (uint i = 0; i < end; i++) {
-      out[i] = sBytes[start + i];
-    }
-    return string(out);
-  }
-
-  function stringFindSeparator(string s, byte separator) internal returns (bool[]) {
-    bool[] memory out;
-    bytes memory sBytes;
-
-    uint left = 0;
-    for (uint i = 0; i < sBytes.length; i++) {
-      if (sBytes[i] == separator) {
-        out[i] = true;
-        left = i + 1;
-      }
-    }
-    return out;
-  }
-
-  function stringEqual(string a, string b) internal returns (bool) {
-    bytes memory _a = bytes(a);
-    bytes memory _b = bytes(b);
-    if (_a.length != _b.length)
-			return false;
-		for (uint i = 0; i < _a.length; i ++)
-			if (_a[i] != _b[i])
-				return false;
-		return true;
   }
 
   /* ----------------------------------------------------------------------- */

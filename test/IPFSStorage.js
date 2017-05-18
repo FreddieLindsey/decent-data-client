@@ -509,7 +509,33 @@ contract('IPFSStorage', () => {
       })
     })
 
-    xit('should see whether someone is a group')
+    it('should see whether someone is a group', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      let group
+      return contract
+      .then(() => Group(accounts('gmc').address).contract)
+      .then(() => {
+        group = Group(accounts('gmc').address).instance().address
+        return instance().addGroup(
+          group, 'GMC', { from: accounts('patient_1').address }
+        )
+      })
+      .then(() => instance().giveWriteGroup(
+          'GMC', path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().giveReadGroup(
+          'GMC', path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().sizeShare(path, { from: accounts('patient_1').address }))
+      .then((v) => assert.equal(v.valueOf(), 1))
+      .then(() => instance().indexShare(path, 0, { from: accounts('patient_1').address }))
+      .then((v) => {
+        assert.equal(v[0].valueOf(), group)
+        assert.equal(v[1].valueOf(), 3)
+        assert.equal(v[2].valueOf(), true)
+      })
+    })
 
   })
 
