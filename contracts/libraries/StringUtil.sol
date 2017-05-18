@@ -13,7 +13,7 @@ library StringUtil {
 
   function stringFindSeparator(string s, byte separator) returns (bool[]) {
     bool[] memory out;
-    bytes memory sBytes;
+    bytes memory sBytes = bytes(s);
 
     uint left = 0;
     for (uint i = 0; i < sBytes.length; i++) {
