@@ -260,6 +260,11 @@ contract IPFSStorage {
     return path_share.shares.length;
   }
 
+  function indexShare(string path, uint index) onlyOwner constant returns (address, uint) {
+    Share[] storage path_share = shares[path].shares;
+    return (path_share[index].identity, path_share[index].permissions);
+  }
+
   /* ----------------------------------------------------------------------- */
   /* SET LOGIC */
   /* ----------------------------------------------------------------------- */
@@ -287,6 +292,37 @@ contract IPFSStorage {
 
   function size(Set storage set) internal returns (uint) {
     return set.items.length;
+  }
+
+  /* ----------------------------------------------------------------------- */
+  /* SET SHARE LOGIC */
+  /* ----------------------------------------------------------------------- */
+
+  function insert(SetShare storage set, address addr, bool group, uint permissions) internal {
+    if (contains(set, addr) == size(set))
+      set.shares.push(Share(addr, group, permissions));
+    else
+      set.shares[contains(set, addr)] = Share(addr, group, permissions);
+  }
+
+  function remove(SetShare storage set, address addr) internal {
+    uint index = contains(set, addr);
+    if (index != size(set)) {
+      set.shares[index] = set.shares[size(set) - 1];
+      set.shares[size(set) - 1] = Share(0, false, 0);
+      set.shares.length--;
+    }
+  }
+
+  function contains(SetShare storage set, address addr) internal returns (uint) {
+    for (uint i = 0; i < size(set); i++)
+      if (set.shares[i].identity == addr)
+        return i;
+    return size(set);
+  }
+
+  function size(SetShare storage set) internal returns (uint) {
+    return set.shares.length;
   }
 
    /* ----------------------------------------------------------------------- */
@@ -340,7 +376,8 @@ contract IPFSStorage {
       IpfsHash h = hashes[path];
       h.access_control[addr] += 1;
 
-      shares[path].shares.push(Share(addr, group, h.access_control[addr]));
+      SetShare storage sharing = shares[path];
+      insert(sharing, addr, group, h.access_control[addr]);
     }
   }
 
@@ -349,7 +386,8 @@ contract IPFSStorage {
       IpfsHash h = hashes[path];
       h.access_control[addr] += 2;
 
-      shares[path].shares.push(Share(addr, group, h.access_control[addr]));
+      SetShare storage sharing = shares[path];
+      insert(sharing, addr, group, h.access_control[addr]);
     }
   }
 
