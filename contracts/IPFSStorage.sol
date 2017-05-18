@@ -52,10 +52,20 @@ contract IPFSStorage {
     string[] items;
   }
 
+  struct SetShare {
+    Share[] shares;
+  }
+
   struct IpfsHash {
     bytes32 part1;
     bytes32 part2;
     mapping(address => uint) access_control;
+  }
+
+  struct Share {
+    address identity;
+    bool group;
+    uint permissions;
   }
 
   /* Contract owner */
@@ -66,6 +76,9 @@ contract IPFSStorage {
 
   /* Specific user's available paths */
   mapping (address => Set) user_paths;
+
+  /* Who has access to a path */
+  mapping (string => SetShare) shares;
 
   /* Record location */
   mapping (string => IpfsHash) hashes;
@@ -91,7 +104,7 @@ contract IPFSStorage {
 
   /* ONLY ACCESSIBLE BY OWNER */
   function giveWrite(address writer, string path) onlyOwner {
-    allowWrite(writer, path);
+    allowWrite(writer, path, false);
     insert(user_paths[owner], path);
     insert(user_paths[writer], path);
   }
@@ -101,14 +114,14 @@ contract IPFSStorage {
     address group = groups[name];
     if (group == 0) throw;
 
-    allowWrite(group, path);
+    allowWrite(group, path, true);
     insert(user_paths[owner], path);
     insert(user_paths[group], path);
   }
 
   /* ONLY ACCESSIBLE BY OWNER */
   function giveRead(address reader, string path) onlyOwner {
-    allowRead(reader, path);
+    allowRead(reader, path, false);
     insert(user_paths[owner], path);
     insert(user_paths[reader], path);
   }
@@ -118,7 +131,7 @@ contract IPFSStorage {
     address group = groups[name];
     if (group == 0) throw;
 
-    allowRead(group, path);
+    allowRead(group, path, true);
     insert(user_paths[owner], path);
     insert(user_paths[group], path);
   }
@@ -247,7 +260,6 @@ contract IPFSStorage {
   function insert(Set storage set, string path) internal {
     if (contains(set, path) == size(set))
       set.items.push(path);
-      /*set.items.length++;*/
   }
 
   function remove(Set storage set, string path) internal {
@@ -316,17 +328,21 @@ contract IPFSStorage {
 
   /* ADD ACCESS */
 
-  function allowRead(address addr, string path) internal {
+  function allowRead(address addr, string path, bool group) internal {
     if (!allowedRead(addr, path)) {
       IpfsHash h = hashes[path];
       h.access_control[addr] += 1;
+
+      shares[path].shares.push(Share(addr, group, h.access_control[addr]));
     }
   }
 
-  function allowWrite(address addr, string path) internal {
+  function allowWrite(address addr, string path, bool group) internal {
     if (!allowedWrite(addr, path)) {
       IpfsHash h = hashes[path];
       h.access_control[addr] += 2;
+
+      shares[path].shares.push(Share(addr, group, h.access_control[addr]));
     }
   }
 

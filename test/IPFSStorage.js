@@ -439,4 +439,14 @@ contract('IPFSStorage', () => {
 
   })
 
+  describe('sharing', () => {
+
+    xit('should see who a path is shared with')
+
+    xit('should see what permissions someone has for a path')
+
+    xit('should see whether someone is a group')
+
+  })
+
 })

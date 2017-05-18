@@ -1,10 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import { Redirect } from 'react-router'
 
 import Dropdown from 'react-dropdown'
 import Dropzone from 'react-dropzone'
 
-import { Redirect } from 'react-router'
+import {
+  isThrow
+} from '../../../utils'
 
 import styles from './index.scss'
 
