@@ -441,7 +441,22 @@ contract('IPFSStorage', () => {
 
   describe('sharing', () => {
 
-    xit('should see who a path is shared with')
+    it('should see who a path is shared with', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      return contract
+      .then(() => instance().giveRead(
+          accounts('patient_2').address, path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().giveRead(
+          accounts('patient_3').address, path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().giveRead(
+          accounts('patient_4').address, path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().sizeShare(path, { from: accounts('patient_1').address }))
+      .then((v) => assert.equal(v.valueOf(), 3))
+    })
 
     xit('should see what permissions someone has for a path')
 

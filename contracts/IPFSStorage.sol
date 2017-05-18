@@ -200,6 +200,7 @@ contract IPFSStorage {
   }
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
+  /* TODO: RESTRICT ACCESS */
   function get(string path) readable(path) constant returns (bytes32, bytes32) {
     /* Return hash of path */
     IpfsHash h = hashes[path];
@@ -251,6 +252,12 @@ contract IPFSStorage {
     if (!group.member(reader)) throw;
 
     return allowedRead(group, path);
+  }
+
+  /* ONLY BY ACCESSIBLE BY OWNER */
+  function sizeShare(string path) onlyOwner constant returns (uint) {
+    SetShare storage path_share = shares[path];
+    return path_share.shares.length;
   }
 
   /* ----------------------------------------------------------------------- */
