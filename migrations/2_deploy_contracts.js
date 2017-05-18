@@ -5,6 +5,7 @@ const Group = artifacts.require('../contracts/Group.sol')
 const StringUtil = artifacts.require('../contracts/libraries/StringUtil.sol')
 
 module.exports = function(deployer) {
+  deployer.deploy(StringUtil);
   deployer.link(StringUtil, IPFSStorage);
 
   deployer.deploy(IPFSStorage);
