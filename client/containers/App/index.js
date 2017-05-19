@@ -14,7 +14,6 @@ import {
 
 import Authenticate from '../../components/AuthenticatePage'
 import AppAuthenticated from '../AppAuthenticated'
-import NotFound from '../../components/NotFound'
 
 const mapStateToProps = (state) => {
   const {
@@ -47,7 +46,6 @@ class App extends Component {
             <Route path='/' component={ AppAuthenticated } /> :
             <Redirect to='/authenticate' />
           }
-          <Route component={ NotFound } />
         </Switch>
       </BrowserRouter>
     )

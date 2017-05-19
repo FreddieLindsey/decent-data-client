@@ -5,6 +5,7 @@ import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 import UploadPage from '../../components/UploadPage'
 import PersonalIndexPage from '../../components/PersonalIndexPage'
 import SharedIndexPage from '../../components/SharedIndexPage'
+import NotFoundPage from '../../components/NotFoundPage'
 
 import styles from './index.scss'
 
@@ -15,7 +16,7 @@ export default class AppAuthenticated extends Component {
 
   render () {
     return (
-      <BrowserRouter basename={ '/app' } >
+      <BrowserRouter >
         <div className={ styles.container } >
           <div className={ 'row ' + styles.condense } >
             <div className={ 'col-xs-3 ' + styles.noPad } >
@@ -39,15 +40,16 @@ export default class AppAuthenticated extends Component {
                   Shared
                 </NavLink>
               </div>
-              </div>
+            </div>
             <div className={ 'col-xs-9 ' + styles.noPad } >
-            <div className={ styles.content }>
+              <div className={ styles.content }>
                 <Switch>
                   <Route exact path='/upload' component={ UploadPage } />
                   <Route exact path='/personal' component={ PersonalIndexPage } />
                   {/* <Route path='/personal/view/:path' component={ ViewBlobPage } /> */}
                   {/* <Route path='/personal/share/:path' component={ ShareBlobPage } /> */}
                   <Route exact path='/shared' component={ SharedIndexPage } />
+                  <Route component={ NotFoundPage } />
                 </Switch>
               </div>
             </div>

@@ -165,7 +165,7 @@ class Authenticate extends Component {
 
   renderAuthenticated = () =>
     <Redirect to={{
-      pathname: '/app/personal',
+      pathname: '/personal',
       state: { from: '/authenticate' }
     }}/>
 
