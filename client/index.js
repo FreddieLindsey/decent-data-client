@@ -27,6 +27,6 @@ const renderer = (Component) => {
 renderer(App)
 if (module.hot)
   module.hot.accept('./containers/App', () => {
-    console.log('HOT RELOADING REDUCERS')
+    console.log('HOT RELOADING VIEW')
     renderer(require('./containers/App').default)
   })
