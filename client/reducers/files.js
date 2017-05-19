@@ -65,6 +65,9 @@ const validateFile = (file) => {
     mime: null,
     writable: false,
     readable: false,
+    sharing: {
+      shares: {}
+    },
     ...file
   }
 }

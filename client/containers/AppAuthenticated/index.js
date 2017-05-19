@@ -2,10 +2,18 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 
+// VIEW COMPONENTS
+
 import UploadPage from '../../components/UploadPage'
+
 import PersonalIndexPage from '../../components/PersonalIndexPage'
+import ShareAdminPage from '../../components/ShareAdminPage'
+
 import SharedIndexPage from '../../components/SharedIndexPage'
+
 import NotFoundPage from '../../components/NotFoundPage'
+
+// -- END
 
 import styles from './index.scss'
 

@@ -1,4 +1,5 @@
 export * from './create'
 export * from './indexGet'
+export * from './sizeShareGet'
 export * from './sizeGet'
 export * from './select'

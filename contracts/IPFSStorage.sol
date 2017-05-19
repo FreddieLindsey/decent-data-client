@@ -290,7 +290,7 @@ contract IPFSStorage {
 
   function contains(Set storage set, string path) internal returns (uint) {
     for (uint i = 0; i < size(set); i++)
-      if (StringUtil.stringEqual(set.items[i], path))
+      if (/*StringUtil.*/stringEqual(set.items[i], path))
         return i;
     return size(set);
   }
@@ -402,5 +402,16 @@ contract IPFSStorage {
   /* ----------------------------------------------------------------------- */
   /* UTILS */
   /* ----------------------------------------------------------------------- */
+
+  function stringEqual(string a, string b) returns (bool) {
+    bytes memory _a = bytes(a);
+    bytes memory _b = bytes(b);
+    if (_a.length != _b.length)
+			return false;
+		for (uint i = 0; i < _a.length; i ++)
+			if (_a[i] != _b[i])
+				return false;
+		return true;
+  }
 
 }
