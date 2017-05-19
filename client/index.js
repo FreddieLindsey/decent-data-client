@@ -10,11 +10,23 @@ import './init'
 
 import store from './store'
 
-import App from './components/App/index.js'
+import { AppContainer } from 'react-hot-loader'
+import App from './containers/App'
 
-render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('app')
-)
+const renderer = (Component) => {
+  render(
+    <AppContainer >
+      <Provider store={store}>
+        <Component />
+      </Provider>
+    </AppContainer>,
+    document.getElementById('app')
+  )
+}
+
+renderer(App)
+if (module.hot)
+  module.hot.accept('./containers/App', () => {
+    console.log('HOT RELOADING VIEW')
+    renderer(require('./containers/App').default)
+  })

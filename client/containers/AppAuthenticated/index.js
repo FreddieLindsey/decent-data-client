@@ -2,24 +2,21 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 
-import UploadPage from '../UploadPage'
-import PersonalIndexPage from '../PersonalIndexPage'
-import SharedIndexPage from '../SharedIndexPage'
+import UploadPage from '../../components/UploadPage'
+import PersonalIndexPage from '../../components/PersonalIndexPage'
+import SharedIndexPage from '../../components/SharedIndexPage'
+import NotFoundPage from '../../components/NotFoundPage'
 
 import styles from './index.scss'
 
-const mapStateToProps = (state) => ({})
-
-const mapDispatchToProps = (dispatch) => ({})
-
 // Assume the user is authenticated at this point
-class AppAuthenticated extends Component {
+export default class AppAuthenticated extends Component {
 
   static displayName = 'App (Authenticated)'
 
   render () {
     return (
-      <BrowserRouter basename={ '/app' } >
+      <BrowserRouter >
         <div className={ styles.container } >
           <div className={ 'row ' + styles.condense } >
             <div className={ 'col-xs-3 ' + styles.noPad } >
@@ -43,15 +40,16 @@ class AppAuthenticated extends Component {
                   Shared
                 </NavLink>
               </div>
-              </div>
+            </div>
             <div className={ 'col-xs-9 ' + styles.noPad } >
-            <div className={ styles.content }>
+              <div className={ styles.content }>
                 <Switch>
                   <Route exact path='/upload' component={ UploadPage } />
                   <Route exact path='/personal' component={ PersonalIndexPage } />
                   {/* <Route path='/personal/view/:path' component={ ViewBlobPage } /> */}
                   {/* <Route path='/personal/share/:path' component={ ShareBlobPage } /> */}
                   <Route exact path='/shared' component={ SharedIndexPage } />
+                  <Route component={ NotFoundPage } />
                 </Switch>
               </div>
             </div>
@@ -62,5 +60,3 @@ class AppAuthenticated extends Component {
   }
 
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(AppAuthenticated)

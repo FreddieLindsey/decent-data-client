@@ -12,16 +12,13 @@ let middleware = (process.env.NODE_ENV !== 'production')
   ? applyMiddleware(thunk, logger())
   : applyMiddleware(thunk)
 
-const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ // || compose
+const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(reducers, {}, composeEnhancer(middleware))
 
-if (module.hot) {
-  // Enable Webpack hot module replacement for reducers
-  module.hot.accept('./reducers', () => {
-    const nextReducers = require('./reducers/index')
-    store.replaceReducer(nextReducers)
-  })
-}
+if (module.hot) module.hot.accept('./reducers', () => {
+  console.log('HOT RELOADING REDUCERS')
+  store.replaceReducer(require('./reducers').default)
+})
 
 export default store

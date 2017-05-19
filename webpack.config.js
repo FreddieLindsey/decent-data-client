@@ -14,10 +14,12 @@ module.exports = {
     stats: 'errors-only',
   },
   entry: [
+    'react-hot-loader/patch',
     './client/index.js'
   ],
   output: {
     path: path.resolve(__dirname, 'build', 'client'),
+    publicPath: '/',
     filename: 'app.js'
   },
   resolve: {
