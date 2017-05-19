@@ -45,7 +45,7 @@ class App extends Component {
           {
             authenticated ?
             <Route path='/' component={ AppAuthenticated } /> :
-            <Redirect to={{ pathname: '/authenticate', state: { from: props.location } }}/>
+            <Redirect to='/authenticate' />
           }
           <Route component={ NotFound } />
         </Switch>

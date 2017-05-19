@@ -14,6 +14,7 @@ module.exports = {
     stats: 'errors-only',
   },
   entry: [
+    'react-hot-loader/patch',
     './client/index.js'
   ],
   output: {

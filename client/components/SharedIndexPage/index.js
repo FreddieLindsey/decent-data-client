@@ -142,7 +142,7 @@ class SharedIndex extends Component {
               }
             </div> :
             <div className={ 'col-xs-12' } >
-              Please provide an address to query above
+              Please provide an address to query above.
             </div>
           }
         </div>

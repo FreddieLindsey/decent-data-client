@@ -15,12 +15,12 @@ class NotFound extends Component {
             404
           </h1>
           <h2 className={ styles.text } >
-            Ooops! I can't find a page with this URL.
+            Ooops! I can't find a page with this URL
           </h2>
           <hr />
           <Link
             className={ styles.link }
-            to={{ pathname: '/app/personal', state: { from: '/notfound' }}} >
+            to={{ pathname: '/personal', state: { from: '/notfound' }}} >
             Click here to return to the application
           </Link>
         </div>
