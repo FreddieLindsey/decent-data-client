@@ -13,7 +13,7 @@ import {
 } from 'react-router-dom'
 
 import Authenticate from '../../components/AuthenticatePage'
-import AppAuthenticated from '../../components/AppAuthenticated'
+import AppAuthenticated from '../AppAuthenticated'
 import NotFound from '../../components/NotFound'
 
 const mapStateToProps = (state) => {

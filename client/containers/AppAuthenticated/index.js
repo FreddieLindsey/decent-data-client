@@ -2,18 +2,14 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 
-import UploadPage from '../UploadPage'
-import PersonalIndexPage from '../PersonalIndexPage'
-import SharedIndexPage from '../SharedIndexPage'
+import UploadPage from '../../components/UploadPage'
+import PersonalIndexPage from '../../components/PersonalIndexPage'
+import SharedIndexPage from '../../components/SharedIndexPage'
 
 import styles from './index.scss'
 
-const mapStateToProps = (state) => ({})
-
-const mapDispatchToProps = (dispatch) => ({})
-
 // Assume the user is authenticated at this point
-class AppAuthenticated extends Component {
+export default class AppAuthenticated extends Component {
 
   static displayName = 'App (Authenticated)'
 
@@ -62,5 +58,3 @@ class AppAuthenticated extends Component {
   }
 
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(AppAuthenticated)
