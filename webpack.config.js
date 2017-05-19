@@ -19,6 +19,7 @@ module.exports = {
   ],
   output: {
     path: path.resolve(__dirname, 'build', 'client'),
+    publicPath: '/',
     filename: 'app.js'
   },
   resolve: {
