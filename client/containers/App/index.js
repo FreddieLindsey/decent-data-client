@@ -12,14 +12,9 @@ import {
   Switch
 } from 'react-router-dom'
 
-import Authenticate from '../AuthenticatePage'
-import AppAuthenticated from '../AppAuthenticated'
-import NotFound from '../NotFound'
-
-import {
-  registryAddStore,
-  registryGetStore
-} from '../../actions'
+import Authenticate from '../../components/AuthenticatePage'
+import AppAuthenticated from '../../components/AppAuthenticated'
+import NotFound from '../../components/NotFound'
 
 const mapStateToProps = (state) => {
   const {
@@ -41,25 +36,17 @@ class App extends Component {
   }
 
   render () {
-    const PrivateRoute = ({ component: Component, ...rest }) => (
-      <Route {...rest} render={ props =>
-        this.props.authenticated ? (
-          <Component {...props}/>
-        ) : (
-          <Redirect to={{
-            pathname: '/authenticate',
-            state: { from: props.location }
-          }}/>
-        )
-      }/>
-    )
+    const { authenticated } = this.props
 
     return (
       <BrowserRouter >
         <Switch>
-          <PrivateRoute path='/app' component={ AppAuthenticated } />
-          <Redirect exact from='/' to='/app' />
           <Route exact path='/authenticate' component={ Authenticate } />
+          {
+            authenticated ?
+            <Route path='/' component={ AppAuthenticated } /> :
+            <Redirect to={{ pathname: '/authenticate', state: { from: props.location } }}/>
+          }
           <Route component={ NotFound } />
         </Switch>
       </BrowserRouter>
