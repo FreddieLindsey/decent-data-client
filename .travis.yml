@@ -27,6 +27,7 @@ install:
   - yarn
   - yarn run services
   - yarn run testrpc > ./testrpc.log &
+  - sleep 20
 
 script:
   - yarn run build
