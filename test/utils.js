@@ -10,7 +10,10 @@ let
   contractGroup = {}
 
 export const isThrow = (err) => {
-  return err.toString().indexOf('invalid JUMP') !== -1
+  let throw_ =
+    err.toString().indexOf('invalid JUMP') !== -1 ||
+    err.toString().indexOf('invalid opcode') !== -1
+  if (!throw_) console.log(err)
 }
 
 let accountsData = { init: false, data: {} }
