@@ -2,7 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
 import {
-  ipfsStorageSizeShareGet
+  ipfsStorageSizeShareGet,
+  ipfsStorageGiveRead,
+  ipfsStorageGiveWrite
 } from '../../actions'
 
 import styles from './index.scss'
@@ -12,7 +14,9 @@ const mapStateToProps = (state, props) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  handleSizeShareGet: (p) => dispatch(ipfsStorageSizeShareGet(p))
+  handleSizeShareGet: (p) => dispatch(ipfsStorageSizeShareGet(p)),
+  handleGiveRead: (a, p) => dispatch(ipfsStorageGiveRead(a, p)),
+  handleGiveWrite: (a, p) => dispatch(ipfsStorageGiveWrite(a, p)),
 })
 
 const initialState = {
@@ -30,7 +34,9 @@ class ShareAdminPage extends Component {
   static propTypes = {
     path: PropTypes.string.isRequired,
 
-    handleSizeShareGet: PropTypes.func.isRequired
+    handleSizeShareGet: PropTypes.func.isRequired,
+    handleGiveRead: PropTypes.func.isRequired,
+    handleGiveWrite: PropTypes.func.isRequired
   }
 
   constructor (props) {
@@ -82,6 +88,7 @@ class ShareAdminPage extends Component {
   }
 
   handleSubmit () {
+    const { path } = this.props
     const { add: { address, permissions } } = this.state
     let errors = []
 
@@ -95,7 +102,11 @@ class ShareAdminPage extends Component {
         add: { ...this.state.add, errors }
       })
     } else {
-      console.log('TODO: Send to Ethereum')
+      // Give read
+      if (permissions % 2 === 1) this.props.handleGiveRead(address, path)
+
+      // Give write
+      if (permissions % 4 >= 2) this.props.handleGiveWrite(address, path)
     }
   }
 

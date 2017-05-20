@@ -9,9 +9,9 @@ export const ipfsStorageGiveWrite = (address, path) => {
     const storage = getState().IPFSStorage.mine
     dispatch(ipfsStorageGiveWritePending(identity, address, path))
     contracts.IPFSStorage.at(storage)
-    .giveWrite(address, path, { from: identity })
+    .giveWrite(address, path, { from: identity, gas: 3000000, gasPrice: 10000000 })
     .then(() => dispatch(ipfsStorageGiveWriteSuccess(identity, address, path)))
-    .catch((err) => dispatch(ipfsStorageGiveWriteError(identity, address, path, error)))
+    .catch((err) => dispatch(ipfsStorageGiveWriteError(identity, address, path, err)))
   }
 }
 

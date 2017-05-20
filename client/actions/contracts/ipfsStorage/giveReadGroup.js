@@ -9,9 +9,9 @@ export const ipfsStorageGiveReadGroup = (group, path) => {
     const storage = getState().IPFSStorage.mine
     dispatch(ipfsStorageGiveReadGroupPending(identity, group, path))
     contracts.IPFSStorage.at(storage)
-    .giveReadGroup(group, path, { from: identity })
+    .giveReadGroup(group, path, { from: identity, gas: 3000000, gasPrice: 10000000 })
     .then(() => dispatch(ipfsStorageGiveReadGroupSuccess(identity, group, path)))
-    .catch((err) => dispatch(ipfsStorageGiveReadGroupError(identity, group, path, error)))
+    .catch((err) => dispatch(ipfsStorageGiveReadGroupError(identity, group, path, err)))
   }
 }
 

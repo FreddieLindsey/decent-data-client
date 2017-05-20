@@ -13,6 +13,12 @@ import {
   // IPFSSTORAGE_INDEX_GET_PENDING,
   IPFSSTORAGE_INDEX_GET_SUCCESS,
   IPFSSTORAGE_INDEX_GET_ERROR,
+  // IPFSSTORAGE_GIVE_READ_PENDING,
+  IPFSSTORAGE_GIVE_READ_SUCCESS,
+  IPFSSTORAGE_GIVE_READ_ERROR,
+  // IPFSSTORAGE_GIVE_WRITE_PENDING,
+  IPFSSTORAGE_GIVE_WRITE_SUCCESS,
+  IPFSSTORAGE_GIVE_WRITE_ERROR,
 } from '../actions'
 
 const initialState = {
@@ -66,7 +72,8 @@ const validateFile = (file) => {
     writable: false,
     readable: false,
     sharing: {
-      shares: {}
+      individuals: {},
+      groups: {}
     },
     ...file
   }
