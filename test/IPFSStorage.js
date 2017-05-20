@@ -125,6 +125,7 @@ contract('IPFSStorage', () => {
         )
       })
       .catch((err) => {
+        if (!isThrow(err)) console.log(err)
         assert.equal(isThrow(err), true)
       })
     })
@@ -186,6 +187,7 @@ contract('IPFSStorage', () => {
         return instance().get('random')
       })
       .catch((err) => {
+        if (!isThrow(err)) console.log(err)
         assert.equal(isThrow(err), true)
       })
     })
@@ -300,6 +302,7 @@ contract('IPFSStorage', () => {
       return contract
       .then(() => instance().giveWrite(accounts('patient_2').address, path))
       .catch((err) => {
+        if (!isThrow(err)) console.log(err)
         assert.equal(isThrow(err), true)
       })
     })
@@ -310,6 +313,7 @@ contract('IPFSStorage', () => {
       return contract
       .then(() => instance().giveRead(accounts('patient_2').address, path))
       .catch((err) => {
+        if (!isThrow(err)) console.log(err)
         assert.equal(isThrow(err), true)
       })
     })
@@ -343,6 +347,7 @@ contract('IPFSStorage', () => {
         )
       })
       .catch((err) => {
+        if (!isThrow(err)) console.log(err)
         assert.equal(isThrow(err), true)
       })
     })
