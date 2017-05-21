@@ -54,6 +54,12 @@ const files = (state = initialState, action) => {
         state, action.index, `${action.address}/${action.path}`)
     case IPFSSTORAGE_INDEX_GET_ERROR:
       return handleIpfsStorageIndexGetError(state, action.index, action.error)
+    case IPFSSTORAGE_GIVE_READ_SUCCESS:
+      return handleIpfsStorageGiveReadSuccess(
+        state, `${action.identity}/${action.path}`, action.address)
+    case IPFSSTORAGE_GIVE_WRITE_SUCCESS:
+      return handleIpfsStorageGiveWriteSuccess(
+        state, `${action.identity}/${action.path}`, action.address)
   }
   return state
 }
@@ -214,6 +220,36 @@ const handleIpfsStorageIndexGetError = (state, index, error) => {
   stored['Errored retrieving path for index ' + index] = validateFile({
     ...stored[path], error, retrieved: false, retrieving: false
   })
+  return {
+    ...state,
+    stored
+  }
+}
+
+const handleIpfsStorageGiveReadSuccess = (state, path, address) => {
+  let stored = state.stored
+  let file = stored[path]
+  if (!file.sharing.individuals[address]) file.sharing.individuals[address] = {
+    permissions: 0
+  }
+  let permissions = file.sharing.individuals[address].permissions
+  if (permissions % 2 !== 1) file.sharing.individuals[address].permissions += 1
+  stored[path] = file
+  return {
+    ...state,
+    stored
+  }
+}
+
+const handleIpfsStorageGiveWriteSuccess = (state, path, address) => {
+  let stored = state.stored
+  let file = stored[path]
+  if (!file.sharing.individuals[address]) file.sharing.individuals[address] = {
+    permissions: 0
+  }
+  let permissions = file.sharing.individuals[address].permissions
+  if (permissions % 4 < 2) file.sharing.individuals[address].permissions += 2
+  stored[path] = file
   return {
     ...state,
     stored

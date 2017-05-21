@@ -9,9 +9,15 @@ import {
 
 import styles from './index.scss'
 
-const mapStateToProps = (state, props) => ({
-  path: props.match.params.path
-})
+const mapStateToProps = (state, props) => {
+  const { address } = state.security
+  const path = props.match.params.path
+  const file = state.files.stored[`${address}/${path}`]
+  return  {
+    path,
+    individuals: file.sharing.individuals
+  }
+}
 
 const mapDispatchToProps = (dispatch) => ({
   handleSizeShareGet: (p) => dispatch(ipfsStorageSizeShareGet(p)),
@@ -33,6 +39,7 @@ class ShareAdminPage extends Component {
   static displayName = 'Share Admin Page'
   static propTypes = {
     path: PropTypes.string.isRequired,
+    individuals: PropTypes.object.isRequired,
 
     handleSizeShareGet: PropTypes.func.isRequired,
     handleGiveRead: PropTypes.func.isRequired,
@@ -111,7 +118,7 @@ class ShareAdminPage extends Component {
   }
 
   render () {
-    const { path } = this.props
+    const { path, individuals } = this.props
     const { add: { address, permissions, type, errors } } = this.state
 
     return (
@@ -199,6 +206,43 @@ class ShareAdminPage extends Component {
           <hr />
 
           {/* LIST CURRENT */}
+
+          <div className={ styles.listIndividual } >
+              <div className='row' >
+                <div className='col-xs-10' >
+                  <div className={ styles.headerAddress } >
+                    Address
+                  </div>
+                </div>
+                <div className='col-xs-1' >
+                  <div className={ styles.headerRead } >
+                    R
+                  </div>
+                </div>
+                <div className='col-xs-1' >
+                  <div className={ styles.headerWrite } >
+                    W
+                  </div>
+                </div>
+              {
+                Object.keys(individuals).map((k) =>
+                  <div key={ k } className='col-xs-12' >
+                    <div className='row' >
+                      <div className='col-xs-10' >
+                        { k }
+                      </div>
+                      <div className='col-xs-1' >
+                        { individuals[k].permissions % 2 === 1 ? '✔️' : ' ' }
+                      </div>
+                      <div className='col-xs-1' >
+                        { individuals[k].permissions % 4 >= 2 ? '✔️' : ' ' }
+                      </div>
+                    </div>
+                  </div>
+                )
+              }
+            </div>
+          </div>
         </div>
       </div>
     )
