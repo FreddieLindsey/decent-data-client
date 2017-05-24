@@ -9,13 +9,15 @@ import {
 
 import styles from './index.scss'
 
+import PermissionsList from '../PermissionsList'
+
 const mapStateToProps = (state, props) => {
-  const { address } = state.security
+  const identity = state.security.address
   const path = props.match.params.path
-  const file = state.files.stored[`${address}/${path}`]
   return  {
+    identity,
     path,
-    individuals: file.sharing.individuals
+    size
   }
 }
 
@@ -38,8 +40,8 @@ class ShareAdminPage extends Component {
 
   static displayName = 'Share Admin Page'
   static propTypes = {
+    identity: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
-    individuals: PropTypes.object.isRequired,
 
     handleSizeShareGet: PropTypes.func.isRequired,
     handleGiveRead: PropTypes.func.isRequired,
@@ -118,7 +120,7 @@ class ShareAdminPage extends Component {
   }
 
   render () {
-    const { path, individuals } = this.props
+    const { identity, path } = this.props
     const { add: { address, permissions, type, errors } } = this.state
 
     return (
@@ -132,7 +134,7 @@ class ShareAdminPage extends Component {
             Invite
           </h4>
           <div className='row' >
-            {/* ADD PERSON */}
+            {/* ADD PARTY */}
             <div className='col-xs-12' >
               <input
                 className={ styles.addressInput }
@@ -206,43 +208,7 @@ class ShareAdminPage extends Component {
           <hr />
 
           {/* LIST CURRENT */}
-
-          <div className={ styles.listIndividual } >
-              <div className='row' >
-                <div className='col-xs-10' >
-                  <div className={ styles.headerAddress } >
-                    Address
-                  </div>
-                </div>
-                <div className='col-xs-1' >
-                  <div className={ styles.headerRead } >
-                    R
-                  </div>
-                </div>
-                <div className='col-xs-1' >
-                  <div className={ styles.headerWrite } >
-                    W
-                  </div>
-                </div>
-              {
-                Object.keys(individuals).map((k) =>
-                  <div key={ k } className='col-xs-12' >
-                    <div className='row' >
-                      <div className='col-xs-10' >
-                        { k }
-                      </div>
-                      <div className='col-xs-1' >
-                        { individuals[k].permissions % 2 === 1 ? '✔️' : ' ' }
-                      </div>
-                      <div className='col-xs-1' >
-                        { individuals[k].permissions % 4 >= 2 ? '✔️' : ' ' }
-                      </div>
-                    </div>
-                  </div>
-                )
-              }
-            </div>
-          </div>
+          <PermissionsList path={ `${identity}/${path}` } />
         </div>
       </div>
     )
