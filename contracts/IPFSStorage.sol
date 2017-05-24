@@ -255,19 +255,20 @@ contract IPFSStorage {
     return allowedRead(group, path);
   }
 
-  /* ONLY BY ACCESSIBLE BY OWNER */
-  function sizeShare(string path) onlyOwner constant returns (uint) {
-    SetShare storage path_share = shares[path];
-    return path_share.shares.length;
-  }
-
-  function indexShare(string path, uint index) onlyOwner constant returns (address, uint, bool) {
+  /* ONLY ACCESSIBLE BY OWNER */
+  function getIndexShare(string path, uint index) onlyOwner constant returns (address, uint, bool) {
     Share[] storage path_share = shares[path].shares;
     return (
       path_share[index].identity,
       path_share[index].permissions,
       path_share[index].group
     );
+  }
+
+  /* ONLY BY ACCESSIBLE BY OWNER */
+  function sizeShare(string path) onlyOwner constant returns (uint) {
+    SetShare storage path_share = shares[path];
+    return path_share.shares.length;
   }
 
   /* ----------------------------------------------------------------------- */

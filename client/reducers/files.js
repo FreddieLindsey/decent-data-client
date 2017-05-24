@@ -16,6 +16,9 @@ import {
   // IPFSSTORAGE_SIZE_SHARED_GET_PENDING,
   IPFSSTORAGE_SIZE_SHARED_GET_SUCCESS,
   IPFSSTORAGE_SIZE_SHARED_GET_ERROR,
+  // IPFSSTORAGE_INDEX_SHARE_GET_PENDING,
+  IPFSSTORAGE_INDEX_SHARE_GET_SUCCESS,
+  IPFSSTORAGE_INDEX_SHARE_GET_ERROR,
   // IPFSSTORAGE_GIVE_READ_PENDING,
   IPFSSTORAGE_GIVE_READ_SUCCESS,
   IPFSSTORAGE_GIVE_READ_ERROR,
@@ -52,15 +55,19 @@ const files = (state = initialState, action) => {
         state, `${action.address}/${action.oldPath}`, `${action.address}/${action.newPath}`)
     case FILE_LOADED_CLEAR:
       return handleFileLoadedClear(state)
-    case IPFSSTORAGE_SIZE_SHARED_GET_SUCCESS:
-      return handleIpfsStorageSizeSharedGetSuccess(
-        state, `${action.address}/${action.path}`, action.size
-      )
     case IPFSSTORAGE_INDEX_GET_SUCCESS:
       return handleIpfsStorageIndexGetSuccess(
         state, action.index, `${action.address}/${action.path}`)
     case IPFSSTORAGE_INDEX_GET_ERROR:
       return handleIpfsStorageIndexGetError(state, action.index, action.error)
+    case IPFSSTORAGE_SIZE_SHARED_GET_SUCCESS:
+      return handleIpfsStorageSizeSharedGetSuccess(
+        state, `${action.address}/${action.path}`, action.size
+      )
+    case IPFSSTORAGE_INDEX_SHARE_GET_SUCCESS:
+      return handleIpfsStorageIndexShareGetSuccess(
+        state, `${action.identity}/${action.path}`, action.index, action.address, action.permissions
+      )
     case IPFSSTORAGE_GIVE_READ_SUCCESS:
       return handleIpfsStorageGiveReadSuccess(
         state, `${action.identity}/${action.path}`, action.address)
@@ -85,7 +92,7 @@ const validateFile = (file) => {
     writable: false,
     readable: false,
     sharing: {
-      parties: [],
+      parties: {},
       size: -1
     },
     ...file
@@ -242,19 +249,31 @@ const handleIpfsStorageSizeSharedGetSuccess = (state, path, size) => {
   }
 }
 
-const handleIpfsStorageGiveReadSuccess = (state, path, address) => {
+const handleIpfsStorageIndexShareGetSuccess = (state, path, index, address, permissions) => {
   let stored = state.stored
-  let file = stored[path]
+  let parties = stored[path].sharing.parties
+  parties[index] = { address, permissions }
+  return {
+    ...state,
+    stored
+  }
+}
+
+const handleIpfsStorageGiveReadSuccess = (state, path, address) => {
+  let { parties, size } = state.stored[path].sharing
   let found = false
-  for (const i in file.sharing.parties) {
-    const party = file.sharing.parties[i]
-    if (party.address === address) {
+  for (const i in parties) {
+    if (parties[i].address === address) {
       found = true
-      if (party.permissions % 2 < 1) party.permissions += 1
+      if (parties[i].permissions % 2 < 1) parties[i].permissions += 1
     }
   }
-  if (!found)
-    file.sharing.parties.push({ address, permissions: 1 })
+  if (!found) {
+    parties[size] = { address, permissions: 1 }
+    size++
+  }
+  let stored = { ...state.stored }
+  stored[path].sharing = { parties, size }
   return {
     ...state,
     stored
@@ -262,18 +281,20 @@ const handleIpfsStorageGiveReadSuccess = (state, path, address) => {
 }
 
 const handleIpfsStorageGiveWriteSuccess = (state, path, address) => {
-  let stored = state.stored
-  let file = stored[path]
+  let { parties, size } = state.stored[path].sharing
   let found = false
-  for (const i in file.sharing.parties) {
-    const party = file.sharing.parties[i]
-    if (party.address === address) {
+  for (const i in parties) {
+    if (parties[i].address === address) {
       found = true
-      if (party.permissions % 4 < 2) party.permissions += 2
+      if (parties[i].permissions % 4 < 2) parties[i].permissions += 2
     }
   }
-  if (!found)
-    file.sharing.parties.push({ address, permissions: 2 })
+  if (!found) {
+    parties[size] = { address, permissions: 2 }
+    size++
+  }
+  let stored = { ...state.stored }
+  stored[path].sharing = { parties, size }
   return {
     ...state,
     stored

@@ -467,7 +467,7 @@ contract('IPFSStorage', () => {
       ))
       .then(() => instance().sizeShare(path, { from: accounts('patient_1').address }))
       .then((v) => assert.equal(v.valueOf(), 1))
-      .then(() => instance().indexShare(path, 0, { from: accounts('patient_1').address }))
+      .then(() => instance().getIndexShare(path, 0, { from: accounts('patient_1').address }))
       .then((v) => {
         assert.equal(v[0].valueOf(), accounts('patient_2').address)
         assert.equal(v[1].valueOf(), 1)
@@ -483,7 +483,7 @@ contract('IPFSStorage', () => {
       ))
       .then(() => instance().sizeShare(path, { from: accounts('patient_1').address }))
       .then((v) => assert.equal(v.valueOf(), 1))
-      .then(() => instance().indexShare(path, 0, { from: accounts('patient_1').address }))
+      .then(() => instance().getIndexShare(path, 0, { from: accounts('patient_1').address }))
       .then((v) => {
         assert.equal(v[0].valueOf(), accounts('patient_3').address)
         assert.equal(v[1].valueOf(), 2)
@@ -502,7 +502,7 @@ contract('IPFSStorage', () => {
       ))
       .then(() => instance().sizeShare(path, { from: accounts('patient_1').address }))
       .then((v) => assert.equal(v.valueOf(), 1))
-      .then(() => instance().indexShare(path, 0, { from: accounts('patient_1').address }))
+      .then(() => instance().getIndexShare(path, 0, { from: accounts('patient_1').address }))
       .then((v) => {
         assert.equal(v[0].valueOf(), accounts('patient_3').address)
         assert.equal(v[1].valueOf(), 3)
@@ -529,7 +529,7 @@ contract('IPFSStorage', () => {
       ))
       .then(() => instance().sizeShare(path, { from: accounts('patient_1').address }))
       .then((v) => assert.equal(v.valueOf(), 1))
-      .then(() => instance().indexShare(path, 0, { from: accounts('patient_1').address }))
+      .then(() => instance().getIndexShare(path, 0, { from: accounts('patient_1').address }))
       .then((v) => {
         assert.equal(v[0].valueOf(), group)
         assert.equal(v[1].valueOf(), 3)

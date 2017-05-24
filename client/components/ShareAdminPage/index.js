@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import {
   ipfsStorageSizeShareGet,
   ipfsStorageGiveRead,
-  ipfsStorageGiveWrite
+  ipfsStorageGiveWrite,
+  ipfsStorageIndexShareGet,
 } from '../../actions'
 
 import styles from './index.scss'
@@ -14,10 +15,11 @@ import PermissionsList from '../PermissionsList'
 const mapStateToProps = (state, props) => {
   const identity = state.security.address
   const path = props.match.params.path
+  const sharing = state.files.stored[`${identity}/${path}`].sharing
   return  {
     identity,
     path,
-    size
+    sharing
   }
 }
 
@@ -25,6 +27,7 @@ const mapDispatchToProps = (dispatch) => ({
   handleSizeShareGet: (p) => dispatch(ipfsStorageSizeShareGet(p)),
   handleGiveRead: (a, p) => dispatch(ipfsStorageGiveRead(a, p)),
   handleGiveWrite: (a, p) => dispatch(ipfsStorageGiveWrite(a, p)),
+  handleIndexSharedGet: (p, i) => dispatch(ipfsStorageIndexShareGet(p, i))
 })
 
 const initialState = {
@@ -42,10 +45,15 @@ class ShareAdminPage extends Component {
   static propTypes = {
     identity: PropTypes.string.isRequired,
     path: PropTypes.string.isRequired,
+    sharing: PropTypes.shape({
+      parties: PropTypes.object.isRequired,
+      size: PropTypes.number.isRequired
+    }).isRequired,
 
     handleSizeShareGet: PropTypes.func.isRequired,
     handleGiveRead: PropTypes.func.isRequired,
-    handleGiveWrite: PropTypes.func.isRequired
+    handleGiveWrite: PropTypes.func.isRequired,
+    handleIndexSharedGet: PropTypes.func.isRequired,
   }
 
   constructor (props) {
@@ -55,6 +63,12 @@ class ShareAdminPage extends Component {
 
   componentWillMount () {
     this.props.handleSizeShareGet(this.props.path)
+    const { size, parties } = this.props.sharing
+    const party_size = Object.keys(parties).length
+    if (party_size < size)
+      for (let i = 0; i < size; i++)
+        if (!parties[i])
+          this.props.handleIndexSharedGet(this.props.path, i)
   }
 
   handleAddressUpdate (event) {

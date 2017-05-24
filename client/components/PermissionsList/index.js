@@ -13,11 +13,15 @@ class PermissionsList extends Component {
 
   static displayName = 'Permissions List'
   static propTypes = {
-    parties: PropTypes.arrayOf(PropTypes.shape({
-      address: PropTypes.string.isRequired,
-      permissions: PropTypes.number.isRequired
-    })).isRequired,
+    parties: PropTypes.object.isRequired,
     size: PropTypes.number.isRequired
+  }
+
+  getParties () {
+    let parties = []
+    for (const i in this.props.parties)
+      parties.push(this.props.parties[i])
+    return parties
   }
 
   render () {
@@ -31,26 +35,32 @@ class PermissionsList extends Component {
           </div>
           <div className='col-xs-1' >
             <div className={ styles.headerRead } >
-              R
+              Read
             </div>
           </div>
           <div className='col-xs-1' >
             <div className={ styles.headerWrite } >
-              W
+              Write
             </div>
           </div>
           {
-            this.props.parties.map((p) =>
+            this.getParties().map((p) =>
               <div key={ p.address } className='col-xs-12' >
                 <div className='row' >
                   <div className='col-xs-10' >
-                    { p.address }
+                    <div className={ styles.colAddress } >
+                      { p.address }
+                    </div>
                   </div>
                   <div className='col-xs-1' >
-                    { p.permissions % 2 === 1 ? '✔️' : ' ' }
+                    <div className={ styles.colRead } >
+                      { p.permissions % 2 === 1 ? '✔️' :  ' ' }
+                    </div>
                   </div>
                   <div className='col-xs-1' >
-                    { p.permissions % 4 >= 2 ? '✔️' : ' ' }
+                    <div className={ styles.colWrite } >
+                      { p.permissions % 4 >= 2 ? '✔️' : '  ' }
+                    </div>
                   </div>
                 </div>
               </div>

@@ -8,7 +8,10 @@ module.exports = function(deployer) {
   deployer.deploy(StringUtil);
   deployer.link(StringUtil, IPFSStorage);
 
-  deployer.deploy(IPFSStorage);
-  deployer.deploy(Registry);
+  deployer.deploy(IPFSStorage).then(() => {
+    deployer.link(IPFSStorage, Registry);
+    return deployer.deploy(Registry);
+  });
+
   deployer.deploy(Group);
 };

@@ -3,9 +3,9 @@ export const IPFSSTORAGE_SIZE_SHARED_GET_PENDING = 'IPFSSTORAGE_SIZE_SHARED_GET_
 export const IPFSSTORAGE_SIZE_SHARED_GET_SUCCESS = 'IPFSSTORAGE_SIZE_SHARED_GET_SUCCESS'
 export const IPFSSTORAGE_SIZE_SHARED_GET_ERROR   = 'IPFSSTORAGE_SIZE_SHARED_GET_ERROR'
 
-export const ipfsStorageSizeShareGet = (path, address = undefined) => {
+export const ipfsStorageSizeShareGet = (path) => {
   return (dispatch, getState) => {
-    const identity = address || getState().security.address
+    const identity = getState().security.address
     const storage = getState().IPFSStorage.identities[identity].address
     dispatch(ipfsStorageSizeShareGetPending(identity, path))
     contracts.IPFSStorage.at(storage)
