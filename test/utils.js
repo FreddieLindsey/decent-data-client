@@ -1,8 +1,8 @@
 import accounts_ from '../infra/testrpc/accounts.json'
 
-const Registry_ = artifacts.require('Registry')
-const IPFSStorage_ = artifacts.require('IPFSStorage')
-const Group_ = artifacts.require('Group')
+const Registry_ = artifacts.require('./Registry.sol')
+const IPFSStorage_ = artifacts.require('./IPFSStorage.sol')
+const Group_ = artifacts.require('./Group.sol')
 
 let
   contractRegistry = {},
@@ -10,11 +10,7 @@ let
   contractGroup = {}
 
 export const isThrow = (err) => {
-  let throw_ =
-    err.toString().indexOf('invalid JUMP') !== -1 ||
-    err.toString().indexOf('invalid opcode') !== -1
-  if (!throw_) console.log(err)
-  return throw_
+  return err.toString().indexOf('invalid JUMP') !== -1
 }
 
 let accountsData = { init: false, data: {} }

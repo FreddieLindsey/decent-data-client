@@ -2,12 +2,10 @@ import contract from 'truffle-contract'
 
 import Registry from '../../contracts/Registry.sol'
 import IPFSStorage from '../../contracts/IPFSStorage.sol'
-import Group from '../../contracts/Group.sol'
 
 export const contractArtifacts = {
   Registry,
-  IPFSStorage,
-  Group
+  IPFSStorage
 }
 
 export const initialise = (contractArtifacts, web3) => {

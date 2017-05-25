@@ -1,7 +1,6 @@
 pragma solidity ^0.4.8;
 
 import "./Group.sol";
-import "./libraries/StringUtil.sol";
 
 /*
   CORE PRINCIPLES:
@@ -53,20 +52,10 @@ contract IPFSStorage {
     string[] items;
   }
 
-  struct SetShare {
-    Share[] shares;
-  }
-
   struct IpfsHash {
     bytes32 part1;
     bytes32 part2;
     mapping(address => uint) access_control;
-  }
-
-  struct Share {
-    address identity;
-    bool group;
-    uint permissions;
   }
 
   /* Contract owner */
@@ -77,9 +66,6 @@ contract IPFSStorage {
 
   /* Specific user's available paths */
   mapping (address => Set) user_paths;
-
-  /* Who has access to a path */
-  mapping (string => SetShare) shares;
 
   /* Record location */
   mapping (string => IpfsHash) hashes;
@@ -105,7 +91,7 @@ contract IPFSStorage {
 
   /* ONLY ACCESSIBLE BY OWNER */
   function giveWrite(address writer, string path) onlyOwner {
-    allowWrite(writer, path, false);
+    allowWrite(writer, path);
     insert(user_paths[owner], path);
     insert(user_paths[writer], path);
   }
@@ -115,14 +101,14 @@ contract IPFSStorage {
     address group = groups[name];
     if (group == 0) throw;
 
-    allowWrite(group, path, true);
+    allowWrite(group, path);
     insert(user_paths[owner], path);
     insert(user_paths[group], path);
   }
 
   /* ONLY ACCESSIBLE BY OWNER */
   function giveRead(address reader, string path) onlyOwner {
-    allowRead(reader, path, false);
+    allowRead(reader, path);
     insert(user_paths[owner], path);
     insert(user_paths[reader], path);
   }
@@ -132,7 +118,7 @@ contract IPFSStorage {
     address group = groups[name];
     if (group == 0) throw;
 
-    allowRead(group, path, true);
+    allowRead(group, path);
     insert(user_paths[owner], path);
     insert(user_paths[group], path);
   }
@@ -201,7 +187,6 @@ contract IPFSStorage {
   }
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
-  /* TODO: RESTRICT ACCESS */
   function get(string path) readable(path) constant returns (bytes32, bytes32) {
     /* Return hash of path */
     IpfsHash h = hashes[path];
@@ -255,22 +240,6 @@ contract IPFSStorage {
     return allowedRead(group, path);
   }
 
-  /* ONLY ACCESSIBLE BY OWNER */
-  function getIndexShare(string path, uint index) onlyOwner constant returns (address, uint, bool) {
-    Share[] storage path_share = shares[path].shares;
-    return (
-      path_share[index].identity,
-      path_share[index].permissions,
-      path_share[index].group
-    );
-  }
-
-  /* ONLY BY ACCESSIBLE BY OWNER */
-  function sizeShare(string path) onlyOwner constant returns (uint) {
-    SetShare storage path_share = shares[path];
-    return path_share.shares.length;
-  }
-
   /* ----------------------------------------------------------------------- */
   /* SET LOGIC */
   /* ----------------------------------------------------------------------- */
@@ -278,6 +247,7 @@ contract IPFSStorage {
   function insert(Set storage set, string path) internal {
     if (contains(set, path) == size(set))
       set.items.push(path);
+      /*set.items.length++;*/
   }
 
   function remove(Set storage set, string path) internal {
@@ -291,7 +261,7 @@ contract IPFSStorage {
 
   function contains(Set storage set, string path) internal returns (uint) {
     for (uint i = 0; i < size(set); i++)
-      if (/*StringUtil.*/stringEqual(set.items[i], path))
+      if (stringEqual(set.items[i], path))
         return i;
     return size(set);
   }
@@ -300,44 +270,17 @@ contract IPFSStorage {
     return set.items.length;
   }
 
-  /* ----------------------------------------------------------------------- */
-  /* SET SHARE LOGIC */
-  /* ----------------------------------------------------------------------- */
-
-  function insert(SetShare storage set, address addr, bool group, uint permissions) internal {
-    if (contains(set, addr) == size(set))
-      set.shares.push(Share(addr, group, permissions));
-    else
-      set.shares[contains(set, addr)] = Share(addr, group, permissions);
-  }
-
-  function remove(SetShare storage set, address addr) internal {
-    uint index = contains(set, addr);
-    if (index != size(set)) {
-      set.shares[index] = set.shares[size(set) - 1];
-      set.shares[size(set) - 1] = Share(0, false, 0);
-      set.shares.length--;
-    }
-  }
-
-  function contains(SetShare storage set, address addr) internal returns (uint) {
-    for (uint i = 0; i < size(set); i++)
-      if (set.shares[i].identity == addr)
-        return i;
-    return size(set);
-  }
-
-  function size(SetShare storage set) internal returns (uint) {
-    return set.shares.length;
-  }
-
    /* ----------------------------------------------------------------------- */
   /* ACCESS CONTROL */
   /*
      No access by default (0)
-     R = 1, W = 2
+     R = 1, W = 2, RL = 4, WL = 8
+     mapping(uint => mapping(address => uint)) access_control
 
-     0: _           1: R           2: W           3: R, W
+      1: R            2: W            3: R, W            4: RL
+      5: R, RL        6: W, RL        7: R, W, RL        8: WL
+      9: R, WL       10: W, WL       11: R, W, WL       12: RL, WL
+     13: R, RL, WL   14: W, RL, WL   15: R, W, RL, WL
   */
   /* ----------------------------------------------------------------------- */
 
@@ -357,27 +300,49 @@ contract IPFSStorage {
     return (access >= 2);
   }
 
+  /*function allowedReadLog(address addr, string path) internal returns (bool) {
+    IpfsHash h = hashes[path];
+    uint access = h.access_control[addr];
+    access = access % 8;
+    return (access >= 4);
+  }*/
+
+  /*function allowedWriteLog(address addr, string path) internal returns (bool) {
+    IpfsHash h = hashes[path];
+    uint access = h.access_control[addr];
+    access = access % 16;
+    return (access >= 8);
+  }*/
+
   /* ADD ACCESS */
 
-  function allowRead(address addr, string path, bool group) internal {
+  function allowRead(address addr, string path) internal {
     if (!allowedRead(addr, path)) {
       IpfsHash h = hashes[path];
       h.access_control[addr] += 1;
-
-      SetShare storage sharing = shares[path];
-      insert(sharing, addr, group, h.access_control[addr]);
     }
   }
 
-  function allowWrite(address addr, string path, bool group) internal {
+  function allowWrite(address addr, string path) internal {
     if (!allowedWrite(addr, path)) {
       IpfsHash h = hashes[path];
       h.access_control[addr] += 2;
-
-      SetShare storage sharing = shares[path];
-      insert(sharing, addr, group, h.access_control[addr]);
     }
   }
+
+  /*function allowReadLog(address addr, string path) internal {
+    if (!allowedReadLog(addr, path)) {
+      IpfsHash h = hashes[path];
+      h.access_control[addr] += 4;
+    }
+  }*/
+
+  /*function allowWriteLog(address addr, string path) internal {
+    if (!allowedWriteLog(addr, path)) {
+      IpfsHash h = hashes[path];
+      h.access_control[addr] += 8;
+    }
+  }*/
 
   /* REMOVE ACCESS */
 
@@ -400,11 +365,48 @@ contract IPFSStorage {
     }
   }
 
+  /*function removeReadLog(address addr, string path) internal {
+    if (allowedReadLog(addr, path)) {
+      IpfsHash h = hashes[path];
+      h.access_control[addr] -= 4;
+    }
+  }*/
+
+  /*function removeWriteLog(address addr, string path) internal {
+    if (allowedWriteLog(addr, path)) {
+      IpfsHash h = hashes[path];
+      h.access_control[addr] -= 8;
+    }
+  }*/
+
   /* ----------------------------------------------------------------------- */
-  /* UTILS */
+  /* STRING LOGIC */
   /* ----------------------------------------------------------------------- */
 
-  function stringEqual(string a, string b) returns (bool) {
+  function stringSlice(string s, uint start, uint end) internal returns (string) {
+    bytes memory sBytes = bytes(s);
+    bytes memory out = new bytes(end - start);
+    for (uint i = 0; i < end; i++) {
+      out[i] = sBytes[start + i];
+    }
+    return string(out);
+  }
+
+  function stringFindSeparator(string s, byte separator) internal returns (bool[]) {
+    bool[] memory out;
+    bytes memory sBytes;
+
+    uint left = 0;
+    for (uint i = 0; i < sBytes.length; i++) {
+      if (sBytes[i] == separator) {
+        out[i] = true;
+        left = i + 1;
+      }
+    }
+    return out;
+  }
+
+  function stringEqual(string a, string b) internal returns (bool) {
     bytes memory _a = bytes(a);
     bytes memory _b = bytes(b);
     if (_a.length != _b.length)
@@ -414,5 +416,9 @@ contract IPFSStorage {
 				return false;
 		return true;
   }
+
+  /* ----------------------------------------------------------------------- */
+  /* UTILS */
+  /* ----------------------------------------------------------------------- */
 
 }
