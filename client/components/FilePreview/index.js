@@ -21,13 +21,50 @@ class FilePreview extends Component {
     content: PropTypes.string
   }
 
-  render () {
+  handleDecode () {
     const { content } = this.props
     return content ?
-      <embed className={ styles.preview } src={ this.props.content } /> :
+      window.atob(content.slice(content.indexOf('base64,') + 7)) :
+      ''
+  }
+
+  renderNoContent () {
+    return (
       <div className={ styles.noContent } >
         No content
       </div>
+    )
+  }
+
+  renderText () {
+    return (
+      <pre className={ styles.viewText }>
+        { this.handleDecode() }
+      </pre>
+    )
+  }
+
+  renderImage () {
+    const { content } = this.props
+    return (
+      <img className={ styles.viewImage } src={ content } />
+    )
+  }
+
+  render () {
+    const { content } = this.props
+    if (!content) return this.renderNoContent()
+
+    const type = content.slice(5, content.indexOf(';'))
+    switch (type) {
+      case 'text/plain':
+        return this.renderText()
+      case 'image/jpeg':
+      case 'image/png':
+        return this.renderImage()
+      default:
+        return <embed className={ styles.preview } src={ this.props.content } />
+    }
   }
 
 }

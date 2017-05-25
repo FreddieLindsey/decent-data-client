@@ -48,7 +48,7 @@ class ViewBlobPage extends Component {
     return (
       <div className={ styles.main } >
         <h2 className={ styles.header } >
-          { owned ? 'Personal' : 'Shared' } ⇨ { path }
+          { owned ? 'Personal' : 'Shared' } / { path }
         </h2>
         <hr />
         <FilePreview path={ `${address}/${path}` } />
