@@ -9,11 +9,17 @@ import {
 
 import styles from './index.scss'
 
-const mapStateToProps = (state, ownProps) => ({
-  address: state.security.address,
-  owned: ownProps.match.path.indexOf('/personal') !== -1,
-  path: ownProps.match.params.path
-})
+const mapStateToProps = (state, ownProps) => {
+  const owned = ownProps.match.path.indexOf('/personal') !== -1
+  const path = ownProps.match.params.path
+  const address = owned ? state.security.address : ownProps.address
+  return {
+    address,
+    owned,
+    retrieved: !!state.files.stored[`${address}/${path}`].content,
+    path
+  }
+}
 
 const mapDispatchToProps = (dispatch) => ({
   handleGetContent: (p) => dispatch(ipfsStorageGet(p))
@@ -25,13 +31,15 @@ class ViewBlobPage extends Component {
   static propTypes = {
     address: PropTypes.string.isRequired,
     owned: PropTypes.bool.isRequired,
+    retrieved: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired,
 
     handleGetContent: PropTypes.func.isRequired
   }
 
   componentWillMount () {
-    this.props.handleGetContent(this.props.path)
+    if (!this.props.retrieved)
+      this.props.handleGetContent(this.props.path)
   }
 
   render () {
