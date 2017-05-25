@@ -27,9 +27,10 @@ install:
   - yarn
   - yarn run services
   - yarn run testrpc > ./testrpc.log &
-  - sleep 20
 
 script:
   - yarn run build
   - yarn run test-contracts
   - yarn run test-api
+  # TODO: Web testing
+  # - yarn run test-web
