@@ -2,10 +2,18 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 
+// VIEW COMPONENTS
+
 import UploadPage from '../../components/UploadPage'
+
 import PersonalIndexPage from '../../components/PersonalIndexPage'
+import ShareAdminPage from '../../components/ShareAdminPage'
+
 import SharedIndexPage from '../../components/SharedIndexPage'
+
 import NotFoundPage from '../../components/NotFoundPage'
+
+// -- END
 
 import styles from './index.scss'
 
@@ -47,7 +55,7 @@ export default class AppAuthenticated extends Component {
                   <Route exact path='/upload' component={ UploadPage } />
                   <Route exact path='/personal' component={ PersonalIndexPage } />
                   {/* <Route path='/personal/view/:path' component={ ViewBlobPage } /> */}
-                  {/* <Route path='/personal/share/:path' component={ ShareBlobPage } /> */}
+                  <Route path='/personal/share/:path' component={ ShareAdminPage } />
                   <Route exact path='/shared' component={ SharedIndexPage } />
                   <Route component={ NotFoundPage } />
                 </Switch>
