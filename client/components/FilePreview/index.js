@@ -18,12 +18,16 @@ class FilePreview extends Component {
 
   static displayName = 'File Preview'
   static propTypes = {
-    content: PropTypes.string,
-    type: PropTypes.string
+    content: PropTypes.string
   }
 
   render () {
-    return <embed className={ styles.preview } src={ this.props.content } />
+    const { content } = this.props
+    return content ?
+      <embed className={ styles.preview } src={ this.props.content } /> :
+      <div className={ styles.noContent } >
+        No content
+      </div>
   }
 
 }
