@@ -1,8 +1,6 @@
 import Request from 'superagent'
-import concat from 'concat-stream'
-import through from 'through2'
 
-import { HashByte, DecryptRSA } from '../../../utils'
+import { DecryptRSA } from '../../../utils'
 
 // Retrieving files from IPFS
 export const FILE_RETRIEVE_PENDING = 'FILE_RETRIEVE_PENDING'
@@ -28,21 +26,6 @@ export const fileRetrieve = (path, address = undefined) => {
             DecryptRSA(res.text, getState().security.rsa.privateKey)
           dispatch(fileRetrieveSuccess(identity, path, content))
         }
-
-        let files = []
-        stream.pipe(through.obj((file, enc, next) => {
-          file.content.pipe(concat((content) => {
-            files.push({
-              path: file.path,
-              content: content
-            })
-            next()
-          }))
-        }, () => {
-          const content =
-            DecryptRSA(files[0].content, getState().security.rsa.privateKey)
-          dispatch(fileRetrieveSuccess(path, content))
-        }))
       })
   }
 }
