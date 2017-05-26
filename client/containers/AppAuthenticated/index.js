@@ -6,7 +6,7 @@ import UploadPage from '../../components/UploadPage'
 import PersonalIndexPage from '../../components/PersonalIndexPage'
 import SharedIndexPage from '../../components/SharedIndexPage'
 import ViewBlobPage from '../../components/ViewBlobPage'
-import NotFoundPage from '../../components/NotFoundPage'
+import NotFoundPage from '../NotFoundPage'
 
 import styles from './index.scss'
 

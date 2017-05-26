@@ -4,9 +4,9 @@
 .container {
   background-color: $background-404;
   display: table;
+  height: calc(100vh);
   left: 0;
-  min-height: calc(100vh);
-  position: absolute;
+  position: fixed;
   text-align: center;
   top: 0;
   width: calc(100vw);
