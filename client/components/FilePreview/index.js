@@ -53,6 +53,11 @@ class FilePreview extends Component {
     )
   }
 
+  renderUnknown () {
+    const { content } = this.props
+    return <embed className={ styles.preview } src={ content } />
+  }
+
   render () {
     const { content } = this.props
     if (!content) return this.renderNoContent()
@@ -66,7 +71,7 @@ class FilePreview extends Component {
       case 'image/gif':
         return this.renderImage()
       default:
-        return <embed className={ styles.preview } src={ this.props.content } />
+        return this.renderUnknown()
     }
   }
 
