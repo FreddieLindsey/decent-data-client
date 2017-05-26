@@ -5,7 +5,8 @@ import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 import UploadPage from '../../components/UploadPage'
 import PersonalIndexPage from '../../components/PersonalIndexPage'
 import SharedIndexPage from '../../components/SharedIndexPage'
-import NotFoundPage from '../../components/NotFoundPage'
+import ViewBlobPage from '../../components/ViewBlobPage'
+import NotFoundPage from '../NotFoundPage'
 
 import styles from './index.scss'
 
@@ -46,9 +47,9 @@ export default class AppAuthenticated extends Component {
                 <Switch>
                   <Route exact path='/upload' component={ UploadPage } />
                   <Route exact path='/personal' component={ PersonalIndexPage } />
-                  {/* <Route path='/personal/view/:path' component={ ViewBlobPage } /> */}
-                  {/* <Route path='/personal/share/:path' component={ ShareBlobPage } /> */}
                   <Route exact path='/shared' component={ SharedIndexPage } />
+                  <Route path='/personal/view' component={ ViewBlobPage } />
+                  {/* <Route path='/personal/share' component={ ShareBlobPage } /> */}
                   <Route component={ NotFoundPage } />
                 </Switch>
               </div>

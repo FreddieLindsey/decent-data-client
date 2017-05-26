@@ -1,0 +1,42 @@
+@import "../../style/colours.scss";
+@import "../../style/fonts.scss";
+
+.container {
+  background-color: $background-404;
+  display: table;
+  height: calc(100vh);
+  left: 0;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: calc(100vw);
+}
+
+.main {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.number,
+.text,
+.link,
+.link:active,
+.link:focus,
+.link:hover {
+  color: $font-colour-404;
+  text-shadow: -1px 2px 2px $blackish;
+}
+
+.number {
+  font-size: $font-massive;
+}
+
+.main hr {
+  border-top: 3px solid $font-colour-404;
+  max-width: 500px;
+}
+
+.link {
+
+}

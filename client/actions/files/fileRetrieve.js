@@ -30,7 +30,7 @@ export const fileRetrieve = (path, address = undefined) => {
   }
 }
 
-const fileRetrievePending = (address, path) => {
+export const fileRetrievePending = (address, path) => {
   return {
     type: FILE_RETRIEVE_PENDING,
     address,
@@ -38,7 +38,7 @@ const fileRetrievePending = (address, path) => {
   }
 }
 
-const fileRetrieveSuccess = (address, path, content) => {
+export const fileRetrieveSuccess = (address, path, content) => {
   // path and content
   return {
     type: FILE_RETRIEVE_SUCCESS,
@@ -48,10 +48,11 @@ const fileRetrieveSuccess = (address, path, content) => {
   }
 }
 
-const fileRetrieveError = (address, error) => {
+export const fileRetrieveError = (address, path, error) => {
   return {
     type: FILE_RETRIEVE_ERROR,
     address,
+    path,
     error
   }
 }

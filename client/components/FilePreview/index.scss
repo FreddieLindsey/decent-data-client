@@ -2,3 +2,21 @@
   max-height: 100px;
   max-width: 100%;
 }
+
+.view-text {
+  white-space: pre-line;
+  width: 100%;
+}
+
+.view-image-container {
+  display: table;
+  text-align: -webkit-center;
+  width: 100%;
+}
+
+.view-image {
+  display: table-cell;
+  max-width: 100%;
+  max-height: calc(90vh);
+  vertical-align: middle;
+}
