@@ -35,8 +35,8 @@ class PathItem extends Component {
         <div className='row' >
           <Link
             className={ styles.main }
-            to={ share ? 
-                  '/personal/view/' + path :
+            to={ share ?
+                  '/personal/view?' + path :
                   '/shared/view/' + address + '/' + path } >
             <div className='col-xs-2' >
               <div className={ styles.logo }>
