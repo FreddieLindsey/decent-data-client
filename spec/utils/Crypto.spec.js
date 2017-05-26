@@ -1,5 +1,8 @@
 import { expect } from 'chai'
+import forge from 'node-forge'
 import * as Crypto from '../../utils/Crypto'
+
+const rsa = forge.pki.rsa.generateKeyPair({ bits: 2048, e: 0x10001 })
 
 describe('Utils: Crypto', () => {
 
@@ -23,9 +26,17 @@ describe('Utils: Crypto', () => {
         expect(key.charCodeAt(i)).to.be.a('number')
     })
 
+    it('can decrypt an RSA-encrypted AES key', () => {
+      const key = Crypto.generateAESKey()
+      const keyEncrypted = Crypto.encryptRSA(key, rsa.publicKey)
+
+      const decrypted = Crypto.decryptRSA(keyEncrypted, rsa.privateKey)
+      expect(decrypted).to.equal(key)
+    })
+
   })
 
-  describe('Encrypting/Decrypting content', () => {
+  describe('Encrypting/Decrypting content with AES', () => {
 
     it('can encrypt content (text)', () => {
       const key = Crypto.generateAESKey()
