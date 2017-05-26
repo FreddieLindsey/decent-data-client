@@ -47,7 +47,9 @@ class FilePreview extends Component {
   renderImage () {
     const { content } = this.props
     return (
-      <img className={ styles.viewImage } src={ content } />
+      <div className={ styles.viewImageContainer } >
+        <img className={ styles.viewImage } src={ content } />
+      </div>
     )
   }
 
@@ -61,6 +63,7 @@ class FilePreview extends Component {
         return this.renderText()
       case 'image/jpeg':
       case 'image/png':
+      case 'image/gif':
         return this.renderImage()
       default:
         return <embed className={ styles.preview } src={ this.props.content } />
