@@ -36,8 +36,8 @@ class PathItem extends Component {
           <Link
             className={ styles.main }
             to={ share ?
-                  '/personal/view?' + path :
-                  '/shared/view/' + address + '/' + path } >
+                  '/personal/view?path=' + path :
+                  '/shared/view?address=' + address + '&path=' + path } >
             <div className='col-xs-2' >
               <div className={ styles.logo }>
                 { this.getExtension() }
@@ -53,7 +53,7 @@ class PathItem extends Component {
             share &&
             <div className='col-xs-2' >
               <Link
-                to={ '/personal/share/' + path } >
+                to={ '/personal/share?' + path } >
                 <button
                   className={ styles.sharing } >
                   Share

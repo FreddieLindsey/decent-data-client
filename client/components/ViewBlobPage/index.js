@@ -11,7 +11,7 @@ import styles from './index.scss'
 
 const mapStateToProps = (state, ownProps) => {
   const owned = ownProps.match.path.indexOf('/personal') !== -1
-  const path = ownProps.location.search.slice(1)
+  const path = ownProps.location.search.slice(6)
   const address = owned ? state.security.address : ownProps.address
   return {
     address,
