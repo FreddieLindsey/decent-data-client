@@ -32,5 +32,6 @@ script:
   - yarn run build
   - yarn run test-contracts
   - yarn run test-api
+  - yarn run test-utils
   # TODO: Web testing
   # - yarn run test-web

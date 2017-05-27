@@ -1,6 +1,6 @@
 import Request from 'superagent'
 
-import { EncryptRSA } from '../../../utils'
+import { Crypto } from '../../../utils'
 
 // Submitting files to IPFS
 export const FILE_SUBMIT_PENDING = 'FILE_SUBMIT_PENDING'
@@ -19,13 +19,18 @@ export const filesSubmit = (address = undefined) => {
 
 const fileSubmit = (file, path, address) => {
   return (dispatch, getState) => {
-    let content = EncryptRSA(file.content, getState().security.rsa.publicKey)
+    const aes = Crypto.generateAESKey()
+    const iv = Crypto.generateIv()
+    const { rsa } = getState().security
+
+    let content = ''
+    content += Crypto.encryptRSA(aes, rsa.publicKey)
+    content += Crypto.encryptRSA(iv, rsa.publicKey)
+    content += Crypto.encryptAES(file.content, aes, iv).data
+    content = new Buffer(content, 'binary')
 
     dispatch(fileSubmitPending(path))
-    window.ipfs.add([{
-      path,
-      content
-    }], (err, res) => {
+    window.ipfs.add([{ path, content }], (err, res) => {
       if (err) {
         dispatch(fileSubmitError(address, path, err))
         return
