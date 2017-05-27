@@ -9,7 +9,7 @@ import {
 
 import {
   HashByte,
-  DecryptRSA
+  Crypto
 } from '../../../../utils'
 
 // Get path from index
@@ -44,9 +44,12 @@ export const ipfsStorageGet = (path) => {
             next()
           }))
         }, () => {
-          const encrypted = files[0].content.toString()
-          const decrypted = DecryptRSA(encrypted, getState().security.rsa.privateKey)
-          dispatch(fileRetrieveSuccess(identity, path, decrypted))
+          const input = files[0].content
+          const { rsa } = getState().security
+          let aes = Crypto.decryptRSA(input.slice(0, 256), rsa.privateKey)
+          let iv = Crypto.decryptRSA(input.slice(256, 512), rsa.privateKey)
+          let content = Crypto.decryptAES(input.slice(512), aes, iv).data
+          dispatch(fileRetrieveSuccess(identity, path, content))
         }))
       })
     })

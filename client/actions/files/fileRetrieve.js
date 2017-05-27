@@ -1,6 +1,6 @@
 import Request from 'superagent'
 
-import { DecryptRSA } from '../../../utils'
+import { Crypto } from '../../../utils'
 
 // Retrieving files from IPFS
 export const FILE_RETRIEVE_PENDING = 'FILE_RETRIEVE_PENDING'
@@ -20,10 +20,12 @@ export const fileRetrieve = (path, address = undefined) => {
         if (err) {
           dispatch(fileRetrieveError(identity, path, err))
         } else {
-          // Only attempt to decrypt if encrypted
-          let content = res.text.indexOf('data') !== -1 ?
-            res.text :
-            DecryptRSA(res.text, getState().security.rsa.privateKey)
+          let input = res.text
+          const { rsa } = getState().security
+          let aes = Crypto.decryptRSA(input.slice(0, 256))
+          let iv = Crypto.decryptRSA(input.slice(256, 512))
+          let content = Crypto.decryptAES(input.slice(512), aes, iv)
+
           dispatch(fileRetrieveSuccess(identity, path, content))
         }
       })
