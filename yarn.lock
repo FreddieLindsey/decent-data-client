@@ -70,6 +70,13 @@ aes-js@^0.2.3:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/aes-js/-/aes-js-0.2.4.tgz#94b881ab717286d015fa219e08fb66709dda5a3d"
 
+afgh-pre@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/afgh-pre/-/afgh-pre-0.0.4.tgz#7dccc1b358a94dcf1bc554a0e2cdfb4634c65f9e"
+  dependencies:
+    keccak "^1.2.0"
+    node-forge "^0.7.1"
+
 after@0.8.2:
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/after/-/after-0.8.2.tgz#fedb394f9f0e02aa9768e702bda23b505fae7e1f"
