@@ -12,9 +12,9 @@ import styles from './index.scss'
 
 import PermissionsList from '../PermissionsList'
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = (state, ownProps) => {
   const identity = state.security.address
-  const path = props.match.params.path
+  const path = ownProps.location.search.slice(6)
   const sharing = state.files.stored[`${identity}/${path}`].sharing
   return  {
     identity,
@@ -62,21 +62,13 @@ class ShareAdminPage extends Component {
   }
 
   componentWillMount () {
-    this.handleCheck(this.props)
-  }
-
-  componentWillReceiveProps (props) {
-    this.handleCheck(props)
-  }
-
-  handleCheck (props) {
-    props.handleSizeShareGet(props.path)
-    const { size, parties } = props.sharing
+    this.props.handleSizeShareGet(this.props.path)
+    const { size, parties } = this.props.sharing
     const party_size = Object.keys(parties).length
-    if (size > 0 && party_size < size)
+    if (party_size < size)
       for (let i = 0; i < size; i++)
         if (!parties[i])
-          props.handleIndexSharedGet(props.path, i)
+          this.props.handleIndexSharedGet(this.props.path, i)
   }
 
   handleAddressUpdate (event) {
