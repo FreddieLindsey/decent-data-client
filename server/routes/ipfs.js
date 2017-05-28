@@ -8,6 +8,7 @@ import { addresses, contracts } from '../init'
 import { Pad, HashByte } from '../../utils'
 
 const {
+  Registry,
   IPFSStorage
 } = contracts
 
@@ -28,15 +29,19 @@ router.get('/status', (req, res, next) => {
 
 // Retrieve data from the system
 router.get('/', (req, res, next) => {
+  if (!req.query.identity) {
+    res.status(400)
+    res.json({ error: 'Missing query for identity' })
+  }
   if (!req.query.path) {
     res.status(400)
     res.json({ error: 'Missing query for path' })
   }
+  const { identity, path } = req.query
 
-  IPFSStorage.deployed()
-  .then(i => {
-    return i.get(req.query.path)
-  })
+  Registry.deployed()
+  .then(i => i.getStore(identity))
+  .then(a => IPFSStorage.at(a).get(path))
   .then(hashArray => {
     let hash = HashByte.toHash(hashArray[0]) + HashByte.toHash(hashArray[1])
     ipfs_.get(hash, (err, stream) => {

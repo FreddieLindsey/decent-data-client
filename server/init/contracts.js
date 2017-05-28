@@ -1,8 +1,10 @@
 import contract from 'truffle-contract'
 
+import Registry from '../../build/contracts/Registry.json'
 import IPFSStorage from '../../build/contracts/IPFSStorage.json'
 
 export const contractArtifacts = {
+  Registry,
   IPFSStorage
 }
 
