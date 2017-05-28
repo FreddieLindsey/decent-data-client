@@ -53,7 +53,7 @@ class PathItem extends Component {
             share &&
             <div className='col-xs-2' >
               <Link
-                to={ '/personal/share?' + path } >
+                to={ '/personal/share?path=' + path } >
                 <button
                   className={ styles.sharing } >
                   Share

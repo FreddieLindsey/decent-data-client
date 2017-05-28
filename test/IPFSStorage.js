@@ -3,9 +3,10 @@ import {
   Group,
   IPFSStorage,
 
-  accounts,
-  isThrow
+  accounts
 } from './utils'
+
+import { isThrow } from '../utils'
 
 contract('IPFSStorage', () => {
 
@@ -434,6 +435,106 @@ contract('IPFSStorage', () => {
       .then(() => instance().canReadGroup('GMC', accounts('doctor').address, path))
       .then((value) => {
         assert.equal(value, false)
+      })
+    })
+
+  })
+
+  describe('sharing', () => {
+
+    it('should see who a path is shared with', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      return contract
+      .then(() => instance().giveRead(
+          accounts('patient_2').address, path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().giveRead(
+          accounts('patient_3').address, path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().giveRead(
+          accounts('patient_4').address, path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().sizeShare(path, { from: accounts('patient_1').address }))
+      .then((v) => assert.equal(v.valueOf(), 3))
+    })
+
+    it('should see that an address has read for a path', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      return contract
+      .then(() => instance().giveRead(
+          accounts('patient_2').address, path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().sizeShare(path, { from: accounts('patient_1').address }))
+      .then((v) => assert.equal(v.valueOf(), 1))
+      .then(() => instance().getIndexShare(path, 0, { from: accounts('patient_1').address }))
+      .then((v) => {
+        assert.equal(v[0].valueOf(), accounts('patient_2').address)
+        assert.equal(v[1].valueOf(), 1)
+      })
+    })
+
+    it('should see that an address has write for a path', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      return contract
+      .then(() => instance().giveWrite(
+          accounts('patient_3').address, path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().sizeShare(path, { from: accounts('patient_1').address }))
+      .then((v) => assert.equal(v.valueOf(), 1))
+      .then(() => instance().getIndexShare(path, 0, { from: accounts('patient_1').address }))
+      .then((v) => {
+        assert.equal(v[0].valueOf(), accounts('patient_3').address)
+        assert.equal(v[1].valueOf(), 2)
+      })
+    })
+
+    it('should see that an address has read/write for a path', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      return contract
+      .then(() => instance().giveWrite(
+          accounts('patient_3').address, path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().giveRead(
+          accounts('patient_3').address, path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().sizeShare(path, { from: accounts('patient_1').address }))
+      .then((v) => assert.equal(v.valueOf(), 1))
+      .then(() => instance().getIndexShare(path, 0, { from: accounts('patient_1').address }))
+      .then((v) => {
+        assert.equal(v[0].valueOf(), accounts('patient_3').address)
+        assert.equal(v[1].valueOf(), 3)
+      })
+    })
+
+    it('should see whether someone is a group', () => {
+      const { contract, instance } =
+        IPFSStorage(accounts('patient_1').address, publicKeyHash, true)
+      let group
+      return contract
+      .then(() => Group(accounts('gmc').address).contract)
+      .then(() => {
+        group = Group(accounts('gmc').address).instance().address
+        return instance().addGroup(
+          group, 'GMC', { from: accounts('patient_1').address }
+        )
+      })
+      .then(() => instance().giveWriteGroup(
+          'GMC', path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().giveReadGroup(
+          'GMC', path, { from: accounts('patient_1').address }
+      ))
+      .then(() => instance().sizeShare(path, { from: accounts('patient_1').address }))
+      .then((v) => assert.equal(v.valueOf(), 1))
+      .then(() => instance().getIndexShare(path, 0, { from: accounts('patient_1').address }))
+      .then((v) => {
+        assert.equal(v[0].valueOf(), group)
+        assert.equal(v[1].valueOf(), 3)
+        assert.equal(v[2].valueOf(), true)
       })
     })
 
