@@ -14,12 +14,12 @@ export const fileRetrieve = (path, address = undefined) => {
     dispatch(fileRetrievePending(identity, path))
     Request
       .get(process.env.API_ENDPOINT + '/ipfs')
-      .query({ path })
+      .query({ identity, path })
       .end((err, res) => {
         if (err) {
           dispatch(fileRetrieveError(identity, path, err))
         } else {
-          let input = res.text
+          let input = res.text.toString()
           const { rsa } = getState().security
           const content = new AFGHEncrypter({ rsa }).decrypt(input)
           dispatch(fileRetrieveSuccess(identity, path, content))

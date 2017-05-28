@@ -4,15 +4,17 @@ import { connect } from 'react-redux'
 import FilePreview from '../FilePreview'
 
 import {
-  ipfsStorageGet
+  ipfsStorageGet,
+  fileRetrieve
 } from '../../actions'
 
 import styles from './index.scss'
 
 const mapStateToProps = (state, ownProps) => {
   const owned = ownProps.match.path.indexOf('/personal') !== -1
-  const path = ownProps.location.search.slice(6)
-  const address = owned ? state.security.address : ownProps.address
+  const queries = ownProps.location.search.slice(1).split('&')
+  const path = queries[queries.length - 1].slice(5)
+  const address = owned ? state.security.address : queries[0].slice(8)
   return {
     address,
     owned,
@@ -22,7 +24,8 @@ const mapStateToProps = (state, ownProps) => {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-  handleGetContent: (p) => dispatch(ipfsStorageGet(p))
+  handleGetContent: (p) => dispatch(ipfsStorageGet(p)),
+  handleGetContentShared: (a, p) => dispatch(fileRetrieve(p, a))
 })
 
 class ViewBlobPage extends Component {
@@ -34,12 +37,16 @@ class ViewBlobPage extends Component {
     retrieved: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired,
 
-    handleGetContent: PropTypes.func.isRequired
+    handleGetContent: PropTypes.func.isRequired,
+    handleGetContentShared: PropTypes.func.isRequired
   }
 
   componentWillMount () {
-    if (!this.props.retrieved)
-      this.props.handleGetContent(this.props.path)
+    const { owned, address, retrieved, path } = this.props
+    if (!retrieved)
+      owned ?
+        this.props.handleGetContent(path) :
+        this.props.handleGetContentShared(address, path)
   }
 
   render () {
@@ -48,7 +55,7 @@ class ViewBlobPage extends Component {
     return (
       <div className={ styles.main } >
         <h2 className={ styles.header } >
-          { owned ? 'Personal' : 'Shared' } / { path }
+          { owned ? 'Personal' : `Shared/${address}` } / { path }
         </h2>
         <hr />
         <FilePreview path={ `${address}/${path}` } />

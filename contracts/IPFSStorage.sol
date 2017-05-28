@@ -44,6 +44,11 @@ contract IPFSStorage {
     _;
   }
 
+  /* TODO */
+  modifier authorisedEntity() {
+    _;
+  }
+
   /* ----------------------------------------------------------------------- */
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
@@ -201,7 +206,7 @@ contract IPFSStorage {
 
   /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
   /* TODO: RESTRICT ACCESS */
-  function get(string path) readable(path) constant returns (bytes32, bytes32) {
+  function get(string path) authorisedEntity constant returns (bytes32, bytes32) {
     /* Return hash of path */
     IpfsHash h = hashes[path];
     return (h.part1, h.part2);
