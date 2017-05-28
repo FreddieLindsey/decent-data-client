@@ -1,6 +1,5 @@
 import Request from 'superagent'
-
-import { Crypto } from '../../../utils'
+import AFGHEncrypter from 'afgh-pre'
 
 // Submitting files to IPFS
 export const FILE_SUBMIT_PENDING = 'FILE_SUBMIT_PENDING'
@@ -19,15 +18,8 @@ export const filesSubmit = (address = undefined) => {
 
 const fileSubmit = (file, path, address) => {
   return (dispatch, getState) => {
-    const aes = Crypto.generateAESKey()
-    const iv = Crypto.generateIv()
     const { rsa } = getState().security
-
-    let content = ''
-    content += Crypto.encryptRSA(aes, rsa.publicKey)
-    content += Crypto.encryptRSA(iv, rsa.publicKey)
-    content += Crypto.encryptAES(file.content, aes, iv).data
-    content = new Buffer(content, 'binary')
+    const content = new AFGHEncrypter({ rsa }).encrypt(file.content)
 
     dispatch(fileSubmitPending(path))
     window.ipfs.add([{ path, content }], (err, res) => {

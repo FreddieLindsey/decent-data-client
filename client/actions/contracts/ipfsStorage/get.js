@@ -1,5 +1,6 @@
 import concat from 'concat-stream'
 import through from 'through2'
+import AFGHEncrypter from 'afgh-pre'
 
 import {
   fileRetrievePending,
@@ -8,8 +9,7 @@ import {
 } from '../../files'
 
 import {
-  HashByte,
-  Crypto
+  HashByte
 } from '../../../../utils'
 
 // Get path from index
@@ -44,11 +44,9 @@ export const ipfsStorageGet = (path) => {
             next()
           }))
         }, () => {
-          const input = files[0].content
+          const input = files[0].content.toString()
           const { rsa } = getState().security
-          let aes = Crypto.decryptRSA(input.slice(0, 256), rsa.privateKey)
-          let iv = Crypto.decryptRSA(input.slice(256, 512), rsa.privateKey)
-          let content = Crypto.decryptAES(input.slice(512), aes, iv).data
+          const content = new AFGHEncrypter({ rsa }).decrypt(input)
           dispatch(fileRetrieveSuccess(identity, path, content))
         }))
       })

@@ -1,6 +1,5 @@
 import Request from 'superagent'
-
-import { Crypto } from '../../../utils'
+import AFGHEncrypter from 'afgh-pre'
 
 // Retrieving files from IPFS
 export const FILE_RETRIEVE_PENDING = 'FILE_RETRIEVE_PENDING'
@@ -22,10 +21,7 @@ export const fileRetrieve = (path, address = undefined) => {
         } else {
           let input = res.text
           const { rsa } = getState().security
-          let aes = Crypto.decryptRSA(input.slice(0, 256))
-          let iv = Crypto.decryptRSA(input.slice(256, 512))
-          let content = Crypto.decryptAES(input.slice(512), aes, iv)
-
+          const content = new AFGHEncrypter({ rsa }).decrypt(input)
           dispatch(fileRetrieveSuccess(identity, path, content))
         }
       })
