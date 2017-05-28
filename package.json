@@ -14,7 +14,6 @@
     "test": "npm-run-all --parallel test-*",
     "test-api": "env NODE_ENV=test API_PORT=8001 mocha --compilers js:babel-register --require spec/server/init.js spec/server/**/*.spec.js",
     "test-contracts": "truffle test",
-    "test-web": "env NODE_ENV=test mocha --compilers js:babel-register spec/client/**/*.spec.js",
     "test-utils": "env NODE_ENV=test mocha --compilers js:babel-register --require spec/utils/init.js spec/utils/**/*.spec.js",
     "testrpc": "babel-watch infra/testrpc/index.js"
   },
