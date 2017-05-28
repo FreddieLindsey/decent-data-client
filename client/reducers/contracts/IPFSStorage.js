@@ -11,6 +11,7 @@ import {
   IPFSSTORAGE_SELECT_SUCCESS,
   REGISTRY_GET_STORE_SUCCESS,
   FILE_SUBMIT_SUCCESS,
+  LOAD_ECDSA_PRIVATE_KEY_SUCCESS
 } from '../../actions'
 
 const initialState = {
@@ -45,6 +46,8 @@ export const IPFSStorage = (state = initialState, action) => {
       return handleIpfsStorageSelect(state, action.address)
     case FILE_SUBMIT_SUCCESS:
       return handleFileSubmitSuccess(state, action.address, action.path)
+    case LOAD_ECDSA_PRIVATE_KEY_SUCCESS:
+      return handleLoadECDSAPrivateKeySuccess(state)
   }
   return state
 }
@@ -138,3 +141,5 @@ const handleFileSubmitSuccess = (state, address, path) => {
     identities
   }
 }
+
+const handleLoadECDSAPrivateKeySuccess = (state) => ({ ...initialState })
