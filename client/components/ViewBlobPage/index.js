@@ -55,7 +55,10 @@ class ViewBlobPage extends Component {
     return (
       <div className={ styles.main } >
         <h2 className={ styles.header } >
-          { owned ? 'Personal' : `Shared/${address}` } / { path }
+          { owned ?
+            'Personal' :
+            `Shared / ${address.slice(0, 5)}...${address.slice(address.length - 3)}`
+          } / { path }
         </h2>
         <hr />
         <FilePreview path={ `${address}/${path}` } />
