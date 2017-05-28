@@ -3,9 +3,10 @@ import {
   Group,
   IPFSStorage,
 
-  accounts,
-  isThrow
+  accounts
 } from './utils'
+
+import { isThrow } from '../utils'
 
 contract('IPFSStorage', () => {
 
