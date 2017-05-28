@@ -62,13 +62,21 @@ class ShareAdminPage extends Component {
   }
 
   componentWillMount () {
-    this.props.handleSizeShareGet(this.props.path)
-    const { size, parties } = this.props.sharing
+    this.handleCheck(this.props)
+  }
+
+  componentWillReceiveProps (props) {
+    this.handleCheck(props)
+  }
+
+  handleCheck (props) {
+    props.handleSizeShareGet(props.path)
+    const { size, parties } = props.sharing
     const party_size = Object.keys(parties).length
-    if (party_size < size)
+    if (size > 0 && party_size < size)
       for (let i = 0; i < size; i++)
         if (!parties[i])
-          this.props.handleIndexSharedGet(this.props.path, i)
+          props.handleIndexSharedGet(props.path, i)
   }
 
   handleAddressUpdate (event) {
