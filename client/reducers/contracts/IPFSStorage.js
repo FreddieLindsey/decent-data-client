@@ -122,7 +122,7 @@ const handleSizeGetError   = (state, address, error) => {
 }
 
 const handleIndexGetSuccess = (state, address, index, path) => {
-  let identities = state.identities
+  let identities = { ...state.identities }
   identities[address].files[index] = { path }
   return {
     ...state,

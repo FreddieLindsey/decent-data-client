@@ -19,8 +19,8 @@ class PermissionsList extends Component {
 
   getParties () {
     let parties = []
-    for (const i in this.props.parties)
-      parties.push(this.props.parties[i])
+    for (const p in this.props.parties)
+      parties.push(this.props.parties[p])
     return parties
   }
 
