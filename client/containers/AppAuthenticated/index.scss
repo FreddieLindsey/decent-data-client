@@ -50,3 +50,25 @@
   height: calc(100vh);
   overflow-y: scroll;
 }
+
+.logout {
+  composes: nav-link;
+}
+
+.logout,
+.logout:active,
+.logout:focus,
+.logout:hover,
+.logout:visited {
+  background: none;
+  border: 0;
+  bottom: 0;
+  color: black;
+  left: 0;
+  margin: 15px;
+  outline: none;
+  padding: 5px 0;
+  position: absolute;
+  text-align: left;
+  width: calc(100% - 2 * 15px - 2 * 2px);
+}

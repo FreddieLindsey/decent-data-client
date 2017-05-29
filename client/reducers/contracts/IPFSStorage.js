@@ -1,4 +1,5 @@
 import {
+  LOGOUT,
   // IPFSSTORAGE_CREATE_PENDING,
   IPFSSTORAGE_CREATE_SUCCESS,
   IPFSSTORAGE_CREATE_ERROR,
@@ -26,6 +27,8 @@ const initialState = {
 
 export const IPFSStorage = (state = initialState, action) => {
   switch (action.type) {
+    case LOGOUT:
+      return { ...initialState }
     case IPFSSTORAGE_CREATE_SUCCESS:
       return handleCreateSuccess(state, action.address)
     case IPFSSTORAGE_CREATE_ERROR:

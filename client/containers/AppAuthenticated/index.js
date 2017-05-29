@@ -13,10 +13,22 @@ import NotFoundPage from '../NotFoundPage'
 
 import styles from './index.scss'
 
+import {
+  logout
+} from '../../actions'
+
+const mapStateToProps = (state) => ({})
+const mapDispatchToProps = (dispatch) => ({
+  handleLogout: () => dispatch(logout())
+})
+
 // Assume the user is authenticated at this point
-export default class AppAuthenticated extends Component {
+class AppAuthenticated extends Component {
 
   static displayName = 'App (Authenticated)'
+  static propTypes = {
+    handleLogout: PropTypes.func.isRequired
+  }
 
   render () {
     return (
@@ -43,6 +55,11 @@ export default class AppAuthenticated extends Component {
                   activeClassName={ styles.navLinkSelected } >
                   Shared
                 </NavLink>
+                <button
+                  className={ styles.logout }
+                  onClick={ () => this.props.handleLogout() } >
+                  Logout
+                </button>
               </div>
             </div>
             <div className={ 'col-xs-9 ' + styles.noPad } >
@@ -65,3 +82,5 @@ export default class AppAuthenticated extends Component {
   }
 
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(AppAuthenticated)

@@ -1,4 +1,5 @@
 import {
+  LOGOUT,
   FILE_LOAD_PENDING,
   FILE_LOAD_SUCCESS,
   FILE_LOAD_ERROR,
@@ -34,6 +35,8 @@ const initialState = {
 
 const files = (state = initialState, action) => {
   switch (action.type) {
+    case LOGOUT:
+      return { ...initialState }
     case FILE_LOAD_PENDING:
       return handleFileLoadPending(state, action.path)
     case FILE_LOAD_SUCCESS:
