@@ -1,10 +1,18 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
+import Dropzone from 'react-dropzone'
 
 import FilePreview from '../FilePreview'
 
 import {
+<<<<<<< HEAD
   ipfsStorageGet
+=======
+  ipfsStorageGet,
+  ipfsStorageAdd,
+  ipfsStorageGetPublicKey,
+  fileRetrieve
+>>>>>>> Allow shared upload / personal re-upload
 } from '../../actions'
 
 import styles from './index.scss'
@@ -14,9 +22,11 @@ const mapStateToProps = (state, ownProps) => {
   const queries = ownProps.location.search.slice(1).split('&')
   const path = queries[queries.length - 1].slice(5)
   const address = owned ? state.security.address : queries[0].slice(8)
+  const keys = state.Registry.identities
   return {
     address,
     owned,
+    keys,
     retrieved: !!state.files.stored[`${address}/${path}`].content,
     path
   }
@@ -24,7 +34,13 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => ({
   handleGetContent: (p) => dispatch(ipfsStorageGet(p)),
+<<<<<<< HEAD
   handleGetContentShared: (a, p) => dispatch(ipfsStorageGet(p, a))
+=======
+  handleGetContentShared: (a, p) => dispatch(fileRetrieve(p, a)),
+  handleAdd: (f, a, p) => dispatch(ipfsStorageAdd(f, a, p)),
+  handleGetPublicKey: (a) => dispatch(ipfsStorageGetPublicKey(a))
+>>>>>>> Allow shared upload / personal re-upload
 })
 
 class ViewBlobPage extends Component {
@@ -37,7 +53,9 @@ class ViewBlobPage extends Component {
     path: PropTypes.string.isRequired,
 
     handleGetContent: PropTypes.func.isRequired,
-    handleGetContentShared: PropTypes.func.isRequired
+    handleGetContentShared: PropTypes.func.isRequired,
+    handleAdd: PropTypes.func.isRequired,
+    handleGetPublicKey: PropTypes.func.isRequired
   }
 
   componentWillMount () {
@@ -46,6 +64,8 @@ class ViewBlobPage extends Component {
       owned ?
         this.props.handleGetContent(path) :
         this.props.handleGetContentShared(address, path)
+    if (!owned)
+      this.props.handleGetPublicKey(address)
   }
 
   render () {
@@ -61,6 +81,13 @@ class ViewBlobPage extends Component {
         </h2>
         <hr />
         <FilePreview path={ `${address}/${path}` } />
+        <Dropzone
+          className={ styles.dropzone }
+          onDrop={(f) => this.props.handleAdd(f[0], address, path) } >
+          <div className={ styles.dropzoneText }>
+            Upload new version
+          </div>
+        </Dropzone>
       </div>
     )
   }

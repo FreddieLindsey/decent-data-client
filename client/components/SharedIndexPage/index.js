@@ -18,16 +18,16 @@ import {
 } from '../../actions'
 
 const mapStateToProps = (state) => {
-  let accounts = Object.keys(state.IPFSStorage.identities)
-  accounts = accounts.filter((v) => v !== state.security.address).map(v => ({
-    label: v,
-    value: v
-  }))
   const selected = state.IPFSStorage.selected
   return {
     encryptionKey: !!state.security.encryption.secretKey,
     selected,
-    accounts,
+    accounts: Object
+      .keys(state.IPFSStorage.identities)
+      .filter((v) => v !== state.security.address).map(v => ({
+        label: v,
+        value: v
+      })),
     data: state.IPFSStorage.identities[selected]
   }
 }
