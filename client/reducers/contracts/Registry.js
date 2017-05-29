@@ -1,4 +1,5 @@
 import {
+  LOGOUT,
   // REGISTRY_ADD_STORE_PENDING,
   REGISTRY_ADD_STORE_SUCCESS,
   REGISTRY_ADD_STORE_ERROR,
@@ -19,6 +20,8 @@ const initialState = {
 
 export const Registry = (state = initialState, action) => {
   switch (action.type) {
+    case LOGOUT:
+      return { ...initialState }
     case REGISTRY_ADD_STORE_SUCCESS:
       return handleRegistryAddStoreSuccess(state)
     case REGISTRY_ADD_STORE_ERROR:

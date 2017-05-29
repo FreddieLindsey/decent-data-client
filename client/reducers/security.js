@@ -1,4 +1,5 @@
 import {
+  LOGOUT,
   LOAD_ECDSA_PRIVATE_KEY_PENDING,
   LOAD_ECDSA_PRIVATE_KEY_SUCCESS,
   LOAD_ECDSA_PRIVATE_KEY_ERROR,
@@ -23,6 +24,8 @@ const initialState = {
 
 export const security = (state = initialState, action) => {
   switch (action.type) {
+    case LOGOUT:
+      return { ...initialState }
     case LOAD_ECDSA_PRIVATE_KEY_SUCCESS:
       const { address, privateKey, publicKey } = action
       return handleLoadECDSAPrivateKeySuccess(state, privateKey, publicKey, address)
