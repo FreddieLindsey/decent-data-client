@@ -1,5 +1,5 @@
 import Request from 'superagent'
-import AFGHEncrypter from 'afgh-pre'
+import RSAProxyReencrypt from 'rsa-proxy-reencrypt'
 
 // Submitting files to IPFS
 export const FILE_SUBMIT_PENDING = 'FILE_SUBMIT_PENDING'
@@ -19,7 +19,7 @@ export const filesSubmit = (address = undefined) => {
 const fileSubmit = (file, path, address) => {
   return (dispatch, getState) => {
     const { rsa } = getState().security
-    const content = new AFGHEncrypter({ rsa }).encrypt(file.content)
+    const content = new RSAProxyReencrypt({ rsa }).encrypt(file.content)
 
     dispatch(fileSubmitPending(path))
     window.ipfs.add([{ path, content }], (err, res) => {

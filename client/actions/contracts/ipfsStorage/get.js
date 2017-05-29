@@ -1,6 +1,6 @@
 import concat from 'concat-stream'
 import through from 'through2'
-import AFGHEncrypter from 'afgh-pre'
+import RSAProxyReencrypt from 'rsa-proxy-reencrypt'
 
 import {
   fileRetrievePending,
@@ -46,7 +46,7 @@ export const ipfsStorageGet = (path) => {
         }, () => {
           const input = files[0].content.toString()
           const { rsa } = getState().security
-          const content = new AFGHEncrypter({ rsa }).decrypt(input)
+          const content = new RSAProxyReencrypt({ rsa }).decrypt(input)
           dispatch(fileRetrieveSuccess(identity, path, content))
         }))
       })

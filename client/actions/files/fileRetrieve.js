@@ -1,5 +1,5 @@
 import Request from 'superagent'
-import AFGHEncrypter from 'afgh-pre'
+import RSAProxyReencrypt from 'rsa-proxy-reencrypt'
 
 // Retrieving files from IPFS
 export const FILE_RETRIEVE_PENDING = 'FILE_RETRIEVE_PENDING'
@@ -21,7 +21,7 @@ export const fileRetrieve = (path, address = undefined) => {
         } else {
           let input = res.text.toString()
           const { rsa } = getState().security
-          const content = new AFGHEncrypter({ rsa }).decrypt(input)
+          const content = new RSAProxyReencrypt({ rsa }).decrypt(input)
           dispatch(fileRetrieveSuccess(identity, path, content))
         }
       })
