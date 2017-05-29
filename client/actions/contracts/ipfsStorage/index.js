@@ -5,6 +5,8 @@ export * from './indexGet'
 export * from './sizeGet'
 export * from './get'
 
+export * from './getPublicKey'
+
 export * from './select'
 
 export * from './giveRead'

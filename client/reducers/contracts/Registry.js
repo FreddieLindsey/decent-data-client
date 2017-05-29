@@ -74,3 +74,12 @@ const handleIpfsStorageCreateSuccess = (state, identity, store) => {
   newState[identity] = validateStore({ address: store })
   return newState
 }
+
+const handleIpfsStorageGetPublicKeySuccess = (state, identity, publicKey) => {
+  let nState = { ...state }
+  let ident = nState.identities[identity] || {}
+  ident = validateIdentity({ ...ident, publicKey: {
+    ...ident.publicKey, value: publicKey
+  }})
+  return nState
+}
