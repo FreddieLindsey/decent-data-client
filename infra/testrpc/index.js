@@ -1,8 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import TestRPC from 'ethereumjs-testrpc'
-import forge from 'node-forge'
-import util from 'ethereumjs-util'
+import request from 'superagent'
 
 import accounts from './accounts.json'
 
@@ -27,21 +26,19 @@ const check = () => {
 
     fs.writeFileSync(ECDSAPrivateKeyFile, secretKey)
 
-    const rsa = (account.name || i) + '.rsa'
-    const RSAPrivateKeyFile = path.resolve(accounts_location, rsa)
-    const makeRSA = () => {
-      forge.pki.rsa.generateKeyPair({ bits: 2048, workers: 2}, (err, keys) => {
-        fs.writeFileSync(RSAPrivateKeyFile, forge.pki.privateKeyToPem(keys.privateKey))
-      })
+    const pk = (account.name || i) + '.private'
+    const pu = (account.name || i) + '.public'
+    const PrivateKeyFile = path.resolve(accounts_location, pk)
+    const PublicKeyFile = path.resolve(accounts_location, pu)
+    const makeEncryptionKeys = () => {
+      request
+        .post('http://localhost:7000/key/generate/secret')
+        .then(({ body }) => {
+          fs.writeFileSync(PrivateKeyFile, body.secretKey)
+          fs.writeFileSync(PublicKeyFile, body.publicKey)
+        })
     }
-    try {
-      fs.readFile(RSAPrivateKeyFile, (err, data) => {
-        if (err) return makeRSA()
-        forge.pki.privateKeyFromPem(data)
-      })
-    } catch (err) {
-      makeRSA()
-    }
+    makeEncryptionKeys()
   }
 }
 
