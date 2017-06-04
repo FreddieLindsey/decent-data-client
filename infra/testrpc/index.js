@@ -26,16 +26,13 @@ const check = () => {
 
     fs.writeFileSync(ECDSAPrivateKeyFile, secretKey)
 
-    const pk = (account.name || i) + '.private'
-    const pu = (account.name || i) + '.public'
-    const PrivateKeyFile = path.resolve(accounts_location, pk)
-    const PublicKeyFile = path.resolve(accounts_location, pu)
+    const eKey = (account.name || i) + '.eKey'
+    const eKeyFile = path.resolve(accounts_location, eKey)
     const makeEncryptionKeys = () => {
       request
         .post('http://localhost:7000/key/generate/secret')
         .then(({ body }) => {
-          fs.writeFileSync(PrivateKeyFile, body.secretKey)
-          fs.writeFileSync(PublicKeyFile, body.publicKey)
+          fs.writeFileSync(eKeyFile, JSON.stringify(body, null, 2))
         })
     }
     makeEncryptionKeys()

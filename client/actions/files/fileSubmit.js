@@ -1,5 +1,4 @@
-import Request from 'superagent'
-import RSAProxyReencrypt from 'rsa-proxy-reencrypt'
+import request from 'superagent'
 
 // Submitting files to IPFS
 export const FILE_SUBMIT_PENDING = 'FILE_SUBMIT_PENDING'
@@ -18,25 +17,31 @@ export const filesSubmit = (address = undefined) => {
 
 const fileSubmit = (file, path, address) => {
   return (dispatch, getState) => {
-    const { rsa } = getState().security
-    const content = new RSAProxyReencrypt({ rsa }).encrypt(file.content)
+    const { encryption: { publicKey } } = getState().security
+    const content = file.content
+    const data = content.slice(content.indexOf('base64,') + 7)
+    request
+      .post('http://localhost:7000/encryption/encrypt/second')
+      .send({ publicKey, data })
+      .then(res => {
+        dispatch(fileSubmitPending(path))
+        window.ipfs.add([{ path, content: res.body.encrypted }], (err, res) => {
+          if (err) {
+            dispatch(fileSubmitError(address, path, err))
+            return
+          }
 
-    dispatch(fileSubmitPending(path))
-    window.ipfs.add([{ path, content }], (err, res) => {
-      if (err) {
-        dispatch(fileSubmitError(address, path, err))
-        return
-      }
-
-      const hash = res[0].hash
-      const storage = getState().IPFSStorage.identities[address].address
-      contracts.IPFSStorage.at(storage)
-      .add(path, hash.slice(0, 32), hash.slice(32, 64),
-        { from: getState().security.address,
-          gas: 3000000, gasPrice: 10000000 })
-      .then(() => dispatch(fileSubmitSuccess(address, path)))
-      .catch((err) => dispatch(fileSubmitError(address, path, err)))
-    })
+          const hash = res[0].hash
+          const storage = getState().IPFSStorage.identities[address].address
+          contracts.IPFSStorage.at(storage)
+          .add(path, hash.slice(0, 32), hash.slice(32, 64),
+            { from: getState().security.address,
+              gas: 3000000, gasPrice: 10000000 })
+          .then(() => dispatch(fileSubmitSuccess(address, path)))
+          .catch((err) => dispatch(fileSubmitError(address, path, err)))
+        })
+      })
+      .catch(err => dispatch(fileSubmitError(address, path, err)))
   }
 }
 

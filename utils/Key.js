@@ -6,9 +6,9 @@ import keccak from 'keccak'
 const ecdsa = ec('secp256k1')
 
 // APPLICATION REQUIRES ASYMMETRIC KEYS
-// ALLOWED: RSA
+// ALLOWED: ENCRYPTION
 
-export const validateRSAPrivateKey = (contents, done) => {
+export const validateENCRYPTIONPrivateKey = (contents, done) => {
   try {
     let privateKey = forge.pki.privateKeyFromPem(contents)
     let publicKey = forge.pki.rsa.setPublicKey(privateKey.n, privateKey.e)

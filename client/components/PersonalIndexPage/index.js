@@ -10,14 +10,14 @@ import styles from './index.scss'
 import {
   ipfsStorageSizeGet,
   ipfsStorageIndexGet,
-  loadRSAPrivateKey,
+  loadEncryptionKeys,
 } from '../../actions'
 
 const mapStateToProps = (state) => {
   const { address } = state.security
   const { identities } = state.IPFSStorage
   return {
-    rsaKey: !!state.security.rsa.privateKey,
+    secretKey: !!state.security.encryption.secretKey,
     IPFSStorage: identities[address],
   }
 }
@@ -26,7 +26,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     handleSizeGet: () => dispatch(ipfsStorageSizeGet()),
     handleIndexGet: (i) => dispatch(ipfsStorageIndexGet(i)),
-    handleLoadRSAPrivateKey: (f) => dispatch(loadRSAPrivateKey(f))
+    handleLoadEncryptionKeys: (f) => dispatch(loadEncryptionKeys(f))
   }
 }
 
@@ -34,7 +34,7 @@ class Index extends Component {
 
   static displayName = 'Index'
   static propTypes = {
-    rsaKey: PropTypes.bool.isRequired,
+    secretKey: PropTypes.bool.isRequired,
     IPFSStorage: PropTypes.shape({
       address: PropTypes.string.isRequired,
       size: PropTypes.number
@@ -42,7 +42,7 @@ class Index extends Component {
 
     handleSizeGet: PropTypes.func.isRequired,
     handleIndexGet: PropTypes.func.isRequired,
-    handleLoadRSAPrivateKey: PropTypes.func.isRequired
+    handleLoadEncryptionKeys: PropTypes.func.isRequired
   }
 
   componentWillMount () {
@@ -81,9 +81,9 @@ class Index extends Component {
         </h3>
         <hr />
         <Dropzone
-          className={ styles.privateKey }
-          onDrop={ (f) => this.props.handleLoadRSAPrivateKey(f) } >
-          <p className={ styles.privateKeyText } >
+          className={ styles.secretKey }
+          onDrop={ (f) => this.props.handleLoadEncryptionKeys(f) } >
+          <p className={ styles.secretKeyText } >
             Encryption Key
           </p>
         </Dropzone>
@@ -95,10 +95,10 @@ class Index extends Component {
     this.getCheck()
 
     const {
-      rsaKey
+      secretKey
     } = this.props
 
-    return rsaKey ?
+    return secretKey ?
       this.renderIndex() :
       this.renderNeedKey()
   }

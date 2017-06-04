@@ -1,6 +1,6 @@
 import concat from 'concat-stream'
 import through from 'through2'
-import RSAProxyReencrypt from 'rsa-proxy-reencrypt'
+import request from 'superagent'
 
 import {
   fileRetrievePending,
@@ -44,10 +44,13 @@ export const ipfsStorageGet = (path) => {
             next()
           }))
         }, () => {
-          const input = files[0].content.toString()
-          const { rsa } = getState().security
-          const content = new RSAProxyReencrypt({ rsa }).decrypt(input)
-          dispatch(fileRetrieveSuccess(identity, path, content))
+          const data = files[0].content.toString()
+          const { encryption: { secretKey } } = getState().security
+          request
+            .post('http://localhost:7000/encryption/decrypt/second')
+            .send({ secretKey, data })
+            .then(res => dispatch(fileRetrieveSuccess(identity, path, res.body.decrypted)))
+            .catch(err => dispatch(fileRetrieveError(identity, path, err)))
         }))
       })
     })

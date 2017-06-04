@@ -1,5 +1,4 @@
-import Request from 'superagent'
-import RSAProxyReencrypt from 'rsa-proxy-reencrypt'
+import request from 'superagent'
 
 // Retrieving files from IPFS
 export const FILE_RETRIEVE_PENDING = 'FILE_RETRIEVE_PENDING'
@@ -19,10 +18,13 @@ export const fileRetrieve = (path, address = undefined) => {
         if (err) {
           dispatch(fileRetrieveError(identity, path, err))
         } else {
-          let input = res.text.toString()
-          const { rsa } = getState().security
-          const content = new RSAProxyReencrypt({ rsa }).decrypt(input)
-          dispatch(fileRetrieveSuccess(identity, path, content))
+          const data = files[0].content.toString()
+          const { encryption: { secretKey } } = getState().security
+          request
+            .post('http://localhost:7000/encryption/decrypt/second')
+            .send({ secretKey, data })
+            .then(content => dispatch(fileRetrieveSuccess(identity, path, content)))
+            .catch(err => dispatch(fileRetrieveError(identity, path, err)))
         }
       })
   }

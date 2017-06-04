@@ -31,7 +31,7 @@
   @extend %data;
 }
 
-.private-key,
+.secret-key,
 .public-key {
   border: 2px dashed #0087f7;
   border-radius: 5px;
@@ -45,7 +45,7 @@
   width: 100%;
 }
 
-.private-key {
+.secret-key {
   background-color: rgba(75, 140, 240, .1);
 }
 
@@ -53,7 +53,7 @@
   background-color: rgba(75, 240, 140, .1);
 }
 
-.private-key-text,
+.secret-key-text,
 .public-key-text {
   display: table-cell;
   vertical-align: middle;
