@@ -4,6 +4,8 @@ import { connect } from 'react-redux'
 import styles from './index.scss'
 
 const formDataUri = (path, content) => {
+  if (!content || content.indexOf('data:') !== -1) return content
+
   let dataUri = 'data:'
   const type = path.slice(path.indexOf('.') + 1).toLowerCase()
   if (type === 'txt' || type === 'md')

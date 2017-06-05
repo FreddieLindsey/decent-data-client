@@ -44,11 +44,6 @@ contract IPFSStorage {
     _;
   }
 
-  /* TODO */
-  modifier authorisedEntity() {
-    _;
-  }
-
   /* ----------------------------------------------------------------------- */
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
@@ -82,6 +77,9 @@ contract IPFSStorage {
   /* Specific user's available paths */
   mapping (address => Set) user_paths;
 
+  /* Re-encryption key hashes */
+  mapping (address => IpfsHash) reencryption_keys;
+
   /* Who has access to a path */
   mapping (string => SetShare) shares;
 
@@ -100,7 +98,12 @@ contract IPFSStorage {
     publicKey = IpfsHash(pub_1, pub_2);
   }
 
-  /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
+  function addReencryptionKey(address reader, bytes32 hash1, bytes32 hash2) onlyOwner {
+    /* Add key to mapping */
+    reencryption_keys[reader] = IpfsHash(hash1, hash2);
+  }
+
+  /* ONLY ACCESSIBLE BY PERSONS WHO CAN WRITE TO THE PATH */
   function add(string path, bytes32 hash1, bytes32 hash2) ownerAdd(path) writable(path) {
     /* Update path */
     hashes[path].part1 = hash1;
@@ -204,9 +207,14 @@ contract IPFSStorage {
     return (publicKey.part1, publicKey.part2);
   }
 
-  /* ONLY ACCESSIBLE BY ENTITIES ABLE TO PROXY-RE-ENCRYPT / DATA OWNER */
-  /* TODO: RESTRICT ACCESS */
-  function get(string path) authorisedEntity constant returns (bytes32, bytes32) {
+  /* ONLY ACCESSIBLE BY PERSONS WHO CAN READ FROM THE PATH */
+  function getReencryptionKey() constant returns (bytes32, bytes32) {
+    IpfsHash key = reencryption_keys[msg.sender];
+    return (key.part1, key.part2);
+  }
+
+  /* ONLY ACCESSIBLE BY PERSONS WHO CAN READ FROM THE PATH */
+  function get(string path) readable(path) constant returns (bytes32, bytes32) {
     /* Return hash of path */
     IpfsHash h = hashes[path];
     return (h.part1, h.part2);

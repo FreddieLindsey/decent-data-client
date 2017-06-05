@@ -4,8 +4,7 @@ import { connect } from 'react-redux'
 import FilePreview from '../FilePreview'
 
 import {
-  ipfsStorageGet,
-  fileRetrieve
+  ipfsStorageGet
 } from '../../actions'
 
 import styles from './index.scss'
@@ -25,7 +24,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => ({
   handleGetContent: (p) => dispatch(ipfsStorageGet(p)),
-  handleGetContentShared: (a, p) => dispatch(fileRetrieve(p, a))
+  handleGetContentShared: (a, p) => dispatch(ipfsStorageGet(p, a))
 })
 
 class ViewBlobPage extends Component {

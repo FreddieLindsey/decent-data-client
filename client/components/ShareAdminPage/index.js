@@ -6,6 +6,8 @@ import {
   ipfsStorageGiveRead,
   ipfsStorageGiveWrite,
   ipfsStorageIndexShareGet,
+  ipfsStorageAddReencryptionKey,
+  registryGetStore
 } from '../../actions'
 
 import styles from './index.scss'
@@ -25,9 +27,14 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => ({
   handleSizeShareGet: (p) => dispatch(ipfsStorageSizeShareGet(p)),
-  handleGiveRead: (a, p) => dispatch(ipfsStorageGiveRead(a, p)),
+  handleGiveRead: (a, p) =>
+    dispatch(ipfsStorageAddReencryptionKey(
+      a,
+      () => dispatch(ipfsStorageGiveRead(a, p))
+    )),
   handleGiveWrite: (a, p) => dispatch(ipfsStorageGiveWrite(a, p)),
-  handleIndexSharedGet: (p, i) => dispatch(ipfsStorageIndexShareGet(p, i))
+  handleIndexSharedGet: (p, i) => dispatch(ipfsStorageIndexShareGet(p, i)),
+  handleGetStore: (v) => dispatch(registryGetStore(v))
 })
 
 const initialState = {
@@ -54,6 +61,7 @@ class ShareAdminPage extends Component {
     handleGiveRead: PropTypes.func.isRequired,
     handleGiveWrite: PropTypes.func.isRequired,
     handleIndexSharedGet: PropTypes.func.isRequired,
+    handleGetStore: PropTypes.func.isRequired
   }
 
   constructor (props) {
@@ -162,6 +170,7 @@ class ShareAdminPage extends Component {
                 className={ styles.addressInput }
                 placeholder='Enter address'
                 value={ address }
+                onBlur={ (v) => this.props.handleGetStore(v.target.value) }
                 onChange={ (e) => this.handleAddressUpdate(e) }
               />
             </div>
