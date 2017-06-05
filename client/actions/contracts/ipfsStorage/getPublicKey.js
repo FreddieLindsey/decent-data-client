@@ -35,9 +35,7 @@ export const ipfsStorageGetPublicKey = (identity) => {
             next()
           }))
         }, () => {
-          const input = files[0].content.toString()
-          console.dir(input)
-          const publicKey = forge.pki.publicKeyFromPem(input)
+          const publicKey = files[0].content.toString()
           dispatch(ipfsStorageGetPublicKeySuccess(identity, publicKey))
         }))
       })

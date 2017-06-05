@@ -5,14 +5,10 @@ import Dropzone from 'react-dropzone'
 import FilePreview from '../FilePreview'
 
 import {
-<<<<<<< HEAD
-  ipfsStorageGet
-=======
   ipfsStorageGet,
   ipfsStorageAdd,
   ipfsStorageGetPublicKey,
   fileRetrieve
->>>>>>> Allow shared upload / personal re-upload
 } from '../../actions'
 
 import styles from './index.scss'
@@ -34,13 +30,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => ({
   handleGetContent: (p) => dispatch(ipfsStorageGet(p)),
-<<<<<<< HEAD
-  handleGetContentShared: (a, p) => dispatch(ipfsStorageGet(p, a))
-=======
-  handleGetContentShared: (a, p) => dispatch(fileRetrieve(p, a)),
+  handleGetContentShared: (a, p) => dispatch(ipfsStorageGet(p, a)),
   handleAdd: (f, a, p) => dispatch(ipfsStorageAdd(f, a, p)),
   handleGetPublicKey: (a) => dispatch(ipfsStorageGetPublicKey(a))
->>>>>>> Allow shared upload / personal re-upload
 })
 
 class ViewBlobPage extends Component {
