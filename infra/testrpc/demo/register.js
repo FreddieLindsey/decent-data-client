@@ -17,39 +17,31 @@ const ipfsStorage = contract(IPFSStorage)
 registry.setProvider(web3.currentProvider)
 ipfsStorage.setProvider(web3.currentProvider)
 
-import {
-  validateRSAPrivateKey
-} from '../../../utils'
-
 // Register a user
 async function register (username, accounts) {
-  return validateRSAPrivateKey(
-    fs.readFileSync(path.resolve(__dirname, '..', 'accounts', `${username}.rsa`)), (_, s, p) => {
-      let instance
-      const publicKeyPem = forge.pki.publicKeyToPem(p)
-      ipfs.add([ { path: 'publicKey.pem', content: publicKeyPem }], (err, res) => {
-        if (err) return
-        const hash = res[0].hash
-        ipfsStorage.new(hash.slice(0, 32), hash.slice(32, 64), {
-          from: accounts[username].address, gas: 3000000, gasPrice: 10000000
-        })
-        .then((i) => {
-          accounts[username].ipfsStorage = i.address
-          return registry.deployed()
-        })
-        .then((i) => {
-          instance = i
-          return instance.getStore(accounts[username].address)
-        })
-        .then(() => username)
-        .catch((err) => {
-          return instance.addStore(accounts[username].ipfsStorage, {
-            from: accounts[username].address, gas: 3000000, gasPrice: 10000000
-          })
-        })
-        .then(() => username)
+  const keys = fs.readFileSync(path.resolve(__dirname, '..', 'accounts', `${username}.eKey`))
+  return ipfs.add([ { path: 'publicKey', content: keys.publicKey }], (err, res) => {
+    if (err) return
+    const hash = res[0].hash
+    ipfsStorage.new(hash.slice(0, 32), hash.slice(32, 64), {
+      from: accounts[username].address, gas: 3000000, gasPrice: 10000000
+    })
+    .then((i) => {
+      accounts[username].ipfsStorage = i.address
+      return registry.deployed()
+    })
+    .then((i) => {
+      instance = i
+      return instance.getStore(accounts[username].address)
+    })
+    .then(() => username)
+    .catch((err) => {
+      return instance.addStore(accounts[username].ipfsStorage, {
+        from: accounts[username].address, gas: 3000000, gasPrice: 10000000
       })
     })
+    .then(() => username)
+  })
 }
 
 export default register

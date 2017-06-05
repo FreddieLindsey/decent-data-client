@@ -1,6 +1,11 @@
 version: '2.1'
 
 services:
+  pre_gateway:
+    image: freddielindsey/pre-gateway-java
+    container_name: pre_gateway
+    ports:
+      - 7000:7000
   ipfs:
     image: jbenet/go-ipfs
     container_name: ipfs

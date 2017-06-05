@@ -3,16 +3,16 @@ import {
   LOAD_ECDSA_PRIVATE_KEY_PENDING,
   LOAD_ECDSA_PRIVATE_KEY_SUCCESS,
   LOAD_ECDSA_PRIVATE_KEY_ERROR,
-  LOAD_RSA_PRIVATE_KEY_PENDING,
-  LOAD_RSA_PRIVATE_KEY_SUCCESS,
-  LOAD_RSA_PRIVATE_KEY_ERROR,
+  LOAD_ENCRYPTION_KEYS_PENDING,
+  LOAD_ENCRYPTION_KEYS_SUCCESS,
+  LOAD_ENCRYPTION_KEYS_ERROR,
   ACCOUNTS_CHANGE,
 } from '../actions'
 
 const initialState = {
   address: null,
-  rsa: {
-    privateKey: null,
+  encryption: {
+    secretKey: null,
     publicKey: null
   },
   ecdsa: {
@@ -31,10 +31,10 @@ export const security = (state = initialState, action) => {
       return handleLoadECDSAPrivateKeySuccess(state, privateKey, publicKey, address)
     case LOAD_ECDSA_PRIVATE_KEY_ERROR:
       return handleLoadECDSAPrivateKeyError(state, action.error)
-    case LOAD_RSA_PRIVATE_KEY_SUCCESS:
-      return handleLoadRSAPrivateKeySuccess(state, action.privateKey, action.publicKey)
-    case LOAD_RSA_PRIVATE_KEY_ERROR:
-      return handleLoadRSAPrivateKeyError(state, action.error)
+    case LOAD_ENCRYPTION_KEYS_SUCCESS:
+      return handleLoadEncryptionKeysSuccess(state, action.secretKey, action.publicKey)
+    case LOAD_ENCRYPTION_KEYS_ERROR:
+      return handleLoadEncryptionKeysError(state, action.error)
     case ACCOUNTS_CHANGE:
       return handleAccountsChange(state)
   }
@@ -60,18 +60,18 @@ const handleLoadECDSAPrivateKeyError = (state, error) => {
   }
 }
 
-const handleLoadRSAPrivateKeySuccess = (state, privateKey, publicKey) => {
+const handleLoadEncryptionKeysSuccess = (state, secretKey, publicKey) => {
   return {
     ...state,
-    rsa: {
-      privateKey,
+    encryption: {
+      secretKey,
       publicKey
     },
     error: null
   }
 }
 
-const handleLoadRSAPrivateKeyError = (state, error) => {
+const handleLoadEncryptionKeysError = (state, error) => {
   return {
     ...state,
     error
@@ -81,7 +81,13 @@ const handleLoadRSAPrivateKeyError = (state, error) => {
 const handleAccountsChange = (state) => {
   return {
     ...state,
-    privateKey: null,
-    publicKey: null
+    encryption: {
+      privateKey: null,
+      publicKey: null
+    },
+    ecdsa: {
+      privateKey: null,
+      publicKey: null
+    }
   }
 }

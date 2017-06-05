@@ -10,7 +10,7 @@ import styles from './index.scss'
 
 import {
   loadECDSAPrivateKey,
-  loadRSAPrivateKey,
+  loadEncryptionKeys,
   registryAddStore,
   registryGetStore,
   ipfsStorageCreate
@@ -18,7 +18,7 @@ import {
 
 const mapStateToProps = (state) => {
   const {
-    security: { address, rsa, error },
+    security: { address, encryption, error },
     IPFSStorage,
     Registry
   } = state
@@ -28,7 +28,7 @@ const mapStateToProps = (state) => {
     ipfsStorage: IPFSStorage,
     registry: Registry,
     isError: !!error || !!IPFSStorage.error,
-    rsaKey: !!rsa.privateKey,
+    encryptionKey: !!encryption.secretKey,
     error
   }
 }
@@ -36,7 +36,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleLoadECDSAPrivateKey: (key) => dispatch(loadECDSAPrivateKey(key)),
-    handleLoadRSAPrivateKey: (key) => dispatch(loadRSAPrivateKey(key)),
+    handleLoadEncryptionKeys: (keys) => dispatch(loadEncryptionKeys(keys)),
     handleAddStore: () => dispatch(registryAddStore()),
     handleGetStore: () => dispatch(registryGetStore()),
     handleIpfsStorageCreate: () => dispatch(ipfsStorageCreate())
@@ -52,11 +52,11 @@ class Authenticate extends Component {
     ipfsStorage: PropTypes.shape({}).isRequired,
     registry: PropTypes.shape({}).isRequired,
     isError: PropTypes.bool.isRequired,
-    rsaKey: PropTypes.bool.isRequired,
+    encryptionKey: PropTypes.bool.isRequired,
     error: PropTypes.object,
 
     handleLoadECDSAPrivateKey: PropTypes.func.isRequired,
-    handleLoadRSAPrivateKey: PropTypes.func.isRequired,
+    handleLoadEncryptionKeys: PropTypes.func.isRequired,
     handleAddStore: PropTypes.func.isRequired,
     handleGetStore: PropTypes.func.isRequired,
     handleIpfsStorageCreate: PropTypes.func.isRequired,
@@ -67,7 +67,7 @@ class Authenticate extends Component {
       address,
       ipfsStorage,
       registry,
-      rsaKey,
+      encryptionKey,
       isError
     } = nextProps
 
@@ -77,24 +77,24 @@ class Authenticate extends Component {
         !registry.store.triedGet)
       nextProps.handleGetStore()
 
-    if (!rsaKey) return
+    if (!encryptionKey) return
 
     if (address &&
-        rsaKey &&
+        encryptionKey &&
         registry.store.triedGet &&
         !ipfsStorage.mine &&
         !registry.store.retrieved)
       nextProps.handleIpfsStorageCreate()
 
     if (address &&
-        rsaKey &&
+        encryptionKey &&
         registry.store.triedGet &&
         ipfsStorage.mine &&
         !registry.store.retrieved)
       nextProps.handleAddStore()
 
     if (address &&
-        rsaKey &&
+        encryptionKey &&
         registry.store.triedGet &&
         registry.store.triedAdd &&
         !registry.store.retrieved &&
@@ -104,7 +104,7 @@ class Authenticate extends Component {
 
   renderUnauthenticated = () => {
     const {
-      rsaKey,
+      encryptionKey,
       registry: { store },
       error
     } = this.props
@@ -120,9 +120,9 @@ class Authenticate extends Component {
             <div className='row' >
               <div className={ 'col-xs-12' } >
                 <Dropzone
-                  className={ styles.privateKey }
+                  className={ styles.secretKey }
                   onDrop={ (f) => this.props.handleLoadECDSAPrivateKey(f) } >
-                  <p className={ styles.privateKeyText } >
+                  <p className={ styles.secretKeyText } >
                     Private Key
                   </p>
                 </Dropzone>
@@ -136,7 +136,7 @@ class Authenticate extends Component {
             }
           </div>
           {
-            store.triedGet && !store.retrieved && !rsaKey &&
+            store.triedGet && !store.retrieved && !encryptionKey &&
             <div>
               <hr />
               <div className={ styles.keys } >
@@ -147,9 +147,9 @@ class Authenticate extends Component {
                   </div>
                   <div className={ 'col-xs-12' } >
                     <Dropzone
-                      className={ styles.privateKey }
-                      onDrop={ (f) => this.props.handleLoadRSAPrivateKey(f) } >
-                      <p className={ styles.privateKeyText } >
+                      className={ styles.secretKey }
+                      onDrop={ (f) => this.props.handleLoadEncryptionKeys(f) } >
+                      <p className={ styles.secretKeyText } >
                         Encryption Key
                       </p>
                     </Dropzone>

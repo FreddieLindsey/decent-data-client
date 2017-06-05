@@ -1,4 +1,5 @@
 export * from './create'
+export * from './addReencryptionKey'
 
 export * from './indexGet'
 export * from './sizeGet'

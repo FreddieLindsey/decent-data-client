@@ -13,7 +13,7 @@ import {
   ipfsStorageSizeGet,
   ipfsStorageIndexGet,
   ipfsStorageSelect,
-  loadRSAPrivateKey,
+  loadEncryptionKeys,
 } from '../../actions'
 
 const mapStateToProps = (state) => {
@@ -24,7 +24,7 @@ const mapStateToProps = (state) => {
   }))
   const selected = state.IPFSStorage.selected
   return {
-    rsaKey: !!state.security.rsa.privateKey,
+    encryptionKey: !!state.security.encryption.secretKey,
     selected,
     accounts,
     data: state.IPFSStorage.identities[selected]
@@ -35,7 +35,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     handleSizeGet: (a) => dispatch(ipfsStorageSizeGet(a)),
     handleIndexGet: (i, a) => dispatch(ipfsStorageIndexGet(i, a)),
-    handleLoadRSAPrivateKey: (f) => dispatch(loadRSAPrivateKey(f)),
+    handleLoadEncryptionKeys: (f) => dispatch(loadEncryptionKeys(f)),
     handleIpfsStorageSelect: (v) => dispatch(ipfsStorageSelect(v))
   }
 }
@@ -44,7 +44,7 @@ class SharedIndex extends Component {
 
   static displayName = 'Shared Index'
   static propTypes = {
-    rsaKey: PropTypes.bool.isRequired,
+    encryptionKey: PropTypes.bool.isRequired,
     accounts: PropTypes.arrayOf(
       PropTypes.shape({
         label: PropTypes.string.isRequired,
@@ -55,7 +55,7 @@ class SharedIndex extends Component {
 
     handleSizeGet: PropTypes.func.isRequired,
     handleIndexGet: PropTypes.func.isRequired,
-    handleLoadRSAPrivateKey: PropTypes.func.isRequired,
+    handleLoadEncryptionKeys: PropTypes.func.isRequired,
     handleIpfsStorageSelect: PropTypes.func.isRequired
   }
 
@@ -103,9 +103,9 @@ class SharedIndex extends Component {
       </h3>
       <hr />
       <Dropzone
-        className={ styles.privateKey }
-        onDrop={ (f) => this.props.handleLoadRSAPrivateKey(f) } >
-        <p className={ styles.privateKeyText } >
+        className={ styles.secretKey }
+        onDrop={ (f) => this.props.handleLoadEncryptionKeys(f) } >
+        <p className={ styles.secretKeyText } >
           Encryption Key
         </p>
       </Dropzone>
@@ -114,7 +114,7 @@ class SharedIndex extends Component {
 
   render () {
     const {
-      rsaKey,
+      encryptionKey,
       accounts,
       selected
     } = this.props
@@ -136,7 +136,7 @@ class SharedIndex extends Component {
             selected ?
             <div className={ 'col-xs-12' } style={{ 'display': 'table' }} >
               {
-                rsaKey ?
+                encryptionKey ?
                 this.renderIndex() :
                 this.renderNeedKey()
               }
