@@ -1,22 +1,8 @@
-import forge from 'node-forge'
 import { ec } from 'elliptic'
 import secp256k1 from 'secp256k1'
 import keccak from 'keccak'
 
 const ecdsa = ec('secp256k1')
-
-// APPLICATION REQUIRES ASYMMETRIC KEYS
-// ALLOWED: ENCRYPTION
-
-export const validateENCRYPTIONPrivateKey = (contents, done) => {
-  try {
-    let privateKey = forge.pki.privateKeyFromPem(contents)
-    let publicKey = forge.pki.rsa.setPublicKey(privateKey.n, privateKey.e)
-    done(undefined, privateKey, publicKey)
-  } catch (error) {
-    done(error)
-  }
-}
 
 export const validateECDSAPrivateKey = (contents, done) => {
   const hex = contents.indexOf('0x') === 0 ?
