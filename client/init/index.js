@@ -1,5 +1,6 @@
-// Import bootstrap dependencies
+// Import package dependencies
 import './bootstrap'
+import './toastr'
 
 import { contractArtifacts, initialise } from './contracts'
 import { web3 } from './web3'

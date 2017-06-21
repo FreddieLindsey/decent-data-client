@@ -4,7 +4,7 @@ require('babel-register')
 var fs = require('fs')
 var path = require('path')
 
-var accounts = fs.readFileSync(path.resolve(__dirname, 'infra', 'testrpc', 'accounts.json'))
+var accounts = fs.readFileSync(path.resolve(__dirname, 'accounts.json'))
 var arbitrator
 for (var i = 0; i < accounts.length; i++) {
   if (accounts[i].name === 'arbitrator')

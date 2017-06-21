@@ -1,3 +1,5 @@
+import toastr from 'toastr'
+
 import {
   LOGOUT,
   // IPFSSTORAGE_CREATE_PENDING,
@@ -56,6 +58,7 @@ export const IPFSStorage = (state = initialState, action) => {
 }
 
 const handleCreateSuccess = (state, address) => {
+  toastr.success(`Storage created at ${address}`)
   let mine = address
   let meta = state.meta
   meta.firstTime = true
@@ -67,6 +70,7 @@ const handleCreateSuccess = (state, address) => {
 }
 
 const handleCreateError = (state, error) => {
+  toastr.error(`Storage created at ${address}`)
   return {
     ...state,
     error
@@ -74,6 +78,7 @@ const handleCreateError = (state, error) => {
 }
 
 const handleRegistryGetSuccess = (state, identity, address, owned) => {
+  toastr.success(`Retrieved storage from ${address}`)
   let { mine, identities } = state
   identities[identity] = {
     ...identities[identity],
@@ -89,6 +94,7 @@ const handleRegistryGetSuccess = (state, identity, address, owned) => {
 }
 
 const handleSizeGetSuccess = (state, address, size) => {
+  toastr.success(`You have ${size} files in storage ${address}`)
   let identities = state.identities
   for (const i in identities)
     if (i === address)
@@ -100,6 +106,7 @@ const handleSizeGetSuccess = (state, address, size) => {
 }
 
 const handleSizeGetError   = (state, address, error) => {
+  toastr.error(`Couldn't get size of storage ${address}`)
   let identities = state.identities
   for (const i in identities)
     if (i === address)
@@ -120,6 +127,7 @@ const handleIndexGetSuccess = (state, address, index, path) => {
 }
 
 const handleIndexGetError   = (state, address, index, error) => {
+  toastr.error(`Couldn't get index ${index} of storage ${address}`)
   let identities = state.identities
   identities[address].files[index] = { error }
   return {
@@ -129,6 +137,7 @@ const handleIndexGetError   = (state, address, index, error) => {
 }
 
 const handleIpfsStorageSelect = (state, selected) => {
+  toastr.success(`Selected storage ${selected}`)
   return {
     ...state,
     selected
@@ -136,6 +145,7 @@ const handleIpfsStorageSelect = (state, selected) => {
 }
 
 const handleFileSubmitSuccess = (state, address, path) => {
+  toastr.success(`File ${path} submitted to storage ${address}`)
   let identities = state.identities
   identities[address].files[identities[address].size] = { path }
   identities[address].size += 1
