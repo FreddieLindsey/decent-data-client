@@ -3,15 +3,11 @@
   "version": "0.0.1",
   "description": "Frontend with tested contracts using webpack",
   "scripts": {
-    "api": "babel-node server/index.js",
     "build": "webpack",
     "clean": "rm -rf .node-xml* node_modules",
-    "demo": "babel-node infra/testrpc/demo.js",
-    "dev": "env NODE_ENV=development babel-watch server/index.js",
     "logs-ipfs": "docker logs ipfs --follow",
     "start": "webpack-dev-server --host 0.0.0.0 --port 3000 --hot --inline",
     "test": "npm-run-all --parallel test-*",
-    "test-api": "env NODE_ENV=test API_PORT=8001 mocha --compilers js:babel-register --require spec/server/init.js spec/server/**/*.spec.js",
     "test-contracts": "truffle test",
     "test-utils": "env NODE_ENV=test mocha --compilers js:babel-register --require spec/utils/init.js spec/utils/**/*.spec.js",
     "testrpc": "babel-watch infra/testrpc/index.js"

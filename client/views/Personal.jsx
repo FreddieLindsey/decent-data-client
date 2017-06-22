@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import Dropzone from 'react-dropzone'
 
+import CreateStorageContract from '../components/CreateStorageContract'
 import PathIndex from '../components/PathIndex'
 
 import styles from './Personal.scss'
@@ -16,11 +17,13 @@ import {
 
 const mapStateToProps = (state) => {
   const { address } = state.security
-  const { identities } = state.IPFSStorage
   return {
-    address: address,
+    address,
+    Registry: {
+      ...state.Registry[address]
+    },
     secretKey: !!state.security.encryption.secretKey,
-    IPFSStorage: identities[address],
+    IPFSStorage: state.IPFSStorage.identities[address],
   }
 }
 
@@ -37,6 +40,11 @@ class Personal extends Component {
 
   static displayName = 'Personal Index'
   static propTypes = {
+    address: PropTypes.string,
+    Registry: PropTypes.shape({
+      address: PropTypes.string,
+      error: PropTypes.any
+    }),
     secretKey: PropTypes.bool.isRequired,
     IPFSStorage: PropTypes.shape({
       address: PropTypes.string.isRequired,
@@ -77,22 +85,32 @@ class Personal extends Component {
   )
 
   renderNeedStorage = () => {
+    const { address, Registry } = this.props
+    if (address && Registry && !Registry.error)
+      this.props.handleGetStore(address)
     return (
       <div className={ styles.container } >
-        <div className={ styles.noStorage } >
-          Unable to retrieve your storage contract. Will retry another 5 times.
-        </div>
+        { Registry && !Registry.error ?
+          <div className={ styles.noStorage } >
+            Retrieving contract...
+          </div> :
+          <div className={ styles.noStorage } >
+            A storage contract could not be retrieved.
+            <CreateStorageContract />
+          </div>
+        }
+
       </div>
     )
   }
 
   render () {
     const {
-      IPFSStorage,
+      Registry,
       secretKey
     } = this.props
 
-    return IPFSStorage ?
+    return Registry && Registry.address ?
       secretKey ?
       this.renderIndex() :
       this.renderNeedKey() :

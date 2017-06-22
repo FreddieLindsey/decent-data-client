@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
 import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 
 import UploadPage from '../components/UploadPage'
@@ -16,9 +17,25 @@ import NotFound from '../views/NotFound'
 
 import styles from './App.scss'
 
-export default class App extends Component {
+import {
+  getAccounts
+} from '../actions'
+
+const mapStateToProps = (state) => ({})
+const mapDispatchToProps = (dispatch) => ({
+  handleGetAccounts: () => dispatch(getAccounts())
+})
+
+class App extends Component {
 
   static displayName = 'App (Authenticated)'
+  static propTypes = {
+    handleGetAccounts: PropTypes.func.isRequired
+  }
+
+  componentWillMount () {
+    this.props.handleGetAccounts()
+  }
 
   render () {
     return (
@@ -46,3 +63,5 @@ export default class App extends Component {
   }
 
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
