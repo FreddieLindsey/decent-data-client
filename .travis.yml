@@ -25,7 +25,7 @@ before_install:
 
 install:
   - yarn
-  - yarn run services
+  - yarn run ipfs > ./ipfs.log &
   - yarn run testrpc > ./testrpc.log &
 
 script:
