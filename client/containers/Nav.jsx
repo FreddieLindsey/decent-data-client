@@ -46,6 +46,16 @@ export default class Nav extends Component {
                 </NavLink>
               </li>
             </ul>
+            <ul className="nav navbar-nav navbar-right">
+              <li>
+                <NavLink
+                  to="/accounts"
+                  className={ styles.navLink }
+                  activeClassName={ styles.navLinkActive } >
+                  Accounts
+                </NavLink>
+              </li>
+            </ul>
           </div>
         </div>
       </nav>
