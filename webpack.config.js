@@ -14,6 +14,7 @@ module.exports = {
     stats: 'errors-only',
   },
   entry: [
+    'babel-polyfill',
     'react-hot-loader/patch',
     './client/index.js'
   ],

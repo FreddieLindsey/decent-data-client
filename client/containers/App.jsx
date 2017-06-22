@@ -11,6 +11,7 @@ import ShareBlobPage from '../components/ShareAdminPage'
 import Nav from './Nav'
 
 import Home from '../views/Home'
+import Accounts from '../views/Accounts'
 import NotFound from '../views/NotFound'
 
 import styles from './App.scss'
@@ -28,6 +29,7 @@ export default class App extends Component {
             <div className={ styles.content }>
               <Switch>
                 <Route exact path='/' component={ Home } />
+                <Route exact path='/accounts' component={ Accounts } />
                 <Route exact path='/upload' component={ UploadPage } />
                 <Route exact path='/personal' component={ PersonalIndexPage } />
                 <Route exact path='/shared' component={ SharedIndexPage } />

@@ -1,15 +1,18 @@
 import {
   LOGOUT,
-  LOAD_ECDSA_PRIVATE_KEY_PENDING,
+  // LOAD_ECDSA_PRIVATE_KEY_PENDING,
   LOAD_ECDSA_PRIVATE_KEY_SUCCESS,
   LOAD_ECDSA_PRIVATE_KEY_ERROR,
-  LOAD_ENCRYPTION_KEYS_PENDING,
+  // LOAD_ENCRYPTION_KEYS_PENDING,
   LOAD_ENCRYPTION_KEYS_SUCCESS,
   LOAD_ENCRYPTION_KEYS_ERROR,
+  GET_ACCOUNTS_SUCCESS,
+  GET_ACCOUNTS_ERROR,
   ACCOUNTS_CHANGE,
 } from '../actions'
 
 const initialState = {
+  accounts: [],
   address: null,
   encryption: {
     secretKey: null,
@@ -35,6 +38,8 @@ export const security = (state = initialState, action) => {
       return handleLoadEncryptionKeysSuccess(state, action.secretKey, action.publicKey)
     case LOAD_ENCRYPTION_KEYS_ERROR:
       return handleLoadEncryptionKeysError(state, action.error)
+    case GET_ACCOUNTS_SUCCESS:
+      return handleGetAccounts(state, action.accounts)
     case ACCOUNTS_CHANGE:
       return handleAccountsChange(state)
   }
@@ -75,6 +80,13 @@ const handleLoadEncryptionKeysError = (state, error) => {
   return {
     ...state,
     error
+  }
+}
+
+const handleGetAccounts = (state, accounts) => {
+  return {
+    ...state,
+    accounts
   }
 }
 

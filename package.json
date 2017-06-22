@@ -69,6 +69,7 @@
     "react-router-dom": "^4.1.1",
     "react-select": "^1.0.0-rc.3",
     "redux": "^3.7.0",
+    "redux-action-buffer": "^1.1.0",
     "redux-logger": "^2.8.1",
     "redux-persist": "^4.8.1",
     "redux-thunk": "^2.2.0",
