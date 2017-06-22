@@ -3,20 +3,22 @@ import { connect } from 'react-redux'
 
 import Dropzone from 'react-dropzone'
 
-import PathIndex from '../PathIndex'
+import PathIndex from '../components/PathIndex'
 
-import styles from './index.scss'
+import styles from './Personal.scss'
 
 import {
+  registryGetStore,
   ipfsStorageSizeGet,
   ipfsStorageIndexGet,
   loadEncryptionKeys,
-} from '../../actions'
+} from '../actions'
 
 const mapStateToProps = (state) => {
   const { address } = state.security
   const { identities } = state.IPFSStorage
   return {
+    address: address,
     secretKey: !!state.security.encryption.secretKey,
     IPFSStorage: identities[address],
   }
@@ -24,13 +26,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    handleGetStore: (a) => dispatch(registryGetStore(a)),
     handleSizeGet: () => dispatch(ipfsStorageSizeGet()),
     handleIndexGet: (i) => dispatch(ipfsStorageIndexGet(i)),
     handleLoadEncryptionKeys: (f) => dispatch(loadEncryptionKeys(f))
   }
 }
 
-class PersonalIndex extends Component {
+class Personal extends Component {
 
   static displayName = 'Personal Index'
   static propTypes = {
@@ -40,29 +43,10 @@ class PersonalIndex extends Component {
       size: PropTypes.number
     }),
 
+    handleGetStore: PropTypes.func.isRequired,
     handleSizeGet: PropTypes.func.isRequired,
     handleIndexGet: PropTypes.func.isRequired,
     handleLoadEncryptionKeys: PropTypes.func.isRequired
-  }
-
-  componentWillMount () {
-    // this.getCheck()
-  }
-
-  componentWillReceiveProps (nextProps) {
-    // this.getCheck(nextProps)
-  }
-
-  getCheck (props) {
-    let props_ = props || this.props
-
-    const { IPFSStorage: { files, size } } = props_
-
-    if (typeof size === 'undefined')
-      props_.handleSizeGet()
-    else if (size != 0 && Object.keys(files).length == 0)
-      for (let i = 0; i < size; i++)
-        props_.handleIndexGet(i)
   }
 
   renderIndex = () => (
@@ -92,16 +76,29 @@ class PersonalIndex extends Component {
     </div>
   )
 
+  renderNeedStorage = () => {
+    return (
+      <div className={ styles.container } >
+        <div className={ styles.noStorage } >
+          Unable to retrieve your storage contract. Will retry another 5 times.
+        </div>
+      </div>
+    )
+  }
+
   render () {
     const {
+      IPFSStorage,
       secretKey
     } = this.props
 
-    return secretKey ?
+    return IPFSStorage ?
+      secretKey ?
       this.renderIndex() :
-      this.renderNeedKey()
+      this.renderNeedKey() :
+      this.renderNeedStorage()
   }
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PersonalIndex)
+export default connect(mapStateToProps, mapDispatchToProps)(Personal)
