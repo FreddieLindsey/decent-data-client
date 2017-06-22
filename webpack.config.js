@@ -11,11 +11,12 @@ module.exports = {
   devServer: {
     contentBase: 'build/client',
     historyApiFallback: true,
+    hot: true,
     stats: 'errors-only',
   },
   entry: [
-    'babel-polyfill',
     'react-hot-loader/patch',
+    'babel-polyfill',
     './client/index.js'
   ],
   output: {

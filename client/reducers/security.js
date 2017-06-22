@@ -1,14 +1,10 @@
 import {
-  LOGOUT,
-  // LOAD_ECDSA_PRIVATE_KEY_PENDING,
-  LOAD_ECDSA_PRIVATE_KEY_SUCCESS,
-  LOAD_ECDSA_PRIVATE_KEY_ERROR,
+  SELECT_ACCOUNT,
   // LOAD_ENCRYPTION_KEYS_PENDING,
   LOAD_ENCRYPTION_KEYS_SUCCESS,
   LOAD_ENCRYPTION_KEYS_ERROR,
   GET_ACCOUNTS_SUCCESS,
-  GET_ACCOUNTS_ERROR,
-  ACCOUNTS_CHANGE,
+  GET_ACCOUNTS_ERROR
 } from '../actions'
 
 const initialState = {
@@ -16,90 +12,21 @@ const initialState = {
   address: null,
   encryption: {
     secretKey: null,
-    publicKey: null
-  },
-  ecdsa: {
-    privateKey: null,
-    publicKey: null
-  },
-  error: null
+    publicKey: null,
+    error: null,
+  }
 }
 
 export const security = (state = initialState, action) => {
   switch (action.type) {
-    case LOGOUT:
-      return { ...initialState }
-    case LOAD_ECDSA_PRIVATE_KEY_SUCCESS:
-      const { address, privateKey, publicKey } = action
-      return handleLoadECDSAPrivateKeySuccess(state, privateKey, publicKey, address)
-    case LOAD_ECDSA_PRIVATE_KEY_ERROR:
-      return handleLoadECDSAPrivateKeyError(state, action.error)
     case LOAD_ENCRYPTION_KEYS_SUCCESS:
-      return handleLoadEncryptionKeysSuccess(state, action.secretKey, action.publicKey)
+      return { ...state, encryption: { secretKey: action.secretKey, publicKey: action.publicKey } }
     case LOAD_ENCRYPTION_KEYS_ERROR:
-      return handleLoadEncryptionKeysError(state, action.error)
+      return { ...state, encryption: { ...state.encryption, error: action.error } }
+    case SELECT_ACCOUNT:
+      return { ...state, address: action.address, encryption: { ...initialState.encryption } }
     case GET_ACCOUNTS_SUCCESS:
-      return handleGetAccounts(state, action.accounts)
-    case ACCOUNTS_CHANGE:
-      return handleAccountsChange(state)
+      return { ...state, address: state.address || action.accounts[0], accounts: action.accounts }
   }
   return state
-}
-
-const handleLoadECDSAPrivateKeySuccess = (state, privateKey, publicKey, address) => {
-  return {
-    ...state,
-    address,
-    ecdsa: {
-      privateKey,
-      publicKey
-    },
-    error: null
-  }
-}
-
-const handleLoadECDSAPrivateKeyError = (state, error) => {
-  return {
-    ...state,
-    error
-  }
-}
-
-const handleLoadEncryptionKeysSuccess = (state, secretKey, publicKey) => {
-  return {
-    ...state,
-    encryption: {
-      secretKey,
-      publicKey
-    },
-    error: null
-  }
-}
-
-const handleLoadEncryptionKeysError = (state, error) => {
-  return {
-    ...state,
-    error
-  }
-}
-
-const handleGetAccounts = (state, accounts) => {
-  return {
-    ...state,
-    accounts
-  }
-}
-
-const handleAccountsChange = (state) => {
-  return {
-    ...state,
-    encryption: {
-      privateKey: null,
-      publicKey: null
-    },
-    ecdsa: {
-      privateKey: null,
-      publicKey: null
-    }
-  }
 }
