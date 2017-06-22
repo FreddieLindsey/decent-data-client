@@ -22,7 +22,16 @@ class Accounts extends Component {
   }
 
   componentWillMount () {
+    this.pollAccounts()
+  }
+
+  componentWillUnmount () {
+    clearTimeout(this.timeout)
+  }
+
+  pollAccounts () {
     this.props.handleGetAccounts()
+    this.timeout = setTimeout(() => this.pollAccounts(), 5000)
   }
 
   renderAccountList () {
