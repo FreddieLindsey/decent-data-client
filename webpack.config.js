@@ -17,7 +17,6 @@ module.exports = {
   },
   entry: [
     'react-hot-loader/patch',
-    'babel-polyfill',
     './client/index.js'
   ],
   output: {
