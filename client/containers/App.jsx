@@ -2,28 +2,28 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 
-import UploadPage from '../../components/UploadPage'
-import PersonalIndexPage from '../../components/PersonalIndexPage'
-import SharedIndexPage from '../../components/SharedIndexPage'
+import UploadPage from '../components/UploadPage'
+import PersonalIndexPage from '../components/PersonalIndexPage'
+import SharedIndexPage from '../components/SharedIndexPage'
 
-import ViewBlobPage from '../../components/ViewBlobPage'
-import ShareBlobPage from '../../components/ShareAdminPage'
+import ViewBlobPage from '../components/ViewBlobPage'
+import ShareBlobPage from '../components/ShareAdminPage'
 
-import NotFoundPage from '../NotFoundPage'
+import Home from '../views/Home'
+import NotFound from '../views/NotFound'
 
-import styles from './index.scss'
+import styles from './App.scss'
 
 import {
   logout
-} from '../../actions'
+} from '../actions'
 
 const mapStateToProps = (state) => ({})
 const mapDispatchToProps = (dispatch) => ({
   handleLogout: () => dispatch(logout())
 })
 
-// Assume the user is authenticated at this point
-class AppAuthenticated extends Component {
+class App extends Component {
 
   static displayName = 'App (Authenticated)'
   static propTypes = {
@@ -65,13 +65,14 @@ class AppAuthenticated extends Component {
             <div className={ 'col-xs-9 ' + styles.noPad } >
               <div className={ styles.content }>
                 <Switch>
+                  <Route exact path='/' component={ Home } />
                   <Route exact path='/upload' component={ UploadPage } />
                   <Route exact path='/personal' component={ PersonalIndexPage } />
                   <Route exact path='/shared' component={ SharedIndexPage } />
                   <Route path='/personal/share' component={ ShareBlobPage } />
                   <Route path='/personal/view' component={ ViewBlobPage } />
                   <Route path='/shared/view' component={ ViewBlobPage } />
-                  <Route component={ NotFoundPage } />
+                  <Route component={ NotFound } />
                 </Switch>
               </div>
             </div>
@@ -83,4 +84,4 @@ class AppAuthenticated extends Component {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AppAuthenticated)
+export default connect(mapStateToProps, mapDispatchToProps)(App)

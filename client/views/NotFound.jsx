@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { Link } from 'react-router-dom'
 
-import styles from './index.scss'
+import styles from './NotFound.scss'
 
 class NotFound extends Component {
 
@@ -20,7 +20,7 @@ class NotFound extends Component {
           <hr />
           <Link
             className={ styles.link }
-            to={{ pathname: '/personal', state: { from: '/notfound' }}} >
+            to={{ pathname: '/', state: { from: '/notfound' }}} >
             Click here to return to the application
           </Link>
         </div>
