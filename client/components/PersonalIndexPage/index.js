@@ -30,15 +30,15 @@ const mapDispatchToProps = (dispatch) => {
   }
 }
 
-class Index extends Component {
+class PersonalIndex extends Component {
 
-  static displayName = 'Index'
+  static displayName = 'Personal Index'
   static propTypes = {
     secretKey: PropTypes.bool.isRequired,
     IPFSStorage: PropTypes.shape({
       address: PropTypes.string.isRequired,
       size: PropTypes.number
-    }).isRequired,
+    }),
 
     handleSizeGet: PropTypes.func.isRequired,
     handleIndexGet: PropTypes.func.isRequired,
@@ -46,15 +46,16 @@ class Index extends Component {
   }
 
   componentWillMount () {
-    this.getCheck()
+    // this.getCheck()
   }
 
   componentWillReceiveProps (nextProps) {
-    this.getCheck(nextProps)
+    // this.getCheck(nextProps)
   }
 
   getCheck (props) {
     let props_ = props || this.props
+
     const { IPFSStorage: { files, size } } = props_
 
     if (typeof size === 'undefined')
@@ -92,8 +93,6 @@ class Index extends Component {
   )
 
   render () {
-    this.getCheck()
-
     const {
       secretKey
     } = this.props
@@ -105,4 +104,4 @@ class Index extends Component {
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Index)
+export default connect(mapStateToProps, mapDispatchToProps)(PersonalIndex)

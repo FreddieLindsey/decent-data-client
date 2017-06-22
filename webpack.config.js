@@ -12,6 +12,7 @@ module.exports = {
     contentBase: 'build/client',
     historyApiFallback: true,
     hot: true,
+    inline: true,
     stats: 'errors-only',
   },
   entry: [
