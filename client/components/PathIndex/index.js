@@ -6,7 +6,7 @@ import PathItem from '../PathItem'
 import styles from './index.scss'
 
 const mapStateToProps = (state, ownProps) => {
-  const address = ownProps.address || state.security.address
+  const address = ownProps.address
   const canShare = address === state.security.address
   const { files } = state.IPFSStorage.identities[address]
   return {

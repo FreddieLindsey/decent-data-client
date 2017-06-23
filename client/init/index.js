@@ -1,8 +1,14 @@
-// Import bootstrap dependencies
+// Import package dependencies
 import './bootstrap'
+import './toastr'
 
 import { contractArtifacts, initialise } from './contracts'
 import { web3 } from './web3'
+import ipfsApi from 'ipfs-api'
+
+window.onload = () => {
+  window.ipfs = ipfsApi('localhost', 5001)
+}
 
 window.web3 = web3
 window.contracts = initialise(contractArtifacts, web3)

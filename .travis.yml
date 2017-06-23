@@ -25,11 +25,10 @@ before_install:
 
 install:
   - yarn
-  - yarn run services
+  - yarn run ipfs > ./ipfs.log &
   - yarn run testrpc > ./testrpc.log &
 
 script:
   - yarn run build
   - yarn run test-contracts
-  - yarn run test-api
   - yarn run test-utils
