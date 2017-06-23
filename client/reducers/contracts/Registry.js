@@ -1,5 +1,6 @@
 import {
   GET_ACCOUNTS_SUCCESS,
+  IPFSSTORAGE_CREATE_SUCCESS,
   REGISTRY_ADD_STORE_SUCCESS,
   REGISTRY_ADD_STORE_ERROR,
   REGISTRY_GET_STORE_SUCCESS,
@@ -20,6 +21,8 @@ export const Registry = (state = initialState, action) => {
       return handleRegistryGetStoreSuccess(state, action.identity, action.store)
     case REGISTRY_GET_STORE_ERROR:
       return handleRegistryGetStoreError(state, action.identity, action.error)
+    case IPFSSTORAGE_CREATE_SUCCESS:
+      return handleIpfsStorageCreateSuccess(state, action.address, action.store)
   }
   return state
 }
@@ -58,5 +61,11 @@ const handleRegistryGetStoreSuccess = (state, identity, store) => {
 const handleRegistryGetStoreError = (state, identity, error) => {
   let newState = { ...state }
   newState[identity] = validateStore({ ...newState[identity], error })
+  return newState
+}
+
+const handleIpfsStorageCreateSuccess = (state, identity, store) => {
+  let newState = { ...state }
+  newState[identity] = validateStore({ address: store })
   return newState
 }

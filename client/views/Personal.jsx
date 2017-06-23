@@ -57,27 +57,20 @@ class Personal extends Component {
     handleLoadEncryptionKeys: PropTypes.func.isRequired
   }
 
-  renderIndex = () => (
-    <div className={ styles.container } >
-      <div className={ styles.main } >
-        <PathIndex />
-      </div>
-    </div>
-  )
+  renderIndex = () => <PathIndex address={ this.props.address } />
 
   renderNeedKey = () => (
     <div className={ styles.container } >
       <div className={ styles.noKey } >
         <h3 className={ styles.noKeyTitle } >
-          You need to provide your encryption key before you can view data.
-          Supplying the wrong key will result in unreadable data.
+          Please provide your encryption key to unlock your data.
         </h3>
         <hr />
         <Dropzone
           className={ styles.secretKey }
           onDrop={ (f) => this.props.handleLoadEncryptionKeys(f) } >
           <p className={ styles.secretKeyText } >
-            Encryption Key
+            Drop Key Here
           </p>
         </Dropzone>
       </div>

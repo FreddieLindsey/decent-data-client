@@ -5,13 +5,14 @@ export const REGISTRY_ADD_STORE_ERROR = 'REGISTRY_ADD_STORE_ERROR'
 
 export const registryAddStore = (address) => {
   return async function(dispatch, getState) {
-    const { mine } = getState().IPFSStorage
+    const { address: storage } = getState().IPFSStorage.identities[address]
 
+    // Add store to registry
     dispatch(registryAddStorePending(address))
     try {
       const registry = await contracts.Registry.deployed()
-      await registry.addStore(mine)
-      dispatch(registryAddStoreSuccess(address, mine))
+      await registry.addStore(storage, { from: address })
+      dispatch(registryAddStoreSuccess(address, storage))
     } catch (err) {
       dispatch(registryAddStoreError(address, err))
     }
