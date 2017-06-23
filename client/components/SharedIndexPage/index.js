@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 import Select from 'react-select'
 
+import EncryptionKeyRequired from '../EncryptionKeyRequired'
 import PathIndex from '../PathIndex'
 
 import styles from './index.scss'
@@ -95,22 +96,7 @@ class SharedIndex extends Component {
     )
   }
 
-  renderNeedKey = () => (
-    <div className={ styles.noKey } >
-      <h3 className={ styles.noKeyTitle } >
-        You need to provide your encryption key before you can view data.
-        Supplying the wrong key will result in unreadable data.
-      </h3>
-      <hr />
-      <Dropzone
-        className={ styles.secretKey }
-        onDrop={ (f) => this.props.handleLoadEncryptionKeys(f) } >
-        <p className={ styles.secretKeyText } >
-          Encryption Key
-        </p>
-      </Dropzone>
-    </div>
-  )
+  renderNeedKey = () => <EncryptionKeyRequired />
 
   render () {
     const {
@@ -120,7 +106,7 @@ class SharedIndex extends Component {
     } = this.props
 
     return (
-      <div className={ styles.container } >
+      <div>
         <div className={ 'row' } >
           <div className={ 'col-xs-12' } >
             <div className={ styles.selectWrapper } >

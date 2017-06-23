@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 
 import CreateStorageContract from '../components/CreateStorageContract'
+import EncryptionKeyRequired from '../components/EncryptionKeyRequired'
 import PathIndex from '../components/PathIndex'
 
 import styles from './Personal.scss'
@@ -11,8 +12,7 @@ import styles from './Personal.scss'
 import {
   registryGetStore,
   ipfsStorageSizeGet,
-  ipfsStorageIndexGet,
-  loadEncryptionKeys,
+  ipfsStorageIndexGet
 } from '../actions'
 
 const mapStateToProps = (state) => {
@@ -61,19 +61,7 @@ class Personal extends Component {
 
   renderNeedKey = () => (
     <div className={ styles.container } >
-      <div className={ styles.noKey } >
-        <h3 className={ styles.noKeyTitle } >
-          Please provide your encryption key to unlock your data.
-        </h3>
-        <hr />
-        <Dropzone
-          className={ styles.secretKey }
-          onDrop={ (f) => this.props.handleLoadEncryptionKeys(f) } >
-          <p className={ styles.secretKeyText } >
-            Drop Key Here
-          </p>
-        </Dropzone>
-      </div>
+      <EncryptionKeyRequired />
     </div>
   )
 

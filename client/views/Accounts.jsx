@@ -54,10 +54,10 @@ class Accounts extends Component {
   }
 
   renderAccountList () {
-    const { accounts } = this.props
+    const { accounts, address } = this.props
 
     return (
-      <table className='table' >
+      <table className='table table-striped' >
         <thead>
           <tr>
             <th>#</th>
@@ -67,7 +67,7 @@ class Accounts extends Component {
         <tbody>
           {
             accounts.map((a, i) =>
-              <tr key={ i } >
+              <tr key={ i } className={ a === address ? 'success' : '' } >
                 <th scope='row'>{ i + 1 }</th>
                 <td>{ a }</td>
               </tr>
@@ -81,7 +81,14 @@ class Accounts extends Component {
   render () {
     return (
       <div>
+        <h3>
+          Select Current Account
+        </h3>
         { this.renderAccountSelector() }
+        <hr />
+        <h3>
+          Available Accounts
+        </h3>
         { this.renderAccountList() }
       </div>
     )
