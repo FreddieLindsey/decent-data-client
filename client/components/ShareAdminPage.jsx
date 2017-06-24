@@ -8,11 +8,11 @@ import {
   ipfsStorageIndexShareGet,
   ipfsStorageAddReencryptionKey,
   registryGetStore
-} from '../../actions'
+} from '../actions'
 
-import styles from './index.scss'
+import PermissionsList from './PermissionsList'
 
-import PermissionsList from '../PermissionsList'
+import styles from './ShareAdminPage.scss'
 
 const mapStateToProps = (state, ownProps) => {
   const identity = state.security.address

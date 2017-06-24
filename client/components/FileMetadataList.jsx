@@ -1,17 +1,15 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import PathEditor from '../PathEditor'
-import FilePreview from '../FilePreview'
+import PathEditor from './PathEditor'
+import FilePreview from './FilePreview'
 
-import styles from './index.scss'
+import styles from './FileMetadataList.scss'
 
 import {
   filesSubmit,
   filesLoadedClear
-} from '../../actions'
-
-import './index.scss'
+} from '../actions'
 
 const mapStateToProps = (state) => {
   const address = state.security.address

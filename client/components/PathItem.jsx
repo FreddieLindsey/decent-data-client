@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import styles from './index.scss'
+import styles from './PathItem.scss'
 
 class PathItem extends Component {
 

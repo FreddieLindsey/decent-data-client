@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import styles from './index.scss'
+import styles from './FilePreview.scss'
 
 const formDataUri = (path, content) => {
   if (!content || content.indexOf('data:') !== -1) return content

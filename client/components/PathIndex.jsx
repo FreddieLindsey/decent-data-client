@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import PathItem from '../PathItem'
+import PathItem from './PathItem'
 
-import styles from './index.scss'
+import styles from './PathIndex.scss'
 
 const mapStateToProps = (state, ownProps) => {
   const address = ownProps.address

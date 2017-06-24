@@ -1,20 +1,3 @@
-@import '../style/colours';
-
-.dropzone {
-  background-color: white;
-  border: dotted 2px #0087f8;
-  border-radius: 10px;
-  display: table;
-  height: 80px;
-  width: 100%;
-}
-
-.dropzone-text {
-  display: table-cell;
-  text-align: center;
-  vertical-align: middle;
-}
-
 .container {
   display: table;
   min-height: calc(100vh - 60px);

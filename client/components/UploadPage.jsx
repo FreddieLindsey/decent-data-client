@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 
-import styles from './index.scss'
+import styles from './UploadPage.scss'
 
-import FileDropper from '../FileDropper'
-import FileMetadataList from '../FileMetadataList'
+import FileDropper from './FileDropper'
+import FileMetadataList from './FileMetadataList'
 
 class UploadPage extends Component {
 

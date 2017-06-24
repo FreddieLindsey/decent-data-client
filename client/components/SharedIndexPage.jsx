@@ -4,18 +4,17 @@ import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 import Select from 'react-select'
 
-import EncryptionKeyRequired from '../EncryptionKeyRequired'
-import PathIndex from '../PathIndex'
+import EncryptionKeyRequired from './EncryptionKeyRequired'
+import PathIndex from './PathIndex'
 
-import styles from './index.scss'
-import 'react-select/dist/react-select.css'
+import styles from './SharedIndexPage.scss'
 
 import {
   ipfsStorageSizeGet,
   ipfsStorageIndexGet,
   ipfsStorageSelect,
   loadEncryptionKeys,
-} from '../../actions'
+} from '../actions'
 
 const mapStateToProps = (state) => {
   let accounts = Object.keys(state.IPFSStorage.identities)

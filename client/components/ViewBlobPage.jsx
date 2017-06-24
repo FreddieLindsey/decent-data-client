@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import FilePreview from '../FilePreview'
+import FilePreview from './FilePreview'
 
 import {
   ipfsStorageGet
-} from '../../actions'
+} from '../actions'
 
-import styles from './index.scss'
+import styles from './ViewBlobPage.scss'
 
 const mapStateToProps = (state, ownProps) => {
   const owned = ownProps.match.path.indexOf('/personal') !== -1

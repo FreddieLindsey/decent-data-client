@@ -7,6 +7,8 @@ import {
   loadEncryptionKeys
 } from '../actions'
 
+import FileDropper from './FileDropper'
+
 import styles from './EncryptionKeyRequired.scss'
 
 const mapStateToProps = (state) => ({})
@@ -29,13 +31,10 @@ class EncryptionKeyRequired extends Component {
           Please provide your encryption key to unlock your data.
         </h5>
         <hr />
-        <Dropzone
-          className={ styles.secretKey }
-          onDrop={ (f) => this.props.handleLoadEncryptionKeys(f) } >
-          <p className={ styles.secretKeyText } >
-            Drop Key Here
-          </p>
-        </Dropzone>
+        <FileDropper
+          handleDrop={ (f) => this.props.handleLoadEncryptionKeys(f) }
+          text={ 'Drop Key Here' }
+          classNames={{ main: styles.secretKey, inner: styles.secreyKeyText }} />
       </div>
     )
   }

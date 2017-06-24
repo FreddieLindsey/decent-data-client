@@ -1,11 +1,11 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 
-import styles from './index.scss'
+import styles from './PathEditor.scss'
 
 import {
   fileChangePath
-} from '../../actions'
+} from '../actions'
 
 const mapStateToProps = (state, ownProps) => ({
   path: ownProps.path

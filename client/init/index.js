@@ -1,5 +1,6 @@
 // Import package dependencies
 import './bootstrap'
+import './react-select'
 import './toastr'
 
 import { contractArtifacts, initialise } from './contracts'
