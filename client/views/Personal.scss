@@ -1,20 +1,7 @@
-.container {
-  display: table;
-  min-height: calc(100vh - 60px);
-  width: 100%;
-}
-
-.main {
-  display: table-cell;
-  padding: 40px 15px;
-  vertical-align: top;
-}
-
 .no-key,
 .no-storage {
-  display: table-cell;
   text-align: center;
-  vertical-align: middle;
+  width: 100%;
 }
 
 %data {

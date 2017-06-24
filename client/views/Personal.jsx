@@ -59,11 +59,7 @@ class Personal extends Component {
 
   renderIndex = () => <PathIndex address={ this.props.address } />
 
-  renderNeedKey = () => (
-    <div className={ styles.container } >
-      <EncryptionKeyRequired />
-    </div>
-  )
+  renderNeedKey = () => <EncryptionKeyRequired />
 
   renderNeedStorage = () => {
     const { address, Registry } = this.props
