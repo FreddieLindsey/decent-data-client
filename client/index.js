@@ -1,12 +1,10 @@
-// Import the page's CSS. Webpack will know what to do with it.
-import './style/app.css'
-import './style/dropdown.global.css'
-
 import React from 'react'
 import { Provider } from 'react-redux'
 import { render } from 'react-dom'
 
 import './init'
+import './style/app.css'
+import './style/dropdown.global.css'
 
 import store from './store'
 
