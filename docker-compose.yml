@@ -6,22 +6,3 @@ services:
     container_name: pre_gateway
     ports:
       - 7000:7000
-  ipfs:
-    image: jbenet/go-ipfs
-    container_name: ipfs
-    entrypoint: /run.sh
-    ports:
-      - 5001:5001
-    volumes:
-      - ./infra/ipfs/run.sh:/run.sh
-      - ./.cache/ipfs:/data/ipfs
-
-networks:
-  default:
-    driver: bridge
-    enable_ipv6: true
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.50.66.0/24
-      - subnet: 2001:3984:3989::/64
