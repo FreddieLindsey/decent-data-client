@@ -1,5 +1,9 @@
 import request from 'superagent'
 
+import {
+  fileRetrieveSuccess
+} from '../../'
+
 // Submitting files to IPFS
 export const IPFSSTORAGE_ADD_PENDING = 'IPFSSTORAGE_ADD_PENDING'
 export const IPFSSTORAGE_ADD_SUCCESS = 'IPFSSTORAGE_ADD_SUCCESS'
@@ -10,7 +14,8 @@ export const ipfsStorageAdd = (file, address, path) => {
     const reader = new FileReader()
     reader.onload = async function(f) {
       const publicKey = getState().IPFSStorage.identities[address].publicKey
-      const data = f.target.result
+      const content = f.target.result
+      const data = content.slice(content.indexOf('base64,') + 7)
       try {
         const { body: { encrypted } } = await request
           .post('http://localhost:7000/encryption/encrypt/second')
@@ -29,7 +34,10 @@ export const ipfsStorageAdd = (file, address, path) => {
           .add(path, hash.slice(0, 32), hash.slice(32, 64),
             { from: getState().security.address,
               gas: 3000000, gasPrice: 10000000 })
-          .then(() => dispatch(ipfsStorageAddSuccess(address, path)))
+          .then(() => {
+            dispatch(ipfsStorageAddSuccess(address, path))
+            dispatch(fileRetrieveSuccess(address, path, content))
+          })
           .catch((err) => dispatch(ipfsStorageAddError(address, path, err)))
         })
       } catch (err) {
