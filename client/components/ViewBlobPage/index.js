@@ -52,12 +52,11 @@ class ViewBlobPage extends Component {
 
   componentWillMount () {
     const { owned, address, retrieved, path } = this.props
+    this.props.handleGetPublicKey(address)
     if (!retrieved)
       owned ?
         this.props.handleGetContent(path) :
         this.props.handleGetContentShared(address, path)
-    if (!owned)
-      this.props.handleGetPublicKey(address)
   }
 
   render () {

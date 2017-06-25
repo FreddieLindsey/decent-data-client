@@ -1,5 +1,4 @@
 import Request from 'superagent'
-import RSAProxyReencrypt from 'rsa-proxy-reencrypt'
 
 // Submitting files to IPFS
 export const IPFSSTORAGE_ADD_PENDING = 'IPFSSTORAGE_ADD_PENDING'

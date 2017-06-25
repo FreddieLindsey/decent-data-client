@@ -15,15 +15,15 @@ import {
 } from './actions'
 
 let middleware = (process.env.NODE_ENV !== 'production')
-  ? applyMiddleware(thunk, logger(), createActionBuffer(REHYDRATE))
-  : applyMiddleware(thunk, createActionBuffer(REHYDRATE))
+  ? applyMiddleware(thunk, logger(), /* createActionBuffer(REHYDRATE) */)
+  : applyMiddleware(thunk, /* createActionBuffer(REHYDRATE) */)
 
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-const store = createStore(reducers, undefined, composeEnhancer(middleware, autoRehydrate()))
+const store = createStore(reducers, undefined, composeEnhancer(middleware, /* autoRehydrate() */))
 
 // Persist store to storage
-persistStore(store, { storage: localForage })
+// persistStore(store, { storage: localForage })
 
 if (module.hot) module.hot.accept('./reducers', () => {
   console.log('HOT RELOADING REDUCERS')

@@ -7,6 +7,9 @@ import {
   IPFSSTORAGE_ADD_REENCRYPTION_KEY_PENDING,
   IPFSSTORAGE_ADD_REENCRYPTION_KEY_SUCCESS,
   IPFSSTORAGE_ADD_REENCRYPTION_KEY_ERROR,
+  IPFSSTORAGE_GET_PUBLIC_KEY_PENDING,
+  IPFSSTORAGE_GET_PUBLIC_KEY_SUCCESS,
+  IPFSSTORAGE_GET_PUBLIC_KEY_ERROR,
   // IPFSSTORAGE_SIZE_GET_PENDING,
   IPFSSTORAGE_SIZE_GET_SUCCESS,
   IPFSSTORAGE_SIZE_GET_ERROR,
@@ -40,6 +43,9 @@ export const IPFSStorage = (state = initialState, action) => {
     case IPFSSTORAGE_ADD_REENCRYPTION_KEY_ERROR:
       return { ...state, pending: false }
 
+    case IPFSSTORAGE_GET_PUBLIC_KEY_SUCCESS:
+      return handleGetPublicKeySuccess(state, action.address, action.publicKey)
+
     case REGISTRY_GET_STORE_SUCCESS:
       return handleRegistryGetSuccess(
         state, action.identity, action.store)
@@ -67,6 +73,8 @@ const validateStore = (store) => ({
   address: null,
   files: {},
   error: null,
+  size: -1,
+  publicKey: null,
   ...store
 })
 
@@ -83,6 +91,13 @@ const handleCreateError = (state, address, error) => {
   toastr.error(`Storage could not be created for identity ${address}`)
   let newState = { ...state }
   newState.identities[address] = validateStore({ ...newState.identities[address], error })
+  return newState
+}
+
+const handleGetPublicKeySuccess = (state, identity, publicKey) => {
+  toastr.info(`Retrieved public key for identity ${identity}`)
+  let newState = { ...state }
+  newState.identities[identity] = validateStore({ ...newState.identities[identity], publicKey })
   return newState
 }
 

@@ -29,6 +29,10 @@ class PathIndex extends Component {
     size: PropTypes.number.isRequired
   }
 
+  componentWillMount () {
+
+  }
+
   renderRows = () => (
     <div className={ styles.list } >
       {

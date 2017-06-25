@@ -1,5 +1,7 @@
 import toastr from 'toastr'
 
+import { REHYDRATE } from 'redux-persist/constants'
+
 import {
   GET_ACCOUNTS_SUCCESS,
   IPFSSTORAGE_CREATE_SUCCESS,
@@ -13,6 +15,8 @@ const initialState = {}
 
 export const Registry = (state = initialState, action) => {
   switch (action.type) {
+    case REHYDRATE:
+      return state
     case GET_ACCOUNTS_SUCCESS:
       return handleGetAccountsSuccess(state, action.accounts)
     case REGISTRY_ADD_STORE_SUCCESS:
