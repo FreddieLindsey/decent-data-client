@@ -24,9 +24,9 @@ const check = () => {
     let secretKey = account.secretKey
     if (secretKey.indexOf('0x') === 0) secretKey = secretKey.slice(2)
 
-    fs.writeFileSync(ECDSAPrivateKeyFile, secretKey)
+    // fs.writeFileSync(ECDSAPrivateKeyFile, secretKey)
 
-    const eKey = (account.name || i) + '.eKey'
+    const eKey = (account.name || i) + '.json'
     const eKeyFile = path.resolve(accounts_location, eKey)
     const makeEncryptionKeys = () => {
       request

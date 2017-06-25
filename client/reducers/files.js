@@ -103,7 +103,7 @@ const validateFile = (file) => {
 }
 
 const handleFileLoadPending = (state, path) => {
-  let loaded = state.loaded
+  let loaded = { ...state.loaded }
   loaded[path] = validateFile({
     loading: true, loaded: false
   })
@@ -114,7 +114,7 @@ const handleFileLoadPending = (state, path) => {
 }
 
 const handleFileLoadSuccess = (state, path, content, mime) => {
-  let loaded = state.loaded
+  let loaded = { ...state.loaded }
   loaded[path] = validateFile({
     ...loaded[path], content, mime, loading: false, loaded: true
   })
@@ -125,7 +125,7 @@ const handleFileLoadSuccess = (state, path, content, mime) => {
 }
 
 const handleFileLoadError = (state, path, error) => {
-  let loaded = state.loaded
+  let loaded = { ...state.loaded }
   loaded[path] = validateFile({
     ...loaded[path], error, loading: false, loaded: false
   })
@@ -136,7 +136,7 @@ const handleFileLoadError = (state, path, error) => {
 }
 
 const handleFileSubmitPending = (state, path) => {
-  let loaded = state.loaded
+  let loaded = { ...state.loaded }
   loaded[path] = validateFile({
     ...loaded[path], submitting: true, submitted: false
   })
@@ -160,7 +160,7 @@ const handleFileSubmitSuccess = (state, path, newPath) => {
 }
 
 const handleFileSubmitError = (state, path, error) => {
-  let loaded = state.loaded
+  let loaded = { ...state.loaded }
   loaded[path] = validateFile({
     ...loaded[path], submitting: false, submitted: false, error
   })
@@ -171,7 +171,7 @@ const handleFileSubmitError = (state, path, error) => {
 }
 
 const handleFileRetrievePending = (state, path) => {
-  let stored = state.stored
+  let stored = { ...state.stored }
   stored[path] = validateFile({
     ...stored[path], retrieved: false, retrieving: false
   })
@@ -182,7 +182,7 @@ const handleFileRetrievePending = (state, path) => {
 }
 
 const handleFileRetrieveSuccess = (state, path, content) => {
-  let stored = state.stored
+  let stored = { ...state.stored }
   stored[path] = validateFile({
     ...stored[path], content, retrieved: true, retrieving: false
   })
@@ -193,7 +193,7 @@ const handleFileRetrieveSuccess = (state, path, content) => {
 }
 
 const handleFileRetrieveError = (state, path, error) => {
-  let stored = state.stored
+  let stored = { ...state.stored }
   stored[path] = validateFile({
     ...stored[path], error, retrieved: false, retrieving: false
   })
@@ -204,7 +204,7 @@ const handleFileRetrieveError = (state, path, error) => {
 }
 
 const handleFileChangePath = (state, oldPath, newPath) => {
-  let loaded = state.loaded
+  let loaded = { ...state.loaded }
   let old = loaded[oldPath]
   delete loaded[oldPath]
   loaded[newPath] = old
@@ -222,7 +222,7 @@ const handleFileLoadedClear = (state) => {
 }
 
 const handleIpfsStorageIndexGetSuccess = (state, index, path) => {
-  let stored = state.stored
+  let stored = { ...state.stored }
   stored[path] = validateFile({
     ...stored[path], index, retrieved: false, retrieving: false
   })
@@ -233,7 +233,7 @@ const handleIpfsStorageIndexGetSuccess = (state, index, path) => {
 }
 
 const handleIpfsStorageIndexGetError = (state, index, error) => {
-  let stored = state.stored
+  let stored = { ...state.stored }
   stored['Errored retrieving path for index ' + index] = validateFile({
     ...stored[path], error, retrieved: false, retrieving: false
   })
@@ -244,7 +244,7 @@ const handleIpfsStorageIndexGetError = (state, index, error) => {
 }
 
 const handleIpfsStorageSizeSharedGetSuccess = (state, path, size) => {
-  let stored = state.stored
+  let stored = { ...state.stored }
   stored[path].sharing.size = size
   return {
     ...state,
@@ -253,7 +253,7 @@ const handleIpfsStorageSizeSharedGetSuccess = (state, path, size) => {
 }
 
 const handleIpfsStorageIndexShareGetSuccess = (state, path, index, address, permissions) => {
-  let stored = state.stored
+  let stored = { ...state.stored }
   let parties = stored[path].sharing.parties
   parties[index] = { address, permissions }
   return {

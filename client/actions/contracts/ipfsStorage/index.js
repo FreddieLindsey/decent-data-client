@@ -1,9 +1,13 @@
 export * from './create'
 export * from './addReencryptionKey'
 
+export * from './add'
+
 export * from './indexGet'
 export * from './sizeGet'
 export * from './get'
+
+export * from './getPublicKey'
 
 export * from './select'
 

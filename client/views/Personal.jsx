@@ -57,14 +57,33 @@ class Personal extends Component {
     handleLoadEncryptionKeys: PropTypes.func.isRequired
   }
 
+  componentWillMount () {
+    this.getCheck(this.props)
+  }
+
+  componentWillReceiveProps (props) {
+    this.getCheck(props)
+  }
+
+  getCheck (props) {
+    const { address, Registry, IPFSStorage, size } = props
+    if (address && Registry && !Registry.error)
+      if (!IPFSStorage)
+        this.props.handleGetStore(address)
+      else if (IPFSStorage.size === -1)
+        props.handleSizeGet()
+      else if (IPFSStorage.size !== -1 &&
+               Object.keys(IPFSStorage.files).length !== IPFSStorage.size)
+        for (let i = 0; i < IPFSStorage.size; i++)
+          props.handleIndexGet(i)
+  }
+
   renderIndex = () => <PathIndex address={ this.props.address } />
 
   renderNeedKey = () => <EncryptionKeyRequired />
 
   renderNeedStorage = () => {
-    const { address, Registry } = this.props
-    if (address && Registry && !Registry.error)
-      this.props.handleGetStore(address)
+    const { Registry } = this.props
     return (
       <div className={ styles.container } >
         { Registry && !Registry.error ?
