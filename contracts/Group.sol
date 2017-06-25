@@ -39,8 +39,13 @@ contract Group {
   }
 
   function register(address addr) onlyOwner notBanned(addr) {
-    members_addresses.push(addr);
     members[addr] = 1;
+
+    bool found = false;
+    for (uint i = 0; i < members_addresses.length; i++)
+      if (members_addresses[i] == addr) found = true;
+
+    if (!found) members_addresses.push(addr);
   }
 
   function remove(address addr) onlyOwner notBanned(addr) {

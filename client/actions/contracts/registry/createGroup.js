@@ -3,8 +3,9 @@ export const REGISTRY_CREATE_GROUP_PENDING = 'REGISTRY_CREATE_GROUP_PENDING'
 export const REGISTRY_CREATE_GROUP_SUCCESS = 'REGISTRY_CREATE_GROUP_SUCCESS'
 export const REGISTRY_CREATE_GROUP_ERROR = 'REGISTRY_CREATE_GROUP_ERROR'
 
-export const registryCreateGroup = (address) => {
-  return async function(dispatch) {
+export const registryCreateGroup = () => {
+  return async function(dispatch, getState) {
+    const { address } = getState().security
     dispatch(registryCreateGroupPending(address))
     try {
       const registry = await contracts.Registry.deployed()
