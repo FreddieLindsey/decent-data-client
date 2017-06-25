@@ -1,4 +1,4 @@
-import Request from 'superagent'
+import request from 'superagent'
 
 // Submitting files to IPFS
 export const IPFSSTORAGE_ADD_PENDING = 'IPFSSTORAGE_ADD_PENDING'
@@ -6,28 +6,35 @@ export const IPFSSTORAGE_ADD_SUCCESS = 'IPFSSTORAGE_ADD_SUCCESS'
 export const IPFSSTORAGE_ADD_ERROR   = 'IPFSSTORAGE_ADD_ERROR'
 
 export const ipfsStorageAdd = (file, address, path) => {
-  return (dispatch, getState) => {
+  return async function(dispatch, getState) {
     const reader = new FileReader()
-    reader.onload = (f) => {
-      const publicKey = getState().Registry.identities[address].publicKey.value
-      const content = new RSAProxyReencrypt({ rsa: { publicKey } }).encrypt(f.target.result)
+    reader.onload = async function(f) {
+      const publicKey = getState().IPFSStorage.identities[address].publicKey
+      const data = f.target.result
+      try {
+        const { body: { encrypted } } = await request
+          .post('http://localhost:7000/encryption/encrypt/second')
+          .send({ publicKey, data })
 
-      dispatch(ipfsStorageAddPending(path))
-      window.ipfs.add([{ path, content }], (err, res) => {
-        if (err) {
-          dispatch(ipfsStorageAddError(address, path, err))
-          return
-        }
+        dispatch(ipfsStorageAddPending(path))
+        window.ipfs.add([{ path, content: encrypted }], (err, res) => {
+          if (err) {
+            dispatch(ipfsStorageAddError(address, path, err))
+            return
+          }
 
-        const hash = res[0].hash
-        const storage = getState().IPFSStorage.identities[address].address
-        contracts.IPFSStorage.at(storage)
-        .add(path, hash.slice(0, 32), hash.slice(32, 64),
-          { from: getState().security.address,
-            gas: 3000000, gasPrice: 10000000 })
-        .then(() => dispatch(ipfsStorageAddSuccess(address, path, content)))
-        .catch((err) => dispatch(ipfsStorageAddError(address, path, err)))
-      })
+          const hash = res[0].hash
+          const storage = getState().IPFSStorage.identities[address].address
+          contracts.IPFSStorage.at(storage)
+          .add(path, hash.slice(0, 32), hash.slice(32, 64),
+            { from: getState().security.address,
+              gas: 3000000, gasPrice: 10000000 })
+          .then(() => dispatch(ipfsStorageAddSuccess(address, path)))
+          .catch((err) => dispatch(ipfsStorageAddError(address, path, err)))
+        })
+      } catch (err) {
+        dispatch(ipfsStorageAddError(address, path, err))
+      }
     }
     reader.onerror = (error) => {
       dispatch(ipfsStorageAddError(address, path, error))

@@ -4,10 +4,10 @@ import { connect } from 'react-redux'
 import Dropzone from 'react-dropzone'
 import Select from 'react-select'
 
-import EncryptionKeyRequired from '../EncryptionKeyRequired'
-import PathIndex from '../PathIndex'
+import EncryptionKeyRequired from '../components/EncryptionKeyRequired'
+import PathIndex from '../components/PathIndex'
 
-import styles from './index.scss'
+import styles from './Shared.scss'
 import 'react-select/dist/react-select.css'
 
 import {
@@ -15,7 +15,7 @@ import {
   ipfsStorageIndexGet,
   ipfsStorageSelect,
   loadEncryptionKeys,
-} from '../../actions'
+} from '../actions'
 
 const mapStateToProps = (state) => {
   const selected = state.IPFSStorage.selected
@@ -43,7 +43,7 @@ const mapDispatchToProps = (dispatch) => {
 
 class SharedIndex extends Component {
 
-  static displayName = 'Shared Index'
+  static displayName = 'Shared'
   static propTypes = {
     encryptionKey: PropTypes.bool.isRequired,
     accounts: PropTypes.arrayOf(
@@ -61,22 +61,22 @@ class SharedIndex extends Component {
   }
 
   componentWillMount() {
-    this.getCheck()
+    this.getCheck(this.props)
   }
 
-  componentWillReceiveProps (nextProps) {
-    this.getCheck(nextProps)
+  componentWillReceiveProps (props) {
+    this.getCheck(props)
   }
 
-  getCheck (props = this.props) {
+  getCheck (props) {
     const { selected, data } = props
 
-    if (data && typeof data.size === 'undefined') props.handleSizeGet(selected)
+    if (data && data.size < 0) props.handleSizeGet(selected)
 
     if (data && data.size > 0) this.getData(props)
   }
 
-  getData (props = this.props) {
+  getData (props) {
     const {
       selected,
       data: { files, size }

@@ -17,13 +17,15 @@ const mapStateToProps = (state, ownProps) => {
   const owned = ownProps.match.path.indexOf('/personal') !== -1
   const queries = ownProps.location.search.slice(1).split('&')
   const path = queries[queries.length - 1].slice(5)
-  const address = owned ? state.security.address : queries[0].slice(8)
+  const identity = owned ? state.security.address : queries[0].slice(8)
+  const file_ = state.files.stored[`${identity}/${path}`]
   const keys = state.Registry.identities
   return {
-    address,
+    address: state.security.address,
+    identity,
     owned,
     keys,
-    retrieved: !!state.files.stored[`${address}/${path}`].content,
+    retrieved: file_ && !!file_.content,
     path
   }
 }
@@ -39,7 +41,8 @@ class ViewBlobPage extends Component {
 
   static displayName = 'View Blob Page'
   static propTypes = {
-    address: PropTypes.string.isRequired,
+    address: PropTypes.string,
+    identity: PropTypes.string.isRequired,
     owned: PropTypes.bool.isRequired,
     retrieved: PropTypes.bool.isRequired,
     path: PropTypes.string.isRequired,
@@ -51,30 +54,32 @@ class ViewBlobPage extends Component {
   }
 
   componentWillMount () {
-    const { owned, address, retrieved, path } = this.props
-    this.props.handleGetPublicKey(address)
+    const { address, owned, identity, retrieved, path } = this.props
+    if (!address) return
+
+    this.props.handleGetPublicKey(identity)
     if (!retrieved)
       owned ?
         this.props.handleGetContent(path) :
-        this.props.handleGetContentShared(address, path)
+        this.props.handleGetContentShared(identity, path)
   }
 
   render () {
-    const { address, path, owned } = this.props
+    const { identity, path, owned } = this.props
 
     return (
       <div className={ styles.main } >
         <h2 className={ styles.header } >
           { owned ?
             'Personal' :
-            `Shared / ${address.slice(0, 5)}...${address.slice(address.length - 3)}`
+            `Shared / ${identity.slice(0, 5)}...${identity.slice(identity.length - 3)}`
           } / { path }
         </h2>
         <hr />
-        <FilePreview path={ `${address}/${path}` } />
+        <FilePreview path={ `${identity}/${path}` } />
         <Dropzone
           className={ styles.dropzone }
-          onDrop={(f) => this.props.handleAdd(f[0], address, path) } >
+          onDrop={(f) => this.props.handleAdd(f[0], identity, path) } >
           <div className={ styles.dropzoneText }>
             Upload new version
           </div>

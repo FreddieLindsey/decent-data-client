@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { BrowserRouter, NavLink, Route, Switch } from 'react-router-dom'
 
 import UploadPage from '../components/UploadPage'
-import SharedIndexPage from '../components/SharedIndexPage'
 
 import ViewBlobPage from '../components/ViewBlobPage'
 import ShareBlobPage from '../components/ShareAdminPage'
@@ -12,6 +11,7 @@ import Nav from './Nav'
 
 import Home from '../views/Home'
 import Personal from '../views/Personal'
+import Shared from '../views/Shared'
 import Accounts from '../views/Accounts'
 import Groups from '../views/Groups'
 import GroupDetails from '../views/GroupDetails'
@@ -53,7 +53,7 @@ class App extends Component {
                 <Route exact path='/groups' component={ Groups } />
                 <Route path='/groups/details' component={ GroupDetails } />
                 <Route exact path='/upload' component={ UploadPage } />
-                <Route exact path='/shared' component={ SharedIndexPage } />
+                <Route exact path='/shared' component={ Shared } />
                 <Route path='/personal/share' component={ ShareBlobPage } />
                 <Route path='/personal/view' component={ ViewBlobPage } />
                 <Route path='/shared/view' component={ ViewBlobPage } />
