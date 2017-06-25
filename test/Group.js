@@ -110,4 +110,35 @@ contract('Group', () => {
 
   })
 
+  describe('member index', () => {
+
+    it('should allow the authority to retrieve a list of members', () => {
+      const { contract, instance } = Group(accounts('gmc').address, true)
+      return contract
+      .then(() => instance().getMembers({ from: accounts('gmc').address }))
+      .then(members => assert.equal(members.length, 0))
+      .then(() =>
+        instance().register(accounts('doctor').address, { from: accounts('gmc').address }))
+      .then(() =>
+        instance().register(accounts('patient_1').address, { from: accounts('gmc').address }))
+      .then(() =>
+        instance().register(accounts('patient_2').address, { from: accounts('gmc').address }))
+      .then(() => instance().getMembers({ from: accounts('gmc').address }))
+      .then((members) => {
+        assert.equal(members.length, 3)
+        assert.equal(members[0], accounts('doctor').address)
+        assert.equal(members[1], accounts('patient_1').address)
+        assert.equal(members[2], accounts('patient_2').address)
+      })
+    })
+
+    it('should not allow anyone else to retrieve a list of members', () => {
+      const { contract, instance } = Group(accounts('gmc').address, true)
+      return contract
+      .then(() => instance().getMembers({ from: accounts('patient_1').address }))
+      .catch((err) => assert(isThrow(err)))
+    })
+
+  })
+
 })

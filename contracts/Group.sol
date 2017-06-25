@@ -20,13 +20,18 @@ contract Group {
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
 
-  address public authority;
+  address authority;
 
   /* addr => 0: not a member, 1: member, 2: struck off */
   mapping (address => uint) members;
+  address[] members_addresses;
 
   function Group() {
     authority = msg.sender;
+  }
+
+  function getAuthority() constant returns (address) {
+    return authority;
   }
 
   function member(address addr) constant returns (bool) {
@@ -35,6 +40,12 @@ contract Group {
 
   function register(address addr) onlyOwner notBanned(addr) {
     members[addr] = 1;
+
+    bool found = false;
+    for (uint i = 0; i < members_addresses.length; i++)
+      if (members_addresses[i] == addr) found = true;
+
+    if (!found) members_addresses.push(addr);
   }
 
   function remove(address addr) onlyOwner notBanned(addr) {
@@ -43,6 +54,10 @@ contract Group {
 
   function invalidate(address addr) onlyOwner {
     members[addr] = 2;
+  }
+
+  function getMembers() onlyOwner constant returns (address[]) {
+    return members_addresses;
   }
 
 }

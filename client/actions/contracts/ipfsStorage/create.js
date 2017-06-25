@@ -4,7 +4,10 @@ import request from 'superagent'
 import {
   ipfsStorageAddReencryptionKeyPending,
   ipfsStorageAddReencryptionKeySuccess,
-  ipfsStorageAddReencryptionKeyError
+  ipfsStorageAddReencryptionKeyError,
+  registryAddStorePending,
+  registryAddStoreSuccess,
+  registryAddStoreError
 } from '../../'
 
 // Create a new IPFSStorage contract
@@ -59,6 +62,14 @@ export const ipfsStorageCreate = (address) => {
             await contracts.IPFSStorage.at(storage.address)
             .addReencryptionKey(address, hash1, hash2, { from: address })
             dispatch(ipfsStorageAddReencryptionKeySuccess(address))
+            dispatch(registryAddStorePending(address))
+            try {
+              const registry = await contracts.Registry.deployed()
+              await registry.addStore(storage.address, { from: address })
+              dispatch(registryAddStoreSuccess(address, storage.address))
+            } catch (err) {
+              dispatch(registryAddStoreError(address, err))
+            }
           } catch (err) {
             dispatch(ipfsStorageAddReencryptionKeyError(address, err))
           }

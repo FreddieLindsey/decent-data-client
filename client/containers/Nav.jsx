@@ -45,6 +45,14 @@ export default class Nav extends Component {
                   Upload
                 </NavLink>
               </li>
+              <li>
+                <NavLink
+                  to="/groups"
+                  className={ styles.navLink }
+                  activeClassName={ styles.navLinkActive } >
+                  Groups
+                </NavLink>
+              </li>
             </ul>
             <ul className="nav navbar-nav navbar-right">
               <li>

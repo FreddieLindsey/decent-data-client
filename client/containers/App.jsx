@@ -13,6 +13,8 @@ import Nav from './Nav'
 import Home from '../views/Home'
 import Personal from '../views/Personal'
 import Accounts from '../views/Accounts'
+import Groups from '../views/Groups'
+import GroupDetails from '../views/GroupDetails'
 import NotFound from '../views/NotFound'
 
 import styles from './App.scss'
@@ -47,8 +49,10 @@ class App extends Component {
               <Switch>
                 <Route exact path='/' component={ Home } />
                 <Route exact path='/accounts' component={ Accounts } />
-                <Route exact path='/upload' component={ UploadPage } />
                 <Route exact path='/personal' component={ Personal } />
+                <Route exact path='/groups' component={ Groups } />
+                <Route path='/groups/details' component={ GroupDetails } />
+                <Route exact path='/upload' component={ UploadPage } />
                 <Route exact path='/shared' component={ SharedIndexPage } />
                 <Route path='/personal/share' component={ ShareBlobPage } />
                 <Route path='/personal/view' component={ ViewBlobPage } />
