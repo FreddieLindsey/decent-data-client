@@ -24,6 +24,7 @@ contract Group {
 
   /* addr => 0: not a member, 1: member, 2: struck off */
   mapping (address => uint) members;
+  address[] members_addresses;
 
   function Group() {
     authority = msg.sender;
@@ -38,6 +39,7 @@ contract Group {
   }
 
   function register(address addr) onlyOwner notBanned(addr) {
+    members_addresses.push(addr);
     members[addr] = 1;
   }
 
@@ -47,6 +49,10 @@ contract Group {
 
   function invalidate(address addr) onlyOwner {
     members[addr] = 2;
+  }
+
+  function getMembers() onlyOwner constant returns (address[]) {
+    return members_addresses;
   }
 
 }
