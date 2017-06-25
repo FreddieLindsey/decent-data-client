@@ -20,13 +20,17 @@ contract Group {
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
 
-  address public authority;
+  address authority;
 
   /* addr => 0: not a member, 1: member, 2: struck off */
   mapping (address => uint) members;
 
   function Group() {
     authority = msg.sender;
+  }
+
+  function getAuthority() constant returns (address) {
+    return authority;
   }
 
   function member(address addr) constant returns (bool) {
