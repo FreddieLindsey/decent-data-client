@@ -14,7 +14,7 @@ export const IPFSSTORAGE_ADD_REENCRYPTION_KEY_ERROR = 'IPFSSTORAGE_ADD_REENCRYPT
 export const ipfsStorageAddReencryptionKey = (address, done) => {
   return (dispatch, getState) => {
     const identity = getState().security.address
-    const storage = getState().IPFSStorage.mine
+    const storage = getState().IPFSStorage.identities[identity].address
     const theirStorage = getState().IPFSStorage.identities[address].address
     dispatch(ipfsStorageAddReencryptionKeyPending(address))
     contracts.IPFSStorage.at(theirStorage)
@@ -48,7 +48,6 @@ export const ipfsStorageAddReencryptionKey = (address, done) => {
                 path: 'reencryptionKey',
                 content: key
               }], (err, res) => {
-                console.dir(res)
                 if (err) {
                   dispatch(ipfsStorageAddReencryptionKeyError(identity, err))
                   return

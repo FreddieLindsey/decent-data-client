@@ -15,9 +15,12 @@ import styles from './index.scss'
 import PermissionsList from '../PermissionsList'
 
 const mapStateToProps = (state, ownProps) => {
-  const identity = state.security.address
+  const identity = state.security.address || ''
   const path = ownProps.location.search.slice(6)
-  const sharing = state.files.stored[`${identity}/${path}`].sharing
+  const stored_file =
+    state.files.stored[`${identity}/${path}`] ||
+    { sharing: { parties: {}, size: 0 } }
+  const { sharing } = stored_file
   return  {
     identity,
     path,
@@ -50,7 +53,7 @@ class ShareAdminPage extends Component {
 
   static displayName = 'Share Admin Page'
   static propTypes = {
-    identity: PropTypes.string.isRequired,
+    identity: PropTypes.string,
     path: PropTypes.string.isRequired,
     sharing: PropTypes.shape({
       parties: PropTypes.object.isRequired,
@@ -78,8 +81,12 @@ class ShareAdminPage extends Component {
   }
 
   handleCheck (props) {
+    if (!props.identity) return
+
     props.handleSizeShareGet(props.path)
     const { size, parties } = props.sharing
+    if (!size || !parties) return
+
     const party_size = Object.keys(parties).length
     if (size > 0 && party_size < size)
       for (let i = 0; i < size; i++)

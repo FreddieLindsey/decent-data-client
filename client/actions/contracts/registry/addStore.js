@@ -19,18 +19,18 @@ export const registryAddStore = (address) => {
   }
 }
 
-const registryAddStorePending = (identity) => ({
+export const registryAddStorePending = (identity) => ({
   type: REGISTRY_ADD_STORE_PENDING,
   identity
 })
 
-const registryAddStoreSuccess = (identity, store) => ({
+export const registryAddStoreSuccess = (identity, store) => ({
   type: REGISTRY_ADD_STORE_SUCCESS,
   identity,
   store
 })
 
-const registryAddStoreError = (identity, error) => ({
+export const registryAddStoreError = (identity, error) => ({
   type: REGISTRY_ADD_STORE_ERROR,
   identity,
   error

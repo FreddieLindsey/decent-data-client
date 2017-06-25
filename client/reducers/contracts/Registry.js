@@ -1,3 +1,5 @@
+import toastr from 'toastr'
+
 import {
   GET_ACCOUNTS_SUCCESS,
   IPFSSTORAGE_CREATE_SUCCESS,
@@ -34,6 +36,7 @@ const validateStore = (store) => ({
 })
 
 const handleGetAccountsSuccess = (state, accounts) => {
+  toastr.info(`Retrieved ${accounts.length} unlocked accounts`)
   let newState = { ...state }
   for (const i of accounts)
     newState[i] = validateStore(newState[i])
@@ -41,6 +44,7 @@ const handleGetAccountsSuccess = (state, accounts) => {
 }
 
 const handleRegistryAddStoreSuccess = (state, identity, store) => {
+  toastr.success(`Added store to registry for identity ${identity}`)
   let newState = { ...state }
   newState[identity] = validateStore({ address: store })
   return newState
@@ -53,6 +57,7 @@ const handleRegistryAddStoreError = (state, identity, error) => {
 }
 
 const handleRegistryGetStoreSuccess = (state, identity, store) => {
+  toastr.success(`Retrieved store from registry for identity ${identity}`)
   let newState = { ...state }
   newState[identity] = validateStore({ address: store })
   return newState

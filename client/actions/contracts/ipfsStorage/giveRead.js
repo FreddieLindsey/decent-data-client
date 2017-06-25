@@ -6,7 +6,7 @@ export const IPFSSTORAGE_GIVE_READ_ERROR = 'IPFSSTORAGE_GIVE_READ_ERROR'
 export const ipfsStorageGiveRead = (address, path) => {
   return (dispatch, getState) => {
     const identity = getState().security.address
-    const storage = getState().IPFSStorage.mine
+    const storage = getState().IPFSStorage.identities[identity].address
     dispatch(ipfsStorageGiveReadPending(identity, address, path))
     contracts.IPFSStorage.at(storage)
     .giveRead(address, path, { from: identity, gas: 3000000, gasPrice: 10000000 })
