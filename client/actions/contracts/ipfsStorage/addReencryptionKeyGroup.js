@@ -17,12 +17,12 @@ export const IPFSSTORAGE_ADD_REENCRYPTION_KEY_GROUP_ERROR =
 export const ipfsStorageAddReencryptionKeyGroup = (name, done) => {
   return async function(dispatch, getState) {
     const identity = getState().security.address
-    const { encryption: secretKey } = getState().security
+    const { encryption: { secretKey } } = getState().security
     const storage = getState().IPFSStorage.identities[identity].address
 
     dispatch(ipfsStorageAddReencryptionKeyGroupPending(name))
     try {
-      const groupAddress = await storage.getGroupAddress(name)
+      const groupAddress = await contracts.IPFSStorage.at(storage).getGroupAddress(name)
       const group = contracts.Group.at(groupAddress)
       const hash = (await group.getPublicKey()).map((v) => HashByte.toHash(v)).join('')
       const stream = await window.ipfs.get(hash)
@@ -41,11 +41,9 @@ export const ipfsStorageAddReencryptionKeyGroup = (name, done) => {
           .post('http://localhost:7000/key/generate/reencryption')
           .send({ secretKey, publicKey })
 
-
-        const key = new Buffer(res.body.reencryptionKey)
         const res = await window.ipfs.add([{
           path: 'reencryptionKey',
-          content: key
+          content: new Buffer(reencryptionKey)
         }])
         const hash1 = res[0].hash.slice(0, 32)
         const hash2 = res[0].hash.slice(32)
