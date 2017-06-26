@@ -5,7 +5,9 @@ import styles from './GroupDetails.scss'
 
 import {
   groupGetMembers,
-  groupAddMember
+  groupAddMember,
+  groupAddReencryptionKey,
+  registryGetStore
 } from '../actions'
 
 const mapStateToProps = (state, ownProps) => {
@@ -29,7 +31,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => ({
   handleGetMembers: (g) => dispatch(groupGetMembers(g)),
-  handleAddMember: (g, m) => dispatch(groupAddMember(g, m))
+  handleAddMember: (g, m) => dispatch(groupAddMember(g, m)),
+  handleAddReencryptionKey: (g, m) => dispatch(groupAddReencryptionKey(g, m)),
+  handleGetStore: (a) => dispatch(registryGetStore(a))
 })
 
 const initialState = {
@@ -50,7 +54,9 @@ class GroupDetails extends Component {
     }),
 
     handleGetMembers: PropTypes.func.isRequired,
-    handleAddMember: PropTypes.func.isRequired
+    handleAddMember: PropTypes.func.isRequired,
+    handleAddReencryptionKey: PropTypes.func.isRequired,
+    handleGetStore: PropTypes.func.isRequired
   }
 
   constructor (props) {
@@ -95,8 +101,10 @@ class GroupDetails extends Component {
         ...this.state,
         add: { ...this.state.add, errors }
       })
-    else
+    else {
       this.props.handleAddMember(contract.address, address)
+      this.props.handleAddReencryptionKey(contract.address, address)
+    }
   }
 
   renderAddMember () {
@@ -106,6 +114,7 @@ class GroupDetails extends Component {
           <input
             className={ styles.addInput }
             value={ this.state.add.address || '' }
+            onBlur={ (e) => this.props.handleGetStore(e.target.value) }
             onChange={ (e) => this.handleAddressUpdate(e) } />
         </div>
         <div className='col-xs-offset-3 col-sm-offset-0 col-xs-6 col-sm-2' >

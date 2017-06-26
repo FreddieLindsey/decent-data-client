@@ -52,6 +52,14 @@ contract Group {
     public_key = IpfsHash(part1, part2);
   }
 
+  function getPrivateKey() constant returns (bytes32, bytes32) {
+    return (master_key.part1, master_key.part2);
+  }
+
+  function getPublicKey() constant returns (bytes32, bytes32) {
+    return (public_key.part1, public_key.part2);
+  }
+
   function addReencryptionKey(address addr, bytes32 part1, bytes32 part2) onlyOwner {
     reencryption_key[addr] = IpfsHash(part1, part2);
   }
