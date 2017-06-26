@@ -20,14 +20,45 @@ contract Group {
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
 
+  struct IpfsHash {
+    bytes32 part1;
+    bytes32 part2;
+  }
+
   address authority;
 
   /* addr => 0: not a member, 1: member, 2: struck off */
   mapping (address => uint) members;
   address[] members_addresses;
 
+  /* re-encryption keys for private group key */
+  IpfsHash master_key;
+  IpfsHash public_key;
+  mapping (address => IpfsHash) reencryption_key;
+
+  /* ----------------------------------------------------------------------- */
+  /* FUNCTIONS */
+  /* ----------------------------------------------------------------------- */
+
   function Group() {
     authority = msg.sender;
+  }
+
+  function setPrivateKey(bytes32 part1, bytes32 part2) onlyOwner {
+    master_key = IpfsHash(part1, part2);
+  }
+
+  function setPublicKey(bytes32 part1, bytes32 part2) onlyOwner {
+    public_key = IpfsHash(part1, part2);
+  }
+
+  function addReencryptionKey(address addr, bytes32 part1, bytes32 part2) onlyOwner {
+    reencryption_key[addr] = IpfsHash(part1, part2);
+  }
+
+  function getReencryptionKey() constant returns (bytes32, bytes32) {
+    IpfsHash key = reencryption_key[msg.sender];
+    return (key.part1, key.part2);
   }
 
   function getAuthority() constant returns (address) {
