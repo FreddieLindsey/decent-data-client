@@ -6,6 +6,12 @@ import {
   REGISTRY_GET_GROUPS_PENDING,
   REGISTRY_GET_GROUPS_SUCCESS,
   REGISTRY_GET_GROUPS_ERROR,
+  IPFSSTORAGE_GET_GROUPS_PENDING,
+  IPFSSTORAGE_GET_GROUPS_SUCCESS,
+  IPFSSTORAGE_GET_GROUPS_ERROR,
+  IPFSSTORAGE_ADD_GROUP_PENDING,
+  IPFSSTORAGE_ADD_GROUP_SUCCESS,
+  IPFSSTORAGE_ADD_GROUP_ERROR,
   GROUP_GET_MEMBERS_PENDING,
   GROUP_GET_MEMBERS_SUCCESS,
   GROUP_GET_MEMBERS_ERROR,
@@ -31,6 +37,10 @@ const groups = (state = initialState, action) => {
       return handleRegistryGetGroupsSuccess(state, action.identity, action.groups)
     case REGISTRY_GET_GROUPS_ERROR:
       return handleRegistryGetGroupsError(state, action.identity, action.error)
+    case IPFSSTORAGE_GET_GROUPS_SUCCESS:
+      return handleIpfsStorageGetGroupsSuccess(state, action.address, action.groups)
+    case IPFSSTORAGE_ADD_GROUP_SUCCESS:
+      return handleIpfsStorageAddGroupSuccess(state, action.address, action.group, action.name)
     case GROUP_GET_MEMBERS_SUCCESS:
       return handleGroupGetMembersSuccess(state, action.identity, action.group, action.members)
     case GROUP_ADD_MEMBER_SUCCESS:
@@ -42,6 +52,7 @@ const groups = (state = initialState, action) => {
 
 const validateGroups = (groups) => ({
   pending: false,
+  known: {},
   groups: [],
   ...groups
 })
@@ -90,6 +101,23 @@ const handleRegistryGetGroupsSuccess = (state, address, groups) => {
 const handleRegistryGetGroupsError = (state, address, error) => {
   let newState = { ...state }
   newState[address] = validateGroups({ ...newState[address], error })
+  return newState
+}
+
+const handleIpfsStorageGetGroupsSuccess = (state, address, groups) => {
+  let newState = { ...state }
+  newState[address] = validateGroups({ ...newState[address], known: groups })
+  return newState
+}
+
+const handleIpfsStorageAddGroupSuccess = (state, address, group, name) => {
+  let newState = { ...state }
+  newState[address] = validateGroups({ ...newState[address] })
+  let found = false
+  for (const i of newState[address].known)
+    if (i.name === name)
+      found = true
+  if (!found) newState[address].known.push({ name, address: group })
   return newState
 }
 

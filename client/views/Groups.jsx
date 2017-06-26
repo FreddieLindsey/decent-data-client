@@ -2,11 +2,14 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 
+import AddGroup from '../components/AddGroup'
+
 import styles from './Groups.scss'
 
 import {
   registryCreateGroup,
-  registryGetGroups
+  registryGetGroups,
+  ipfsStorageGetGroups
 } from '../actions'
 
 const mapStateToProps = (state) => {
@@ -15,13 +18,15 @@ const mapStateToProps = (state) => {
   {
     address,
     pending: state.groups[state.security.address].pending,
-    groups: [ ...state.groups[state.security.address].groups ]
+    groups: [ ...state.groups[state.security.address].groups ],
+    known: [ ...state.groups[state.security.address].known ]
   } : {}
 }
 
 const mapDispatchToProps = (dispatch) => ({
   handleCreate: () => dispatch(registryCreateGroup()),
-  handleGetGroups: () => dispatch(registryGetGroups())
+  handleGetGroups: () => dispatch(registryGetGroups()),
+  handleGetKnownGroups: () => dispatch(ipfsStorageGetGroups())
 })
 
 class Groups extends Component {
@@ -33,16 +38,21 @@ class Groups extends Component {
     groups: PropTypes.arrayOf(PropTypes.shape({
       address: PropTypes.string.isRequired
     })),
+    known: PropTypes.arrayOf(PropTypes.shape({
+      address: PropTypes.string.isRequired
+    })),
 
     handleCreate: PropTypes.func.isRequired,
-    handleGetGroups: PropTypes.func.isRequired
+    handleGetGroups: PropTypes.func.isRequired,
+    handleGetKnownGroups: PropTypes.func.isRequired
   }
 
   componentWillMount () {
     this.props.address && this.props.handleGetGroups()
+    this.props.address && this.props.handleGetKnownGroups()
   }
 
-  renderGroups () {
+  renderOwnedGroups () {
     const { groups } = this.props
     return (
       <table className='table table-striped' >
@@ -70,6 +80,32 @@ class Groups extends Component {
     )
   }
 
+  renderKnownGroups () {
+    const { known } = this.props
+    return (
+      <table className='table table-striped' >
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Group Name</th>
+            <th>Group Address</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            known && known.map((g, i) =>
+              <tr key={ i } >
+                <th scope='row'>{ i + 1 }</th>
+                <td>{ g.name }</td>
+                <td>{ g.address }</td>
+              </tr>
+            )
+          }
+        </tbody>
+      </table>
+    )
+  }
+
   render () {
     return (
       <div>
@@ -85,7 +121,14 @@ class Groups extends Component {
             </button>
           </div>
         </div>
-        { this.renderGroups() }
+        { this.renderOwnedGroups() }
+        <hr />
+        <h3>
+          Known Groups
+        </h3>
+        { this.renderKnownGroups() }
+        <hr />
+        <AddGroup />
       </div>
     )
   }

@@ -34,16 +34,16 @@ export const ipfsStorageCreate = (address) => {
 
       // Create storage
       const hash = res[0].hash
-      const storage = await contracts.IPFSStorage.new(
-        hash.slice(0, 32), hash.slice(32, 64), {
-          from: address, gas: 3000000, gasPrice: 10000000
-        }
-      )
-      dispatch(ipfsStorageCreateSuccess(address, storage.address))
-
-      // Create re-encryption key
-      dispatch(ipfsStorageAddReencryptionKeyPending(address))
       try {
+        const storage = await contracts.IPFSStorage.new(
+          hash.slice(0, 32), hash.slice(32, 64), {
+            from: address, gas: 4700000, gasPrice: 1000000000
+          }
+        )
+        dispatch(ipfsStorageCreateSuccess(address, storage.address))
+
+        // Create re-encryption key
+        dispatch(ipfsStorageAddReencryptionKeyPending(address))
         const { body: { reencryptionKey } } = await request
           .post('http://localhost:7000/key/generate/reencryption')
           .send({ secretKey, publicKey })
@@ -76,7 +76,6 @@ export const ipfsStorageCreate = (address) => {
         })
       } catch (err) {
         dispatch(ipfsStorageCreateError(err))
-        return
       }
     })
   }

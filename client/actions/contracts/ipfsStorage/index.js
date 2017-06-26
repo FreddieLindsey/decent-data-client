@@ -1,5 +1,6 @@
 export * from './create'
 export * from './addReencryptionKey'
+export * from './addReencryptionKeyGroup'
 
 export * from './add'
 
@@ -18,3 +19,6 @@ export * from './giveWriteGroup'
 
 export * from './indexShareGet'
 export * from './sizeShareGet'
+
+export * from './addGroup'
+export * from './getGroups'

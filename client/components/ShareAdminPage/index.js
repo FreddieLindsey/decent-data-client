@@ -5,8 +5,11 @@ import {
   ipfsStorageSizeShareGet,
   ipfsStorageGiveRead,
   ipfsStorageGiveWrite,
+  ipfsStorageGiveReadGroup,
+  ipfsStorageGiveWriteGroup,
   ipfsStorageIndexShareGet,
   ipfsStorageAddReencryptionKey,
+  ipfsStorageAddReencryptionKeyGroup,
   registryGetStore
 } from '../../actions'
 
@@ -36,6 +39,12 @@ const mapDispatchToProps = (dispatch) => ({
       () => dispatch(ipfsStorageGiveRead(a, p))
     )),
   handleGiveWrite: (a, p) => dispatch(ipfsStorageGiveWrite(a, p)),
+  handleGiveReadGroup: (a, p) =>
+    dispatch(ipfsStorageAddReencryptionKeyGroup(
+      a,
+      () => dispatch(ipfsStorageGiveReadGroup(a, p))
+    )),
+  handleGiveWriteGroup: (a, p) => dispatch(ipfsStorageGiveWriteGroup(a, p)),
   handleIndexSharedGet: (p, i) => dispatch(ipfsStorageIndexShareGet(p, i)),
   handleGetStore: (v) => dispatch(registryGetStore(v))
 })
@@ -63,6 +72,8 @@ class ShareAdminPage extends Component {
     handleSizeShareGet: PropTypes.func.isRequired,
     handleGiveRead: PropTypes.func.isRequired,
     handleGiveWrite: PropTypes.func.isRequired,
+    handleGiveReadGroup: PropTypes.func.isRequired,
+    handleGiveWriteGroup: PropTypes.func.isRequired,
     handleIndexSharedGet: PropTypes.func.isRequired,
     handleGetStore: PropTypes.func.isRequired
   }
@@ -135,11 +146,12 @@ class ShareAdminPage extends Component {
 
   handleSubmit () {
     const { path } = this.props
-    const { add: { address, permissions } } = this.state
+    const { add: { address, type, permissions } } = this.state
     let errors = []
 
     // CHECK ADDRESS
-    if (address.length !== 42) errors.push('Address is not a valid ethereum address')
+    if (type === 0 && address.length !== 42) errors.push('Address is not a valid ethereum address')
+    if (type === 1 && address.length === 0) errors.push('Group name cannot be blank')
     if (permissions === 0) errors.push('You can\'t give someone no permissions')
 
     if (errors.length > 0) {
@@ -149,10 +161,16 @@ class ShareAdminPage extends Component {
       })
     } else {
       // Give read
-      if (permissions % 2 === 1) this.props.handleGiveRead(address, path)
+      if (permissions % 2 === 1)
+        type === 0 ?
+          this.props.handleGiveRead(address, path) :
+          this.props.handleGiveReadGroup(address, path)
 
       // Give write
-      if (permissions % 4 >= 2) this.props.handleGiveWrite(address, path)
+      if (permissions % 4 >= 2)
+        type === 0 ?
+          this.props.handleGiveWrite(address, path) :
+          this.props.handleGiveWriteGroup(address, path)
     }
   }
 
@@ -177,7 +195,7 @@ class ShareAdminPage extends Component {
                 className={ styles.addressInput }
                 placeholder='Enter address'
                 value={ address }
-                onBlur={ (v) => this.props.handleGetStore(v.target.value) }
+                onBlur={ (v) => type === 0 && this.props.handleGetStore(v.target.value) }
                 onChange={ (e) => this.handleAddressUpdate(e) }
               />
             </div>

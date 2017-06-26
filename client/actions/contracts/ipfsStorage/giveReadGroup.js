@@ -6,7 +6,7 @@ export const IPFSSTORAGE_GIVE_READ_GROUP_ERROR = 'IPFSSTORAGE_GIVE_READ_GROUP_ER
 export const ipfsStorageGiveReadGroup = (group, path) => {
   return (dispatch, getState) => {
     const identity = getState().security.address
-    const storage = getState().IPFSStorage.mine
+    const storage = getState().IPFSStorage.identities[identity].address
     dispatch(ipfsStorageGiveReadGroupPending(identity, group, path))
     contracts.IPFSStorage.at(storage)
     .giveReadGroup(group, path, { from: identity, gas: 3000000, gasPrice: 10000000 })

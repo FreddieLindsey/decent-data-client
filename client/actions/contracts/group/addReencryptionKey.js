@@ -19,6 +19,7 @@ export const groupAddReencryptionKey = (contract, member) => {
     dispatch(groupAddReencryptionKeyPending(address, contract, member))
     try {
       const group = contracts.Group.at(contract)
+
       const registry = await contracts.Registry.deployed()
       const storage = await contracts.IPFSStorage.at(await registry.getStore(member))
       const memberPublicKeyHash =
