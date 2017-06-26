@@ -3,7 +3,10 @@ import request from 'superagent'
 import {
   groupSetKeypairPending,
   groupSetKeypairSuccess,
-  groupSetKeypairError
+  groupSetKeypairError,
+  groupAddReencryptionKeyPending,
+  groupAddReencryptionKeySuccess,
+  groupAddReencryptionKeyError
 } from '../'
 
 // Add store
@@ -30,6 +33,9 @@ export const registryCreateGroup = () => {
       const { body: { encrypted: secretKeyEncrypted } } = await request
         .post('http://localhost:7000/encryption/encrypt/second')
         .send({ publicKey, data: secretKey })
+      const { body: { reencryptionKey } } = await request
+        .post('http://localhost:7000/key/generate/reencryption')
+        .send({ secretKey, publicKey: getState().security.encryption.publicKey })
 
       window.ipfs.add([{ path: 'secretKey', content: new Buffer(secretKeyEncrypted) }],
       async function(err, res) {
@@ -63,6 +69,23 @@ export const registryCreateGroup = () => {
           dispatch(groupSetKeypairSuccess(address, group))
         } catch (err) {
           dispatch(groupSetKeypairError(address, group, err))
+        }
+      })
+      window.ipfs.add([{ path: 'reencryptionKey', content: new Buffer(reencryptionKey) }],
+      async function(err, res) {
+        if (err) {
+          dispatch(groupAddReencryptionKeyError(address, group, address, err))
+          return
+        }
+
+        const hash = res[0].hash
+        try {
+          await group.addReencryptionKey(address, hash.slice(0, 32), hash.slice(32, 64), {
+            from: address, gas: 3000000, gasPrice: 10000000
+          })
+          dispatch(groupAddReencryptionKeySuccess(address, group, address))
+        } catch (err) {
+          dispatch(groupAddReencryptionKeyError(address, group, address, err))
         }
       })
     } catch (err) {
