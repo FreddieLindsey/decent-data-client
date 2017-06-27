@@ -12,7 +12,6 @@ export const ipfsStorageGetGroups = () => {
     try {
       const storage = contracts.IPFSStorage.at(storageAddress)
       const size = await storage.getGroupsSize({ from: address })
-      console.log(size)
       let groups = []
       for (let i = 0; i < size; i++) {
         const [ address, name, ..._ ] = await storage.getGroup(i)

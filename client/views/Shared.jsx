@@ -12,6 +12,7 @@ import 'react-select/dist/react-select.css'
 
 import {
   ipfsStorageSizeGet,
+  ipfsStorageSizeGetGroup,
   ipfsStorageIndexGet,
   ipfsStorageSelect,
   loadEncryptionKeys,
@@ -35,9 +36,20 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     handleSizeGet: (a) => dispatch(ipfsStorageSizeGet(a)),
+    handleSizeGetGroup: (a, g) => dispatch(ipfsStorageSizeGetGroup(a, g)),
     handleIndexGet: (i, a) => dispatch(ipfsStorageIndexGet(i, a)),
     handleLoadEncryptionKeys: (f) => dispatch(loadEncryptionKeys(f)),
     handleIpfsStorageSelect: (v) => dispatch(ipfsStorageSelect(v))
+  }
+}
+
+const initialState = {
+  type: {
+    available: [
+      { value: 0, label: 'Individual' },
+      { value: 1, label: 'Group' },
+    ],
+    selected: 0
   }
 }
 
@@ -60,6 +72,11 @@ class SharedIndex extends Component {
     handleIpfsStorageSelect: PropTypes.func.isRequired
   }
 
+  constructor (props) {
+    super(props)
+    this.state = { ...initialState }
+  }
+
   componentWillMount() {
     this.getCheck(this.props)
   }
@@ -70,8 +87,12 @@ class SharedIndex extends Component {
 
   getCheck (props) {
     const { selected, data } = props
+    const { type } = this.state
 
-    if (data && data.size < 0) props.handleSizeGet(selected)
+    if (data && data.size < 0)
+      type.selected === 0 ?
+        props.handleSizeGet(selected) :
+        props.handleSizeGetGroup()
 
     if (data && data.size > 0) this.getData(props)
   }
@@ -82,7 +103,7 @@ class SharedIndex extends Component {
       data: { files, size }
     } = props
 
-    if (size && size != 0 && Object.keys(files).length == 0)
+    if (size && size != 0 && Object.keys(files).length !== size)
       for (let i = 0; i < size; i++)
         props.handleIndexGet(i, selected)
   }
@@ -105,6 +126,8 @@ class SharedIndex extends Component {
       selected
     } = this.props
 
+    const { type } = this.state
+
     return (
       <div>
         <div className={ 'row' } >
@@ -118,6 +141,29 @@ class SharedIndex extends Component {
               />
             </div>
           </div>
+          <div className={ 'col-xs-12' } >
+            <div className={ styles.selectWrapper } >
+              <Select
+                name={ 'Select account type' }
+                value={ type.available[type.selected] }
+                options={ type.available }
+                onChange={ (v) => this.setState({ type: { ...type, selected: v.value } }) }
+              />
+            </div>
+          </div>
+          {
+            type.selected !== 0 &&
+            <div className={ 'col-xs-12' } >
+              <div className={ styles.selectWrapper } >
+                <input
+                  className={ styles.groupName }
+                  placeholder={ 'Enter Group Name' }
+                  value={ type.groupName }
+                  onChange={ (e) =>
+                    this.setState({ type: { ...type, groupName: e.target.value }}) }/>
+              </div>
+            </div>
+          }
           {
             selected ?
             <div className={ 'col-xs-12' } style={{ 'display': 'table' }} >
@@ -128,7 +174,7 @@ class SharedIndex extends Component {
               }
             </div> :
             <div className={ 'col-xs-12' } >
-              Please provide an address to query above.
+              Please provide an address { type.selected === 1 && ' and group name'} to query above.
             </div>
           }
         </div>

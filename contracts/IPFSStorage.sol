@@ -245,6 +245,16 @@ contract IPFSStorage {
     return size(user_paths[msg.sender]);
   }
 
+  /* ACCESSIBLE BY ANY PARTY */
+  function sizeGroup(string name) constant returns (uint) {
+    Group group = Group(groups[name]);
+
+    if (!group.member(msg.sender)) throw;
+
+    /* The size of the user's available paths */
+    return size(user_paths[groups[name]]);
+  }
+
   /* ONLY ACCESSIBLE BY OWNER */
   function getIndexShare(string path, uint index) onlyOwner constant returns (address, uint, bool) {
     Share[] storage path_share = shares[path].shares;
