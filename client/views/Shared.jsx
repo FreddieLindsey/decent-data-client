@@ -67,6 +67,7 @@ class SharedIndex extends Component {
     selected: PropTypes.string,
 
     handleSizeGet: PropTypes.func.isRequired,
+    handleSizeGetGroup: PropTypes.func.isRequired,
     handleIndexGet: PropTypes.func.isRequired,
     handleLoadEncryptionKeys: PropTypes.func.isRequired,
     handleIpfsStorageSelect: PropTypes.func.isRequired
@@ -92,7 +93,7 @@ class SharedIndex extends Component {
     if (data && data.size < 0)
       type.selected === 0 ?
         props.handleSizeGet(selected) :
-        props.handleSizeGetGroup()
+        props.handleSizeGetGroup(selected, type.groupName)
 
     if (data && data.size > 0) this.getData(props)
   }
@@ -133,16 +134,6 @@ class SharedIndex extends Component {
         <div className={ 'row' } >
           <div className={ 'col-xs-12' } >
             <div className={ styles.selectWrapper } >
-              <Select.Creatable
-                name={ 'Select account' }
-                value={ selected }
-                options={ accounts }
-                onChange={ (v) => this.props.handleIpfsStorageSelect(v && v.value || v) }
-              />
-            </div>
-          </div>
-          <div className={ 'col-xs-12' } >
-            <div className={ styles.selectWrapper } >
               <Select
                 name={ 'Select account type' }
                 value={ type.available[type.selected] }
@@ -164,6 +155,17 @@ class SharedIndex extends Component {
               </div>
             </div>
           }
+          <div className={ 'col-xs-12' } >
+            <div className={ styles.selectWrapper } >
+              <Select.Creatable
+                name={ 'Select account' }
+                value={ selected }
+                options={ accounts }
+                onChange={ (v) =>
+                  this.props.handleIpfsStorageSelect(v && v.value || v) }
+              />
+            </div>
+          </div>
           {
             selected ?
             <div className={ 'col-xs-12' } style={{ 'display': 'table' }} >

@@ -17,6 +17,7 @@ import {
   IPFSSTORAGE_INDEX_GET_SUCCESS,
   IPFSSTORAGE_INDEX_GET_ERROR,
   IPFSSTORAGE_SELECT_SUCCESS,
+  SELECT_ACCOUNT,
   REGISTRY_GET_STORE_SUCCESS,
   FILE_SUBMIT_SUCCESS,
 } from '../../actions'
@@ -65,6 +66,8 @@ export const IPFSStorage = (state = initialState, action) => {
       return handleIpfsStorageSelect(state, action.address)
     case FILE_SUBMIT_SUCCESS:
       return handleFileSubmitSuccess(state, action.address, action.path)
+    case SELECT_ACCOUNT:
+      return { ...state, identities: {} }
   }
   return state
 }

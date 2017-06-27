@@ -1,7 +1,9 @@
 // Get size of storedData
-export const IPFSSTORAGE_SIZE_GET_PENDING = 'IPFSSTORAGE_SIZE_GET_PENDING'
-export const IPFSSTORAGE_SIZE_GET_SUCCESS = 'IPFSSTORAGE_SIZE_GET_SUCCESS'
-export const IPFSSTORAGE_SIZE_GET_ERROR   = 'IPFSSTORAGE_SIZE_GET_ERROR'
+import {
+  IPFSSTORAGE_SIZE_GET_PENDING,
+  IPFSSTORAGE_SIZE_GET_SUCCESS,
+  IPFSSTORAGE_SIZE_GET_ERROR
+} from './sizeGet'
 
 export const ipfsStorageSizeGetGroup = (address, group) => {
   return (dispatch, getState) => {
