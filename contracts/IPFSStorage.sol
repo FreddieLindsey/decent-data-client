@@ -88,6 +88,7 @@ contract IPFSStorage {
 
   /* Groups */
   mapping (string => address) groups;
+  string[] group_names;
 
   /* ----------------------------------------------------------------------- */
   /* EXTERNAL FUNCTIONS */
@@ -177,6 +178,11 @@ contract IPFSStorage {
   /* ONLY ACCESSIBLE BY OWNER */
   function addGroup(address group, string name) onlyOwner {
     groups[name] = group;
+
+    for (uint i = 0; i < group_names.length; i++)
+      if (stringEqual(group_names[i], name))
+        return;
+    group_names.push(name);
   }
 
   /* ONLY ACCESSIBLE BY OWNER. REMOVE ALL GROUP ACCESS */
@@ -281,6 +287,19 @@ contract IPFSStorage {
     if (!group.member(reader)) throw;
 
     return allowedRead(group, path);
+  }
+
+  function getGroupsSize() /* onlyOwner */ constant returns (uint) {
+    return group_names.length;
+  }
+
+  function getGroup(uint index) /* onlyOwner */ constant returns (address, string) {
+    string name = group_names[index];
+    return (groups[name], name);
+  }
+
+  function getGroupAddress(string name) /* onlyOwner */ constant returns (address) {
+    return groups[name];
   }
 
   /* ----------------------------------------------------------------------- */

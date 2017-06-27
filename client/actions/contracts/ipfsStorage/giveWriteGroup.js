@@ -6,7 +6,7 @@ export const IPFSSTORAGE_GIVE_WRITE_GROUP_ERROR = 'IPFSSTORAGE_GIVE_WRITE_GROUP_
 export const ipfsStorageGiveWriteGroup = (group, path) => {
   return (dispatch, getState) => {
     const identity = getState().security.address
-    const storage = getState().IPFSStorage.mine
+    const storage = getState().IPFSStorage.identities[identity].address
     dispatch(ipfsStorageGiveWriteGroupPending(identity, group, path))
     contracts.IPFSStorage.at(storage)
     .giveWriteGroup(group, path, { from: identity, gas: 3000000, gasPrice: 10000000 })
