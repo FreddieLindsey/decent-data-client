@@ -44,6 +44,11 @@ contract IPFSStorage {
     _;
   }
 
+  modifier groupMember(string name) {
+    if (!Group(groups[name]).member(msg.sender)) throw;
+    _;
+  }
+
   /* ----------------------------------------------------------------------- */
   /* DATA STRUCTURES */
   /* ----------------------------------------------------------------------- */
@@ -226,10 +231,30 @@ contract IPFSStorage {
     return (h.part1, h.part2);
   }
 
+  /* ONLY ACCESSIBLE BY PERSONS WHO CAN READ FROM THE PATH */
+  function getGroup(string path, string name) groupMember(name) readable(path) constant returns (bytes32, bytes32) {
+    /* Return hash of path */
+    IpfsHash h = hashes[path];
+    return (h.part1, h.part2);
+  }
+
   /* ACCESSIBLE BY ANY PARTY */
   function getIndex(uint index) constant returns (string) {
     /* Get the user's available paths */
     Set my_paths = user_paths[msg.sender];
+
+    /* Check index is valid and return blank if not */
+    if (index < 0 || index >= size(my_paths))
+      return "";
+
+    /* Return blank for invalid */
+    return my_paths.items[index];
+  }
+
+  /* ACCESSIBLE BY ANY PARTY */
+  function getIndexGroup(uint index, string name) groupMember(name) constant returns (string) {
+    /* Get the user's available paths */
+    Set my_paths = user_paths[groups[name]];
 
     /* Check index is valid and return blank if not */
     if (index < 0 || index >= size(my_paths))

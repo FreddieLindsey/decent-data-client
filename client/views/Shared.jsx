@@ -14,6 +14,7 @@ import {
   ipfsStorageSizeGet,
   ipfsStorageSizeGetGroup,
   ipfsStorageIndexGet,
+  ipfsStorageIndexGetGroup,
   ipfsStorageSelect,
   loadEncryptionKeys,
 } from '../actions'
@@ -38,6 +39,7 @@ const mapDispatchToProps = (dispatch) => {
     handleSizeGet: (a) => dispatch(ipfsStorageSizeGet(a)),
     handleSizeGetGroup: (a, g) => dispatch(ipfsStorageSizeGetGroup(a, g)),
     handleIndexGet: (i, a) => dispatch(ipfsStorageIndexGet(i, a)),
+    handleIndexGetGroup: (i, a, n) => dispatch(ipfsStorageIndexGetGroup(i, a, n)),
     handleLoadEncryptionKeys: (f) => dispatch(loadEncryptionKeys(f)),
     handleIpfsStorageSelect: (v) => dispatch(ipfsStorageSelect(v))
   }
@@ -69,6 +71,7 @@ class SharedIndex extends Component {
     handleSizeGet: PropTypes.func.isRequired,
     handleSizeGetGroup: PropTypes.func.isRequired,
     handleIndexGet: PropTypes.func.isRequired,
+    handleIndexGetGroup: PropTypes.func.isRequired,
     handleLoadEncryptionKeys: PropTypes.func.isRequired,
     handleIpfsStorageSelect: PropTypes.func.isRequired
   }
@@ -103,10 +106,13 @@ class SharedIndex extends Component {
       selected,
       data: { files, size }
     } = props
+    const { type } = this.state
 
     if (size && size != 0 && Object.keys(files).length !== size)
       for (let i = 0; i < size; i++)
-        props.handleIndexGet(i, selected)
+        type.selected === 0 ?
+          props.handleIndexGet(i, selected) :
+          props.handleIndexGetGroup(i, selected, type.groupName)
   }
 
   renderIndex = () => {

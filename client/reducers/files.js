@@ -1,5 +1,4 @@
 import {
-  LOGOUT,
   FILE_LOAD_PENDING,
   FILE_LOAD_SUCCESS,
   FILE_LOAD_ERROR,
@@ -26,6 +25,7 @@ import {
   // IPFSSTORAGE_GIVE_WRITE_PENDING,
   IPFSSTORAGE_GIVE_WRITE_SUCCESS,
   IPFSSTORAGE_GIVE_WRITE_ERROR,
+  SELECT_ACCOUNT
 } from '../actions'
 
 const initialState = {
@@ -35,8 +35,8 @@ const initialState = {
 
 const files = (state = initialState, action) => {
   switch (action.type) {
-    case LOGOUT:
-      return { ...initialState }
+    case SELECT_ACCOUNT:
+      return { ...state, stored: {} }
     case FILE_LOAD_PENDING:
       return handleFileLoadPending(state, action.path)
     case FILE_LOAD_SUCCESS:

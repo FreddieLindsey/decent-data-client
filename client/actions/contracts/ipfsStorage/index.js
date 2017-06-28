@@ -5,6 +5,7 @@ export * from './addReencryptionKeyGroup'
 export * from './add'
 
 export * from './indexGet'
+export * from './indexGetGroup'
 export * from './sizeGet'
 export * from './sizeGetGroup'
 export * from './get'
