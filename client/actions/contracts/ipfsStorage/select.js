@@ -9,7 +9,7 @@ export const IPFSSTORAGE_SELECT_PENDING = 'IPFSSTORAGE_SELECT_PENDING'
 export const IPFSSTORAGE_SELECT_SUCCESS = 'IPFSSTORAGE_SELECT_SUCCESS'
 export const IPFSSTORAGE_SELECT_ERROR = 'IPFSSTORAGE_SELECT_ERROR'
 
-export const ipfsStorageSelect = (address) => {
+export const ipfsStorageSelect = (address, group) => {
   return (dispatch, getState) => {
     dispatch(ipfsStorageSelectPending(address))
     if (getState().IPFSStorage.identities[address]) {
