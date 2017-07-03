@@ -13,24 +13,21 @@ Fundamentally, the user's privacy is vastly improved compared to current central
 - Blockchain technology
 - Off-chain storage
 - Decentralised, distributed client interface
-- Encryption gateway\*
-
-> *\*This is not strictly necessary but at the moment it provides an essential part of the compute layer which is not feasible on Ethereum*
 
 Above are the key components that form the system. Below are instructions on how to run them locally.
 
 ```bash
+# Proxy Re-Encryption local server
+docker-compose up -d
+
 # Blockchain technology (EthereumJS's testrpc)
 yarn run testrpc
 
 # Off-chain storage (IPFS)
-yarn run services
+yarn run ipfs
 
 # Client interface (webpack-dev-server / react)
 yarn start
-
-# Encryption gateway
-yarn run dev
 ```
 
 > *Note, these must be started in separate terminals.*
@@ -39,12 +36,21 @@ Have fun!
 
 ## Demonstration
 
-For demonstration purposes, I have created a demo script that does the following:
+For demonstration purposes, the following functionality can be demonstrated:
 
-- Register `doctor`, `patient_1`, and `patient_2`
-- Assign `doctor` as a member of group `GMC` (a contract administered by the `gmc` account)
+- Individual Account Setup
+- Individual Data Management (inc. permissions)
+- Individual Data Sharing
+- Group Account Setup
+- Group Member Addition
+- Group Member Invalidation
+- Group Data Management (inc. permissions)
+- Group Data Sharing
 
-```bash
-# Run the below once to inject data
-yarn run demo
-```
+## Related works
+
+Please see the following for related material:
+
+- [Project Report](https://github.com/FreddieLindsey/blockchain-layered-data-access)
+- [Local Proxy Re-encryption Gateway](https://github.com/FreddieLindsey/blockchain-layered-data-access-gateway)
+- [Presentation Script](https://github.com/FreddieLindsey/blockchain-layered-data-access-presentation)
