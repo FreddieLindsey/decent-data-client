@@ -1,6 +1,6 @@
 # Private, decentralised data-sharing
 
-[![Build Status](https://travis-ci.com/FreddieLindsey/truffle-webpack-boilerplate.svg?token=2txBfbss4toxp7qpR4fW&branch=master)](https://travis-ci.com/FreddieLindsey/truffle-webpack-boilerplate)
+[![Build Status](https://travis-ci.com/FreddieLindsey/truffle-webpack-boilerplate.svg?token=2txBfbss4toxp7qpR4fW&branch=master)](https://travis-ci.com/FreddieLindsey/truffle-webpack-boilerplate) [![Greenkeeper badge](https://badges.greenkeeper.io/FreddieLindsey/decent-data-client.svg)](https://greenkeeper.io/)
 
 ## Introduction
 
